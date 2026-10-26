@@ -1,0 +1,560 @@
+{
+  "note": "Public bond documents used for evaluation. Files are fetched by scripts/fetch.py into $TSTT_DATA_DIR and never committed. Some documents carry 'not to be forwarded or distributed' legends, so only links and hashes live here.",
+  "documents": {
+    "ibrd-gdif-2021": {
+      "title": "IBRD Global Debt Issuance Facility Prospectus, 24 September 2021",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/03c46dc52fec5ff3bf5e3a0e57e53164-0340022021/original/IBRD-GDIF-Prospectus-2021.pdf",
+      "sha256": "e2e54693cab6f7ebd0a6f11e53a80e7bbd57ac7bf5154bab9c98623589f194a0",
+      "bytes": 338136
+    },
+    "ibrd-gdif-2008": {
+      "title": "IBRD Global Debt Issuance Facility Prospectus, 28 May 2008",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/404891576621762298-0340022019/original/IBRDGDIFProspectus2008.pdf",
+      "sha256": "5fcd27d1665de341c513334ab0371a8b2768e99ecc7d5e39f413d9b304043f4f",
+      "bytes": 480204
+    },
+    "ibrd-dnn-supplement-2023": {
+      "title": "IBRD Digitally Native Notes Prospectus Supplement, 19 October 2023",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/e44cdbc92e45d322c6df9cea31cc1966-0340022024/original/ft-XS2392386533.pdf",
+      "sha256": "6fd0e7c9b284d9aee64f6bc6b29dc670c0c3fb0e2af7b6f35d64296f75fa0644",
+      "bytes": 325682
+    },
+    "ibrd-xs2615318289-ft": {
+      "title": "IBRD EUR 100m 3.399% Digitally Native Notes due 2026, Final Terms",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/2bc6023ef551927643aa23357db10b87-0340022023/original/ft-2023-XS2615318289.pdf",
+      "sha256": "dbfeae63d15a881c05984759568a7d7e2b6a125fc554d8d150e5addc9f169539",
+      "bytes": 27289
+    },
+    "ibrd-xs2113033281-ft": {
+      "title": "IBRD GBP 1.5bn 0.750% Notes due 2026, Final Terms",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/870691604084095015-0340022020/original/ft2020XS2113033281.pdf",
+      "sha256": "4cd25e22ee4ce46d91c4f00a193e7c1395e1cccb1316fd286c0e1dad4d9d8182",
+      "bytes": 370646
+    },
+    "ibrd-au3cb0295509-ft": {
+      "title": "IBRD AUD 4.40% Kangaroo Notes due 2028, Final Terms",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/cac2fa478e942c21efb17ec6d9430923-0340022023/original/ft-2023-AU3CB0295509.pdf",
+      "sha256": "d79bdbee7d7833045ca1c203fa748593961963ea151eb604be61621e228f0b7d",
+      "bytes": 222654
+    },
+    "ibrd-ch1452360691-ft": {
+      "title": "IBRD CHF 225m 0.4850% Notes due 2032, Final Terms",
+      "issuer": "IBRD",
+      "format": "pdf",
+      "url": "https://thedocs.worldbank.org/en/doc/eeb7a88fa77dceb757608d0ee55283b6-0340022025/original/ft-CH1452360691.pdf",
+      "sha256": "0df6e84fb5ab686652a1ae2aaf61d6d6525d96e5adc6ea96a13795667a267cc3",
+      "bytes": 233620
+    },
+    "adb-gmtn-2020": {
+      "title": "ADB Global Medium-Term Note Program Prospectus, 9 December 2020",
+      "issuer": "ADB",
+      "format": "pdf",
+      "url": "https://www.adb.org/sites/default/files/institutional-document/32642/gmtn-20201209.PDF",
+      "sha256": "ac89dfaf752efe0c2c848edb7d203e593e7954ba5d2cf6ba1ed44e2806ff0a6a",
+      "bytes": 836734
+    },
+    "adb-gmtn-1927-ps": {
+      "title": "ADB USD 3.5bn 4.25% Notes due 2036, Pricing Supplement (Series 1927-00-1)",
+      "issuer": "ADB",
+      "format": "pdf",
+      "url": "https://www.adb.org/sites/default/files/page/42012/pricing-supplement-gmtn-1927-00-1.pdf",
+      "sha256": "03ad41a6c7d4af988e353ee9562d398337bed725d7e8e51094e3d207eda0a989",
+      "bytes": 296594
+    },
+    "adb-gmtn-1892-ps": {
+      "title": "ADB CAD 750m 2.60% Notes due 2028, Pricing Supplement (Series 1892-00-1)",
+      "issuer": "ADB",
+      "format": "pdf",
+      "url": "https://www.adb.org/sites/default/files/page/42012/pricing-supplement-gmtn-1892-00-1.pdf",
+      "sha256": "9154e1ba774bb9edf4289206a52d0d3b752992ec5529e6603b534b334dd25dc7",
+      "bytes": 255008
+    },
+    "eib-dip-2025": {
+      "title": "EIB Debt Issuance Programme Offering Circular, 28 November 2025",
+      "issuer": "EIB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=UQfBoJVDAxApqxPg0lBl7lYGScsrXSaMI9lgxNhJ7P%2FTa4kz8C13PnfRB4HKjwrsdQdk%2B3BlX7ue0CVALj0CmNOSyodCZwC%2FvpLFhOo%2FJ%2B47JoTyYkVC4oMwuRA0fNsh4yTor7d9dnZJ0gLb5eREOgDtswOZDGy2%2BTdKOcswRpAhFG9XpWvoUpuzI4Ed%2Fcwz",
+      "sha256": "236aa40a30cd77c56bdd268b82bb9b592b0c2fb3a77548fd91e06fb583def16c",
+      "bytes": 820542
+    },
+    "eib-eu000a4etda0-ft": {
+      "title": "EIB SEK 1bn 2.680% Sustainability Awareness Bonds due 2029, Final Terms 20 April 2026",
+      "issuer": "EIB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=c27XYU9I4mwBrJwVzdjU2%2B3kEpKXGQJQ3hs1hRSNh7ANUsHNbFh4MVUSl6IKaXIGrvQ8bWMaaSme9JgYCRwdLMxNvYdt0mQWavUsird0xV93QKzPi1%2FKt7RRPg1dke7QBRJyb8a6j8ZqU7l%2FW%2BsD8X0FFgF2x%2FBNozl8slBtwmjbJ2yYk7Q5dV48hce8aBsttpkgJrybPYtLk1zMprVVoA%3D%3D",
+      "sha256": "132b768126acc9ecf442cc2b252cb00cd8c2ddb2eace95386e1d3649991e9eac",
+      "bytes": 208664
+    },
+    "ceb-mtn-2023": {
+      "title": "CEB Medium Term Note Programme Offering Circular, 8 December 2023",
+      "issuer": "CEB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=wvQd%2BWTgFjqBTIOjnDTIdQOW%2FerGOYUKmERH%2BRdj8ahtrwgdH6A6N9qKJ7y%2FJ9aRH7gbcsdmlO%2B374JP27U82S7xbI05wJlGUiKQyxqQz4jD2c9AkvD2bZ5tSt0byUiGGv5ZGxrrmARWp29qqs%2BmYMmxFFsJaYw0RyU7RRf00QenkLltOv3IKsGJ8pciy4vv",
+      "sha256": "74ff3062919bf207ed272396064f6ebd2eb5d96d3a2117a4c748ba7c7240ef15",
+      "bytes": 1296454
+    },
+    "ceb-mtn-supplement-2025": {
+      "title": "CEB Offering Circular Supplement, 17 November 2025",
+      "issuer": "CEB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=PniXus8mMbxd2MdV0I3lfsY46oQXv8a%2FYa80%2BL6CCB5XlRIiNUEhioaBVAElYrTuEPnw%2BIwtjX%2BUgFE%2Fp8RrkIkD4DlcfbEPBUgaV3KUj8zD8DDGd9I5QQ0g4Dw7csR1N5nF2RwbxJvW%2FBly1dspZZq5CYY92KIZiCAqbD70%2FZ41ycKEsf6%2FFY0YTaaS7Web",
+      "sha256": "dda229b8c6411678e2caa9fc4b59be32ab605b0b034ba694df6eb884c43409c3",
+      "bytes": 235038
+    },
+    "ceb-xs3268973966-ps": {
+      "title": "CEB GBP 750m 3.875% Social Inclusion Bonds due 2029, Pricing Supplement",
+      "issuer": "CEB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=EVgH8m%2FccZsGkm7TkROAjpKUlBREu6kJwqDbSyte3i%2FIGZguHYi%2B1bxcsw9yAZ9VEJTQDN4eLpxTCgqBY%2BXPgdfIWZEvH43B7Wx3NJ%2BMruRYGraHX26JgKeimi1TSzNAh2WrPYGLuxanc91mpabDi3O7lVZ0Byyh7Xrt4BU4Y%2Baw%2F8KO8DK6s3Gp5bQQ5sJMPE0d1nYojCD3IP7QKBXj%2Fw%3D%3D",
+      "sha256": "3f86c9aba3d996cd45bbcaf37093b8e6b29172abc0b97eba30eca1411cfed371",
+      "bytes": 385637
+    },
+    "hksar-gmtn-om-2025": {
+      "title": "HKSAR Government Global Medium Term Note Programme Offering Memorandum, 29 September 2025",
+      "issuer": "HKSAR",
+      "format": "pdf",
+      "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2025/0930/2025093000469.pdf",
+      "sha256": "b66eebc6b8250dd567bde58633c3de09838b1629e164d1ceae6e4bd3b88e911f",
+      "bytes": 1245568
+    },
+    "hksar-digital-green-2025-ps": {
+      "title": "HKSAR digital green notes, supplemental offering memorandum 10 November 2025 and pricing supplements",
+      "issuer": "HKSAR",
+      "format": "pdf",
+      "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2025/1112/2025111200290.pdf",
+      "sha256": "55170dc578859efb16775c749ca4bb47f99ec224a4fa2a8252a2a81f1bde6fed",
+      "bytes": 837523
+    },
+    "hksar-gmtn-om-2024": {
+      "title": "HKSAR Government Global Medium Term Note Programme Offering Memorandum, 3 July 2024",
+      "issuer": "HKSAR",
+      "format": "pdf",
+      "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2024/0704/2024070400271.pdf",
+      "sha256": "e0fe21c6d84b8078c7c8447a77be93f13ea4fc7f41ab1a126c2106727c5d8c63",
+      "bytes": 1114913
+    },
+    "hksar-hk0001031944-ps": {
+      "title": "HKSAR EUR 750m 3.375% Green Notes due 2031, Pricing Supplement 17 July 2024",
+      "issuer": "HKSAR",
+      "format": "pdf",
+      "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2024/0725/2024072500194.pdf",
+      "sha256": "5182b431c1294613974b1704cf4d2bcb89668e755be6540342b091f165d0ee34",
+      "bytes": 1098574
+    },
+    "kfw-prospectus-2026": {
+      "title": "KfW Prospectus, 26 June 2026 (424B3)",
+      "issuer": "KfW",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/821533/000110465926078691/tm2614101-4_424b3.htm",
+      "sha256": "05cf048d3710c14546c09b96197c42951a39e403c8a0e701641900a44bcf9fd7",
+      "bytes": 269687
+    },
+    "kfw-prospectus-supplement-2026": {
+      "title": "KfW Prospectus Supplement, 26 June 2026 (424B3)",
+      "issuer": "KfW",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/821533/000110465926078696/tm2614101-6_424b3.htm",
+      "sha256": "356f4020c1d07b20ce72d29487c9b53b933e6e97e2b94e6facf5155e7b52ff52",
+      "bytes": 126399
+    },
+    "kfw-us500769kt05-ps": {
+      "title": "KfW USD 3bn 4.50% Global Notes due 2031, Pricing Supplement 11 September 2026 (424B5)",
+      "issuer": "KfW",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/821533/000110465926106949/tm2625018-1_424b5.htm",
+      "sha256": "feec5fdf6120cbeaf18ffdec848da87e2a24f7353d3905cc6085ac54bd0345e6",
+      "bytes": 532017
+    },
+    "toyota-mtn-prosupp-2024": {
+      "title": "Toyota Motor Credit Medium-Term Notes Series B Prospectus Supplement, 22 January 2024 (424B2)",
+      "issuer": "Toyota Motor Credit",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/834071/000095010324000970/dp205496_424b2-mtnprosupp.htm",
+      "sha256": "21d52b53fd5b33344d3ce078d4304d61d9f69098bc226a3e6d283aa128248ef8",
+      "bytes": 549084
+    },
+    "toyota-s3asr-2024": {
+      "title": "Toyota Motor Credit Prospectus, 19 January 2024 (S-3ASR)",
+      "issuer": "Toyota Motor Credit",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/834071/000095010324000920/dp205406_s3asr.htm",
+      "sha256": "fbba18b31f8d55944f44ca7ef14a2e80b5194880b323d703c554af839ef9a6da",
+      "bytes": 161747
+    },
+    "toyota-us89236tqd09-ps": {
+      "title": "Toyota Motor Credit USD 750m 4.500% Notes due 2029, Pricing Supplement 6 July 2026 (424B2)",
+      "issuer": "Toyota Motor Credit",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/834071/000095010326010360/dp249810_424b2-mtn1377.htm",
+      "sha256": "8b5ffe19e53985b056270973b4fa1d20435ad3563ad9a5445e71a46695f0b306",
+      "bytes": 74399
+    },
+    "deere-s3asr-2026": {
+      "title": "John Deere Capital Prospectus and Prospectus Supplement, 14 May 2026 (S-3ASR)",
+      "issuer": "John Deere Capital",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/27673/000110465926061325/tm2614024-1_s3asr.htm",
+      "sha256": "fda07c408125a60b6d4d38b036fba8b90dbd0e2c2910e39bdcb4a643343233aa",
+      "bytes": 1056712
+    },
+    "deere-us24422eyt09-ps": {
+      "title": "John Deere Capital USD 400m 4.800% Notes due 2029, Pricing Supplement 8 September 2026 (424B2)",
+      "issuer": "John Deere Capital",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/27673/000110465926106397/tm2625053d7_424b2.htm",
+      "sha256": "d02b9d5035f7ca1f55d13a49bb0c0a95af878f3aff7be4bb89c8d0c91d35353f",
+      "bytes": 23608
+    },
+    "paccar-s3asr-2024": {
+      "title": "PACCAR Financial Prospectus and Prospectus Supplement, 7 November 2024 (S-3ASR)",
+      "issuer": "PACCAR Financial",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/731288/000119312524253113/d868620ds3asr.htm",
+      "sha256": "6e90facc7486cef45aef53175d2796f8e8db802a18febd022b773497d3582ca1",
+      "bytes": 514569
+    },
+    "paccar-69371ru79-ps": {
+      "title": "PACCAR Financial USD 300m 4.750% Notes due 2029, Pricing Supplement 2 September 2026 (424B2)",
+      "issuer": "PACCAR Financial",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/731288/000119312526380217/d172815d424b2.htm",
+      "sha256": "77426631c05b3b43f3594b8197dae5a4d51144a201352fec88dd632b62972247",
+      "bytes": 23436
+    },
+    "korea-prelim-424b5-2026": {
+      "title": "Republic of Korea Preliminary Prospectus Supplement with Prospectus 10 April 2026 (424B5)",
+      "issuer": "Republic of Korea",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/873465/000119312526297956/d124581d424b5.htm",
+      "sha256": "00d2d01ec2484a40197adb6f3157070663aab2267beb45d515c907aa1ccdb858",
+      "bytes": 1394119
+    },
+    "korea-xs3437347787-fwp": {
+      "title": "Republic of Korea EUR 1bn 3.250% Notes due 2033, Term Sheet 8 July 2026 (FWP)",
+      "issuer": "Republic of Korea",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/873465/000119312526299081/d124581dfwp.htm",
+      "sha256": "5b8711a787691152eae648aba6f145296f490207263264fbbc55a24c07ea348e",
+      "bytes": 19672
+    },
+    "korea-xs3437347787-424b2": {
+      "title": "Republic of Korea EUR 1bn 3.250% Notes due 2033, Final Prospectus Supplement 8 July 2026 (424B2)",
+      "issuer": "Republic of Korea",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/873465/000119312526299082/d124581d424b2.htm",
+      "sha256": "5c692af1521dbbfffe974fd23d8e54fdf53d5d53df882097cb968325f2416639",
+      "bytes": 261712
+    }
+  },
+  "bonds": [
+    {
+      "id": "ibrd-eur-3399-2026",
+      "isin": "XS2615318289",
+      "label": "IBRD EUR 100m 3.399% 2026, digitally native",
+      "dlt_native": true,
+      "documents": [
+        {
+          "doc": "ibrd-xs2615318289-ft",
+          "role": "final_terms"
+        },
+        {
+          "doc": "ibrd-dnn-supplement-2023",
+          "role": "supplement"
+        },
+        {
+          "doc": "ibrd-gdif-2021",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "ibrd-gbp-0750-2026",
+      "isin": "XS2113033281",
+      "label": "IBRD GBP 1.5bn 0.750% 2026, short first coupon",
+      "documents": [
+        {
+          "doc": "ibrd-xs2113033281-ft",
+          "role": "final_terms"
+        },
+        {
+          "doc": "ibrd-gdif-2008",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "ibrd-aud-4400-2028",
+      "isin": "AU3CB0295509",
+      "label": "IBRD AUD 4.40% 2028 Kangaroo",
+      "documents": [
+        {
+          "doc": "ibrd-au3cb0295509-ft",
+          "role": "final_terms"
+        },
+        {
+          "doc": "ibrd-gdif-2021",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "ibrd-chf-0485-2032",
+      "isin": "CH1452360691",
+      "label": "IBRD CHF 225m 0.4850% 2032",
+      "documents": [
+        {
+          "doc": "ibrd-ch1452360691-ft",
+          "role": "final_terms"
+        },
+        {
+          "doc": "ibrd-gdif-2021",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "adb-usd-4250-2036",
+      "isin": "US045167GP25",
+      "label": "ADB USD 3.5bn 4.25% 2036",
+      "documents": [
+        {
+          "doc": "adb-gmtn-1927-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "adb-gmtn-2020",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "adb-cad-2600-2028",
+      "isin": "CA045167GN78",
+      "label": "ADB CAD 750m 2.60% 2028, Canadian compound method",
+      "stretch": true,
+      "documents": [
+        {
+          "doc": "adb-gmtn-1892-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "adb-gmtn-2020",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "eib-sek-2680-2029",
+      "isin": "EU000A4ETDA0",
+      "label": "EIB SEK 1bn 2.680% 2029, short first coupon",
+      "documents": [
+        {
+          "doc": "eib-eu000a4etda0-ft",
+          "role": "final_terms"
+        },
+        {
+          "doc": "eib-dip-2025",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "ceb-gbp-3875-2029",
+      "isin": "XS3268973966",
+      "label": "CEB GBP 750m 3.875% 2029 Social Inclusion Bond",
+      "documents": [
+        {
+          "doc": "ceb-xs3268973966-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "ceb-mtn-supplement-2025",
+          "role": "supplement"
+        },
+        {
+          "doc": "ceb-mtn-2023",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "hksar-usd-3625-2028",
+      "isin": "HK0001201893",
+      "label": "HKSAR USD 300m 3.625% 2028, digital green",
+      "dlt_native": true,
+      "documents": [
+        {
+          "doc": "hksar-digital-green-2025-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "hksar-gmtn-om-2025",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "hksar-eur-2500-2029",
+      "isin": "HK0001201901",
+      "label": "HKSAR EUR 300m 2.500% 2029, digital green",
+      "dlt_native": true,
+      "documents": [
+        {
+          "doc": "hksar-digital-green-2025-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "hksar-gmtn-om-2025",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "hksar-cny-1900-2030",
+      "isin": "HK0001201919",
+      "label": "HKSAR CNY 2.5bn 1.90% 2030, digital green",
+      "dlt_native": true,
+      "documents": [
+        {
+          "doc": "hksar-digital-green-2025-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "hksar-gmtn-om-2025",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "hksar-hkd-2500-2027",
+      "isin": "HK0001201927",
+      "label": "HKSAR HKD 2.5bn 2.50% 2027, digital green",
+      "dlt_native": true,
+      "documents": [
+        {
+          "doc": "hksar-digital-green-2025-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "hksar-gmtn-om-2025",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "hksar-eur-3375-2031",
+      "isin": "HK0001031944",
+      "label": "HKSAR EUR 750m 3.375% 2031 green",
+      "documents": [
+        {
+          "doc": "hksar-hk0001031944-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "hksar-gmtn-om-2024",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "kfw-usd-4500-2031",
+      "isin": "US500769KT05",
+      "label": "KfW USD 3bn 4.50% 2031, short first coupon",
+      "documents": [
+        {
+          "doc": "kfw-us500769kt05-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "kfw-prospectus-supplement-2026",
+          "role": "supplement"
+        },
+        {
+          "doc": "kfw-prospectus-2026",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "toyota-usd-4500-2029",
+      "isin": "US89236TQD09",
+      "label": "Toyota Motor Credit USD 750m 4.500% 2029",
+      "documents": [
+        {
+          "doc": "toyota-us89236tqd09-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "toyota-mtn-prosupp-2024",
+          "role": "supplement"
+        },
+        {
+          "doc": "toyota-s3asr-2024",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "deere-usd-4800-2029",
+      "isin": "US24422EYT09",
+      "label": "John Deere Capital USD 400m 4.800% 2029",
+      "documents": [
+        {
+          "doc": "deere-us24422eyt09-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "deere-s3asr-2026",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "paccar-usd-4750-2029",
+      "isin": null,
+      "cusip": "69371RU79",
+      "label": "PACCAR Financial USD 300m 4.750% 2029",
+      "documents": [
+        {
+          "doc": "paccar-69371ru79-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "paccar-s3asr-2024",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "korea-eur-3250-2033",
+      "isin": "XS3437347787",
+      "label": "Republic of Korea EUR 1bn 3.250% 2033",
+      "documents": [
+        {
+          "doc": "korea-xs3437347787-424b2",
+          "role": "final_terms"
+        },
+        {
+          "doc": "korea-xs3437347787-fwp",
+          "role": "term_sheet"
+        },
+        {
+          "doc": "korea-prelim-424b5-2026",
+          "role": "base_prospectus"
+        }
+      ]
+    }
+  ]
+}

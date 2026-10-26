@@ -1,0 +1,18 @@
+# Local environment
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+
+# Source documents are fetched locally and never committed
+data/raw/
+*.pdf
+
+# Build and test output
+out/
+cache/
+broadcast/
+.pytest_cache/
