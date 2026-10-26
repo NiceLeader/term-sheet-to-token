@@ -1,0 +1,518 @@
+"use strict";
+
+// Review screen for one bond: terms and their sources, the cited page, the token's payments.
+
+const $ = (sel) => document.querySelector(sel);
+const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => (
+  { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const ROLES = {
+  final_terms: "Final terms", pricing_supplement: "Pricing supplement",
+  supplement: "Supplement", base_prospectus: "Base prospectus",
+  prospectus_supplement: "Prospectus supplement", prospectus: "Prospectus",
+  offering_circular: "Offering circular", term_sheet: "Term sheet",
+};
+const CLAUSE_FIELDS = {
+  coupon: ["interest_rate", "day_count_fraction", "business_day_convention", "business_day",
+           "rounding_rule", "record_date"],
+  first: ["interest_commencement_date", "first_interest_payment_date"],
+  redemption: ["final_redemption_amount", "maturity_date", "business_day_convention",
+               "record_date"],
+};
+const ZERO_DECIMALS = new Set(["JPY", "KRW"]);
+const NAMES = {
+  ACT_ACT_ICMA: "Actual/Actual (ICMA)", THIRTY_360: "30/360", THIRTY_E_360: "30E/360",
+  ACT_365_FIXED: "Actual/365 (Fixed)", ACT_360: "Actual/360", RBA_BOND_BASIS: "RBA Bond Basis",
+  ACT_ACT_CANADIAN_COMPOUND: "Actual/Actual (Canadian compound)",
+  FOLLOWING: "Following", MODIFIED_FOLLOWING: "Modified following", PRECEDING: "Preceding",
+  NONE: "None (unadjusted)", HALF_UP: "Half up", HALF_EVEN: "Half even", DOWN: "Down",
+  UP: "Up", NOT_STATED: "Not stated",
+};
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+const state = { runs: [], bonds: [], run: null, bond: null, data: null, field: null,
+                view: null, doc: null, page: 1, quotes: [], label: "" };
+
+async function api(path, options) {
+  const response = await fetch(path, options);
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new Error(body.detail || `${response.status} ${response.statusText}`);
+  }
+  return response.json();
+}
+
+// ---------------------------------------------------------------- formatting
+
+function amount(text) {
+  if (text === null || text === undefined) return "";
+  const [whole, fraction] = String(text).split(".");
+  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (fraction !== undefined ? "." + fraction : "");
+}
+
+function minor(value, currency) {
+  const decimals = ZERO_DECIMALS.has(currency) ? 0 : 2;
+  return amount((value / 10 ** decimals).toFixed(decimals));
+}
+
+function shortDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso + "T00:00:00Z");
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+}
+
+function modelName(model) {
+  if (!model) return "";
+  if (model.startsWith("muse-glimmer")) return "Muse Glimmer " + model.split("-").pop().toUpperCase();
+  if (model.startsWith("muse-spark")) return "Muse Spark " + model.split("-").pop();
+  return model;
+}
+
+function runLabel(run) {
+  if (run.kind === "truth") return "Verified terms";
+  const where = run.model.startsWith("muse-glimmer") ? "local" : "Meta API";
+  return `${modelName(run.model)} · ${run.mode.replace("_", "-")} (${where})`;
+}
+
+function fieldValue(field) {
+  const v = field.value;
+  if (v === null || v === undefined || v === "" || (Array.isArray(v) && !v.length)) return null;
+  if (field.name === "stated_coupon_amounts") {
+    return v.map((c) => `${amount(c.amount)} per ${amount(c.per)}${c.date ? " on " + shortDate(c.date) : ""}`).join("; ");
+  }
+  if (field.name === "interest_payment_dates") {
+    return v.map((d) => { const [m, day] = String(d).split("-"); return `${Number(day)} ${MONTHS[Number(m) - 1] || m}`; }).join(", ");
+  }
+  if (Array.isArray(v)) return v.join(", ");
+  if (typeof v === "boolean") return v ? "yes" : "no";
+  if (field.name.endsWith("_date") && /^\d{4}-\d{2}-\d{2}$/.test(v)) return shortDate(v);
+  if (["aggregate_nominal_amount", "specified_denomination", "calculation_amount"].includes(field.name)) return amount(v);
+  return NAMES[v] || String(v);
+}
+
+function fieldStatus(field, quoted) {
+  if (field.flags.some((f) => f.severity === "error")) return ["bad", "!"];
+  if (field.flags.some((f) => f.severity === "warning")) return ["warn", "?"];
+  if (!quoted) return field.cites.length ? ["none", "p"] : ["none", ""];
+  const stated = field.cites.filter((c) => c.role === "stated_in");
+  if (field.value === null || field.value === undefined) return ["none", ""];
+  if (stated.length && stated.every((c) => c.status === "exact" || c.status === "fuzzy")
+      && field.value_on_page !== false) return ["ok", "✓"];
+  return ["warn", "?"];
+}
+
+const citeStatus = {
+  exact: ["ok", "quote on page"], fuzzy: ["ok", "quote on page (near match)"],
+  wrong_page: ["warn", "quote on another page"], wrong_doc: ["warn", "quote in another document"],
+  not_found: ["bad", "quote not found"], empty: ["bad", "no quote"], cited: ["", "cited page"],
+};
+
+// ---------------------------------------------------------------- loading
+
+async function init() {
+  [state.runs, state.bonds] = await Promise.all([api("/api/runs"), api("/api/bonds")]);
+  $("#bond").innerHTML = state.bonds.map((b) => `<option value="${esc(b.id)}">${esc(b.label)}</option>`).join("");
+  $("#bond").addEventListener("change", () => go(state.run || "groundtruth", $("#bond").value));
+  document.querySelectorAll("[data-left]").forEach((tab) => tab.addEventListener("click", () => leftTab(tab.dataset.left)));
+  $("#prev").addEventListener("click", () => openPage(state.doc, state.page - 1, state.quotes, state.label));
+  $("#next").addEventListener("click", () => openPage(state.doc, state.page + 1, state.quotes, state.label));
+  $("#page").addEventListener("change", () => openPage(state.doc, Number($("#page").value), [], ""));
+  $("#find").addEventListener("submit", (e) => { e.preventDefault(); find($("#find-q").value); });
+  document.querySelectorAll("#extract button").forEach((b) => b.addEventListener("click", () => startExtraction(b.dataset.kind)));
+  window.addEventListener("hashchange", route);
+  route();
+}
+
+function go(run, bond) { location.hash = `#/bond/${run}/${bond}`; }
+
+function route() {
+  const parts = location.hash.replace(/^#\/?/, "").split("/");
+  if (parts[0] === "results") return showResults();
+  $("#results-view").classList.add("hidden");
+  ["#bond-view", "#sources", "#status", "#extract"].forEach((s) => $(s).classList.remove("hidden"));
+  const [run, bond, field] = parts[0] === "bond" ? parts.slice(1, 4) : ["groundtruth", state.bonds[0]?.id];
+  if (run === state.run && bond === state.bond && state.data) {
+    if (field) selectField(field);
+    return;
+  }
+  loadBond(run, bond, field);
+}
+
+async function loadBond(run, bond, field) {
+  state.run = run; state.bond = bond; state.field = null;
+  $("#bond").value = bond;
+  renderSources();
+  try {
+    state.data = await api(`/api/bond/${run}/${bond}`);
+  } catch (error) {
+    state.data = null;
+    $("#terms").innerHTML = `<p class="empty-note">${esc(error.message)}</p>`;
+    $("#payments").innerHTML = "";
+    $("#trace").innerHTML = "";
+    $("#status").innerHTML = "";
+    $("#model").textContent = "";
+    $("#token").textContent = "";
+    $("#sheet").innerHTML = `<div class="empty">No terms from this source for this bond yet.</div>`;
+    return;
+  }
+  renderStatus();
+  renderTerms();
+  renderTrace();
+  renderPayments();
+  renderDocTabs();
+  const first = state.data.documents[0];
+  if (field) selectField(field); else openPage(first.doc, 1, [], "");
+}
+
+function renderSources() {
+  $("#sources").innerHTML = state.runs.map((r) => `<button role="tab" data-run="${esc(r.id)}" class="${r.id === state.run ? "active" : ""}">${esc(runLabel(r))}</button>`).join("");
+  $("#sources").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => go(b.dataset.run, state.bond)));
+}
+
+function renderStatus() {
+  const report = state.data.report;
+  const pills = [];
+  if (report) {
+    const s = report.summary;
+    pills.push(s.payments_ok ? `<span class="pill ok">${s.payments} payments agree three ways</span>`
+                             : `<span class="pill bad">payment mismatch</span>`);
+    const [passed, total] = s.probes.split("/");
+    pills.push(`<span class="pill ${passed === total ? "ok" : "bad"}">guards ${s.probes}</span>`);
+    if (s.errors) pills.push(`<span class="pill bad">${s.errors} red flag${s.errors > 1 ? "s" : ""}</span>`);
+    if (s.warnings) pills.push(`<span class="pill warn">${s.warnings} to review</span>`);
+  } else {
+    pills.push(`<span class="pill">not verified yet</span>`);
+  }
+  const score = state.data.score;
+  if (score) pills.push(`<span class="pill ${score.fields_correct === score.fields_total ? "ok" : "warn"}">${score.fields_correct}/${score.fields_total} fields match verified terms</span>`);
+  $("#status").innerHTML = pills.join("");
+  const x = state.data.extraction;
+  $("#model").innerHTML = x ? `Read by <b>${esc(modelName(x.model))}</b><br>${esc(x.mode.replace("_", "-"))}, ${Math.round(x.seconds)} s${x.cost_usd != null ? `, $${x.cost_usd.toFixed(3)}` : ""}`
+                            : `<b>Verified by hand</b><br>page references`;
+  $("#trace-tab").classList.toggle("hidden", !x || x.mode !== "agent");
+  leftTab("terms");
+}
+
+function leftTab(which) {
+  document.querySelectorAll("[data-left]").forEach((t) => t.classList.toggle("active", t.dataset.left === which));
+  $("#terms").classList.toggle("hidden", which !== "terms");
+  $("#trace").classList.toggle("hidden", which !== "trace");
+}
+
+// ---------------------------------------------------------------- terms
+
+function renderTerms() {
+  const quoted = Boolean(state.data.extraction);
+  let html = "", group = null;
+  for (const f of state.data.fields) {
+    if (f.group !== group) { group = f.group; html += `<h3 class="group-title">${esc(group)}</h3>`; }
+    const value = fieldValue(f);
+    const [cls, sym] = fieldStatus(f, quoted);
+    const pageRef = !quoted && f.cites.length ? `p.${f.cites[0].page}` : sym;
+    const cites = f.cites.map((c, i) => {
+      const [sc, st] = citeStatus[c.status] || ["", c.status];
+      const doc = state.data.documents.find((d) => d.doc === c.doc);
+      const where = `${esc(ROLES[doc?.role] || c.doc)}, p.${esc(c.page)}`;
+      const moved = c.found_page && c.found_page !== c.page ? ` (found on p.${esc(c.found_page)})` : "";
+      return `<div class="cite" data-cite="${i}"><span class="where">${c.role === "defined_in" ? "Defined in" : "Stated in"} ${where}
+        ${st ? `<span class="chip ${sc}">${esc(st)}${moved}</span>` : ""}</span>${c.quote ? `<q>${esc(c.quote)}</q>` : ""}</div>`;
+    }).join("");
+    const onPage = f.value_on_page === false ? `<div class="flag-line warning">The value is not written in the quotes or on the cited pages.</div>` : "";
+    const flags = f.flags.map((x) => `<div class="flag-line ${esc(x.severity)}">${esc(x.message)}</div>`).join("");
+    html += `<div class="field" data-name="${esc(f.name)}">
+      <span class="label">${esc(f.label)}</span>
+      <span class="mark"><span class="dot ${cls}" title="${esc(cls)}">${esc(pageRef)}</span></span>
+      <span class="value ${value === null ? "empty" : ""}">${esc(value ?? "not stated")}</span>
+      <div class="detail">${flags}${onPage}${cites || `<div class="note">No source cited.</div>`}
+        ${f.note ? `<div class="note">${esc(f.note)}</div>` : ""}
+        ${f.bdt ? `<div class="note">ICMA Bond Data Taxonomy: ${esc(f.bdt)}</div>` : ""}</div>
+    </div>`;
+  }
+  $("#terms").innerHTML = html;
+  $("#terms").querySelectorAll(".field").forEach((el) => el.addEventListener("click", (event) => {
+    const cite = event.target.closest(".cite");
+    selectField(el.dataset.name, cite ? Number(cite.dataset.cite) : 0);
+  }));
+}
+
+function selectField(name, citeIndex = 0) {
+  const field = state.data.fields.find((f) => f.name === name);
+  if (!field) return;
+  state.field = name;
+  leftTab("terms");
+  document.querySelectorAll(".field").forEach((el) => el.classList.toggle("selected", el.dataset.name === name));
+  const row = document.querySelector(`.field[data-name="${CSS.escape(name)}"]`);
+  row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  const cite = field.cites[citeIndex] || field.cites[0];
+  if (!cite) return;
+  const page = cite.found_page && cite.status === "wrong_page" ? cite.found_page : cite.page;
+  const quotes = field.cites.filter((c) => c.doc === cite.doc && c.quote).map((c) => c.quote);
+  openPage(cite.doc, Number(page), quotes, field.label);
+}
+
+// ---------------------------------------------------------------- document
+
+function renderDocTabs() {
+  $("#doc-tabs").innerHTML = state.data.documents.map((d) => `<button class="tab" data-doc="${esc(d.doc)}" title="${esc(d.title)}">${esc(ROLES[d.role] || d.role)}<small>${d.pages} p.</small></button>`).join("");
+  $("#doc-tabs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => openPage(b.dataset.doc, 1, [], "")));
+}
+
+async function openPage(doc, page, quotes, label) {
+  const meta = state.data.documents.find((d) => d.doc === doc);
+  if (!meta) return;
+  page = Math.min(Math.max(1, page || 1), meta.pages);
+  Object.assign(state, { doc, page, quotes, label });
+  document.querySelectorAll("#doc-tabs .tab").forEach((t) => t.classList.toggle("active", t.dataset.doc === doc));
+  $("#page").value = page; $("#page").max = meta.pages; $("#pages").textContent = `of ${meta.pages}`;
+  const params = new URLSearchParams();
+  quotes.forEach((q) => params.append("q", q));
+  const view = await api(`/api/view/${doc}/${page}?${params}`);
+  if (state.doc !== doc || state.page !== page) return; // a newer request won
+  state.view = view;
+  const sheet = $("#sheet");
+  if (view.format === "pdf") {
+    sheet.innerHTML = `<img alt="${esc(meta.title)}, page ${page}" src="${esc(view.image)}">` +
+      view.marks.flatMap((m) => m.boxes).map((b) => `<div class="hl" style="left:${b.x * 100}%;top:${b.y * 100}%;width:${b.w * 100}%;height:${b.h * 100}%"></div>`).join("");
+  } else {
+    let text = "", at = 0;
+    const spans = view.marks.flatMap((m) => m.spans).sort((a, b) => a[0] - b[0]);
+    for (const [s, e] of spans) {
+      if (s < at) continue;
+      text += esc(view.text.slice(at, s)) + `<mark>${esc(view.text.slice(s, e))}</mark>`;
+      at = e;
+    }
+    sheet.innerHTML = `<pre>${text + esc(view.text.slice(at))}</pre>`;
+  }
+  const found = view.marks.filter((m) => (m.boxes || m.spans).length).length;
+  const bar = $("#cite-bar");
+  if (label) {
+    bar.innerHTML = `<b>${esc(label)}</b>: ${esc(meta.title)}, page ${page}. ` +
+      (quotes.length ? `${found} of ${quotes.length} quote${quotes.length > 1 ? "s" : ""} located and marked.` : "Page cited, no quote.");
+    bar.classList.add("show");
+  } else {
+    bar.classList.remove("show");
+  }
+  const scrollTo = () => {
+    const mark = sheet.querySelector(".hl, mark");
+    if (mark) mark.scrollIntoView({ block: "center", behavior: "smooth" });
+    else $("#page-wrap").scrollTop = 0;
+  };
+  const img = sheet.querySelector("img");
+  if (img && !img.complete) img.addEventListener("load", scrollTo, { once: true }); else scrollTo();
+}
+
+async function find(phrase) {
+  if (!phrase.trim() || !state.doc) return;
+  const hits = await api(`/api/search/${state.doc}?q=${encodeURIComponent(phrase)}`);
+  const bar = $("#cite-bar");
+  bar.innerHTML = `<b>${esc(phrase)}</b>: ${hits.length ? `${hits.length} page${hits.length > 1 ? "s" : ""}` : "not found"} in this document` +
+    `<div class="hits">${hits.map((p) => `<button data-p="${p}">p.${p}</button>`).join("")}</div>`;
+  bar.classList.add("show");
+  bar.querySelectorAll("button").forEach((b) => b.addEventListener("click", async () => {
+    await openPage(state.doc, Number(b.dataset.p), [phrase], `Search "${phrase}"`);
+  }));
+}
+
+// ---------------------------------------------------------------- agent trace
+
+function docTitle(doc) {
+  return ROLES[state.data?.documents.find((d) => d.doc === doc)?.role] || doc || "all documents";
+}
+
+function stepHtml(s, fresh = false) {
+  let what = "", link = "";
+  const args = s.args || {};
+  if (s.tool === "search") what = `“${esc(args.query)}” in ${esc(docTitle(args.doc))}`;
+  else if (s.tool === "read_page") { what = `${esc(docTitle(args.doc))}, page ${esc(args.page)}`; link = `data-doc="${esc(args.doc)}" data-page="${esc(args.page)}"`; }
+  else if (s.tool === "list_documents") what = "documents of this bond";
+  else if (s.tool === "submit_terms") what = s.errors?.length ? `${s.errors.length} problem(s) returned to the model` : "accepted";
+  else what = "answered in prose, sent back to the tools";
+  if (s.repeat_of) what += ` <span class="repeat">same as step ${esc(s.repeat_of)}, not run again</span>`;
+  const tool = (s.tool || "reply").replace("_", " ");
+  return `<div class="step ${link ? "link" : ""} ${s.tool === "submit_terms" ? "submit" : ""} ${fresh ? "fresh" : ""}" ${link}><span class="n">${esc(s.step)}</span><span><span class="tool">${esc(tool)}</span> <span class="args">${what}</span></span></div>`;
+}
+
+function bindSteps() {
+  $("#trace").querySelectorAll(".step.link").forEach((el) => el.addEventListener("click", () => openPage(el.dataset.doc, Number(el.dataset.page), [], "Page read by the model")));
+}
+
+function renderTrace() {
+  const x = state.data.extraction;
+  if (!x || x.mode !== "agent") { $("#trace").innerHTML = ""; return; }
+  const reads = x.tool_log.filter((s) => s.tool === "read_page").length;
+  const searches = x.tool_log.filter((s) => s.tool === "search").length;
+  $("#trace").innerHTML = `<div class="trace-summary"><b>${esc(modelName(x.model))}</b> worked through the documents with four tools:
+    ${searches} searches, ${reads} page reads, then ${x.error ? "stopped: " + esc(x.error) + "." : "submitted the terms."} ${x.steps} steps,
+    ${Math.round(x.seconds)} s, ${amount(String(x.usage.input_tokens))} tokens read, ${amount(String(x.usage.output_tokens))} written.</div>` +
+    x.tool_log.map((s) => stepHtml(s)).join("");
+  bindSteps();
+}
+
+// ---------------------------------------------------------------- live extraction
+
+async function startExtraction(kind) {
+  const buttons = document.querySelectorAll("#extract button");
+  buttons.forEach((b) => { b.disabled = true; });
+  const name = kind === "hosted" ? "Muse Spark" : "Muse Glimmer";
+  $("#trace-tab").classList.remove("hidden");
+  leftTab("trace");
+  $("#trace").innerHTML = `<div class="live" id="live"><span class="spinner"></span><b>${name}</b> is reading the documents of this bond…</div><div id="live-steps"></div>`;
+  const live = $("#live");
+  const finish = () => buttons.forEach((b) => { b.disabled = false; });
+  let job;
+  try {
+    job = (await api(`/api/extract/${kind}/${state.bond}?mode=agent`, { method: "POST" })).job;
+  } catch (error) {
+    live.className = "live error"; live.textContent = error.message; finish(); return;
+  }
+  const events = new EventSource(`/api/jobs/${job}/events`);
+  events.onmessage = (message) => {
+    const e = JSON.parse(message.data);
+    if (e.type === "start") {
+      live.innerHTML = `<span class="spinner"></span><b>${esc(modelName(e.model))}</b> is reading the documents of this bond…`;
+    } else if (e.type === "step") {
+      $("#live-steps").insertAdjacentHTML("beforeend", stepHtml(e, true));
+      $("#live-steps").lastElementChild.scrollIntoView({ block: "nearest" });
+      live.querySelector("small")?.remove();
+      live.insertAdjacentHTML("beforeend", `<small> step ${e.step}, ${Math.round(e.seconds)} s, ${amount(String(e.input_tokens))} tokens read</small>`);
+      if (e.tool === "read_page") openPage(e.args.doc, Number(e.args.page), [], "Page the model is reading");
+      bindSteps();
+    } else if (e.type === "extracted") {
+      live.innerHTML = `<span class="spinner"></span>Terms submitted after ${e.steps} steps. Deploying the token and paying every coupon on a local chain…`;
+    } else if (e.type === "done") {
+      events.close(); finish();
+      live.className = "live done";
+      live.textContent = `Done: ${e.summary.payments} payments, guards ${e.summary.probes}, ${e.summary.errors} red flags, ${e.summary.warnings} to review.`;
+      state.runs = null;
+      api("/api/runs").then((runs) => { state.runs = runs; state.data = null; go(e.run, state.bond); });
+    } else if (e.type === "error") {
+      events.close(); finish();
+      live.className = "live error"; live.textContent = e.message;
+    }
+  };
+  events.onerror = () => { if (events.readyState === EventSource.CLOSED) finish(); };
+}
+
+// ---------------------------------------------------------------- payments
+
+function renderPayments() {
+  const report = state.data.report;
+  if (!report) {
+    $("#token").textContent = "";
+    $("#payments").innerHTML = `<p class="empty-note">These terms have not been deployed yet.</p>
+      <p style="padding:0 14px"><button class="button" id="verify-now">Deploy the token and run every payment</button></p>`;
+    $("#verify-now").addEventListener("click", async (e) => {
+      e.target.disabled = true; e.target.textContent = "Deploying and paying on a local chain…";
+      try { await api(`/api/verify/${state.run}/${state.bond}`, { method: "POST" }); loadBond(state.run, state.bond); }
+      catch (error) { e.target.textContent = error.message; }
+    });
+    return;
+  }
+  const t = report.token;
+  $("#token").innerHTML = `BondToken <code title="${esc(t.bond)}">${esc(t.bond.slice(0, 8))}…${esc(t.bond.slice(-4))}</code><br>${amount(String(t.units))} units, deployed for ${amount(String(t.deploy_gas))} gas`;
+  const cur = report.currency;
+  const total = Object.values(t.allocation).reduce((a, b) => a + b, 0);
+  const items = [
+    ...report.rows.map((r) => ({ date: r.executed, order: 1, row: r })),
+    ...report.transfers.map((x) => ({ date: x.on, order: 0, transfer: x })),
+  ].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.order - b.order));
+  let html = `<div class="timeline"><div class="event">Issued ${amount(String(total))} units on ${shortDate(report.terms.issue_date)}: A ${share(t.allocation.A, total)}, B ${share(t.allocation.B, total)}, C ${share(t.allocation.C, total)}</div>`;
+  let coupon = 0;
+  for (const item of items) {
+    if (item.transfer) {
+      const x = item.transfer;
+      html += `<div class="event">${shortDate(x.on)}: ${esc(x.from)} sells ${amount(String(x.units))} units to ${esc(x.to)}, ${esc(x.note)}</div>`;
+      continue;
+    }
+    const r = item.row;
+    const isCoupon = r.kind === "coupon";
+    if (isCoupon) coupon += 1;
+    const per = amount(r.per);
+    const checks = [
+      ["Engine", r.engine, true],
+      ["QuantLib", r.quantlib, r.quantlib === r.engine],
+      ["Token", r.chain, r.chain === r.engine],
+      ["Printed", r.stated ? r.stated.split(" per ")[0] : null, r.stated ? r.problems.every((p) => !p.startsWith("printed")) : null],
+    ].map(([name, value, ok]) => `<div class="check ${value == null ? "" : ok ? "ok" : "bad"}"><span>${name}</span><b>${value == null ? "–" : amount(value)}</b></div>`).join("");
+    const holders = Object.entries(r.holders_paid).sort();
+    const units = holders.reduce((a, [, [u]]) => a + u, 0) || 1;
+    const bar = holders.map(([h, [u]]) => `<div class="h-${esc(h)}" style="width:${(u / units) * 100}%">${esc(h)}</div>`).join("");
+    const legend = holders.map(([h, [u, paid]]) => `<span>${esc(h)}: ${amount(String(u))} units, ${cur} ${minor(paid, cur)}</span>`).join("");
+    const deps = [...(isCoupon ? CLAUSE_FIELDS.coupon : CLAUSE_FIELDS.redemption), ...(isCoupon && coupon === 1 ? CLAUSE_FIELDS.first : [])];
+    const depChips = deps.map((name) => {
+      const f = state.data.fields.find((x) => x.name === name);
+      return f && f.value != null ? `<button data-field="${esc(name)}">${esc(f.label)}</button>` : "";
+    }).join("");
+    html += `<div class="pay ${esc(r.kind)} ${r.status === "ok" ? "" : "mismatch"}">
+      <div class="pay-top"><span class="pay-kind">${isCoupon ? `Coupon ${coupon}` : "Redemption"}</span>
+        <span class="pay-date">paid ${shortDate(r.executed)}${r.executed !== r.scheduled ? ` (due ${shortDate(r.scheduled)})` : ""} · record ${shortDate(r.record_date)}</span></div>
+      <div class="pay-amount">${cur} ${amount(r.engine)} <small>per ${per}${r.accrual ? ` · interest ${r.accrual.split(" to ").map(shortDate).join(" – ")}` : ""}</small></div>
+      <div class="checks">${checks}</div>
+      <div class="holders" title="Holders of record">${bar}</div>
+      <div class="holders-legend">${legend}</div>
+      <div class="deps">${depChips}</div>
+      ${r.problems.length ? `<div class="problems">${r.problems.map(esc).join("<br>")}</div>` : ""}
+    </div>`;
+  }
+  html += `</div><h3 class="section-title">Guards tested on chain</h3>` +
+    report.probes.map((p) => `<div class="probe"><span>${esc(p.name)}</span><span class="chip ${p.passed ? "ok" : "bad"}">${p.passed ? "rejected: " : "FAILED: "}${esc(p.actual ?? "accepted")}</span></div>`).join("");
+  const flags = report.flags.filter((f) => f.severity !== "info");
+  html += `<h3 class="section-title">Before issuance</h3>` + (flags.length
+    ? flags.map((f) => `<div class="flag-row"><span class="chip ${f.severity === "error" ? "bad" : "warn"}">${esc(f.severity)}</span><span>${esc(f.message)}</span></div>`).join("")
+    : `<div class="flag-row"><span class="chip ok">clear</span><span>No red flags in the terms.</span></div>`);
+  const notes = [...report.notes, ...report.flags.filter((f) => f.severity === "info").map((f) => f.message)];
+  if (notes.length) html += `<h3 class="section-title">Assumptions</h3>` + notes.map((n) => `<div class="flag-row"><span>${esc(n)}</span></div>`).join("");
+  $("#payments").innerHTML = html;
+  $("#payments").querySelectorAll("[data-field]").forEach((b) => b.addEventListener("click", () => selectField(b.dataset.field)));
+}
+
+function share(part, total) { return `${Math.round((part / total) * 100)}%`; }
+
+// ---------------------------------------------------------------- results
+
+async function showResults() {
+  $("#bond-view").classList.add("hidden");
+  $("#sources").classList.add("hidden");
+  $("#status").classList.add("hidden");
+  $("#extract").classList.add("hidden");
+  const view = $("#results-view");
+  view.classList.remove("hidden");
+  const results = await api("/api/results");
+  const bonds = await api("/api/bonds");
+  const truth = bonds.map((b) => b.reports.groundtruth).filter(Boolean);
+  const payments = truth.reduce((a, s) => a + s.payments, 0);
+  const allOk = truth.every((s) => s.payments_ok);
+  const probes = truth.reduce((a, s) => a + Number(s.probes.split("/")[0]), 0);
+  const probesTotal = truth.reduce((a, s) => a + Number(s.probes.split("/")[1]), 0);
+  const mutants = results.contracts || [];
+  const termRows = results.terms || [];
+  const withEffect = termRows.reduce((a, r) => a + r.with_effect, 0);
+  const caught = termRows.reduce((a, r) => a + r.caught, 0);
+  let html = `<h1>Results</h1><p class="lede">Eighteen live fixed-rate bonds: IBRD notes including a digitally native one, the Hong Kong
+    digital green bonds, and supranational, sovereign and corporate notes from public filings. Every number below can be reproduced with
+    <code>tstt verify</code>, <code>tstt mutate</code> and <code>tstt eval</code>.</p>
+    <div class="cards">
+      <div class="card"><div class="big">${payments}</div><div class="what">payments on ${truth.length} bonds where the engine, QuantLib, the token on chain and the printed amounts ${allOk ? "all agree" : "do not all agree"}</div></div>
+      <div class="card"><div class="big">${probes}/${probesTotal}</div><div class="what">guard probes rejected on chain (early payment, wrong payer, double payment, early redemption, unpaid coupon)</div></div>
+      <div class="card"><div class="big">${mutants.filter((m) => m.caught).length}/${mutants.length}</div><div class="what">deliberate bugs in the bond contract caught by replaying the 18 bonds and the contract tests</div></div>
+      <div class="card"><div class="big">${caught}/${withEffect}</div><div class="what">injected term errors that change a cash flow, flagged before issuance</div></div>
+    </div>`;
+  if (results.eval.length) {
+    html += `<h2>Reading the documents</h2><div class="table-wrap"><table><tr><th>Model</th><th class="num">Bonds</th><th class="num">Field accuracy</th><th class="num">Bonds with all cash flows right</th><th class="num">Quotes on cited page</th><th class="num">Time per bond</th><th class="num">Cost</th></tr>` +
+      results.eval.map((e) => {
+        const [mode, ...model] = e.run.split("-");
+        return `<tr><td>${esc(modelName(model.join("-")))} · ${esc(mode.replace("_", "-"))}</td><td class="num">${e.submitted}/${e.bonds}</td><td class="num">${e.field_accuracy == null ? "–" : (e.field_accuracy * 100).toFixed(1) + "%"}</td><td class="num">${e.bonds_cash_flows_match}/${e.submitted}</td><td class="num">${esc(e.quotes_on_page)}</td><td class="num">${e.seconds_per_bond ?? "–"} s</td><td class="num">${e.cost_usd == null ? "local" : "$" + e.cost_usd.toFixed(2)}</td></tr>`;
+      }).join("") + `</table></div>`;
+  }
+  if (mutants.length) {
+    html += `<h2>Bugs planted in the contract</h2><div class="table-wrap"><table><tr><th>Mutant</th><th>What it breaks</th><th class="num">Bonds exposing it</th><th class="num">Failing tests</th><th>Result</th></tr>` +
+      mutants.map((m) => `<tr><td><code>${esc(m.name)}</code></td><td>${esc(m.description)}</td><td class="num">${m.bonds_caught.length}</td><td class="num">${m.failed_tests.length}</td><td><span class="chip ${m.caught ? "ok" : "bad"}">${m.caught ? "caught" : "survived"}</span></td></tr>`).join("") + `</table></div>`;
+  }
+  if (termRows.length) {
+    html += `<h2>Errors planted in the terms</h2><div class="table-wrap"><table><tr><th>Error</th><th class="num">Bonds</th><th class="num">Changes a cash flow</th><th class="num">Flagged</th><th class="num">by page check</th><th class="num">by consistency checks</th><th>Missed</th></tr>` +
+      termRows.map((r) => `<tr><td>${esc(r.description)}</td><td class="num">${r.cases}</td><td class="num">${r.with_effect}</td><td class="num">${r.caught}</td><td class="num">${r.by_page}</td><td class="num">${r.by_checks}</td><td>${esc(r.missed.join(", ") || "–")}</td></tr>`).join("") + `</table></div>`;
+  }
+  view.innerHTML = html;
+}
+
+init();

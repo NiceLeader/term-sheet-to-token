@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Term Sheet to Token</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#/">Term Sheet to Token</a>
+    <label class="picker">
+      <span>Bond</span>
+      <select id="bond"></select>
+    </label>
+    <div class="sources" id="sources" role="tablist" aria-label="Source of the terms"></div>
+    <div class="extract" id="extract">
+      <span>Read again with</span>
+      <button data-kind="hosted" title="Meta Model API">Muse Spark</button>
+      <button data-kind="local" title="Open weights, on this machine">Muse Glimmer</button>
+    </div>
+    <div class="status" id="status"></div>
+    <a class="results-link" href="#/results">Results</a>
+  </header>
+
+  <main id="bond-view" class="grid">
+    <section class="panel terms" aria-label="Terms">
+      <div class="panel-head">
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-left="terms">Terms</button>
+          <button class="tab" data-left="trace" id="trace-tab">Agent trace</button>
+        </div>
+        <div class="model" id="model"></div>
+      </div>
+      <div class="panel-body" id="terms"></div>
+      <div class="panel-body hidden" id="trace"></div>
+    </section>
+
+    <section class="panel document" aria-label="Document">
+      <div class="panel-head doc-head">
+        <div class="tabs" id="doc-tabs" role="tablist"></div>
+        <div class="pager">
+          <button id="prev" aria-label="Previous page">&#8249;</button>
+          <input id="page" type="number" min="1" aria-label="Page">
+          <span id="pages"></span>
+          <button id="next" aria-label="Next page">&#8250;</button>
+          <form id="find"><input id="find-q" placeholder="Find in document" aria-label="Find in document"></form>
+        </div>
+      </div>
+      <div class="cite-bar" id="cite-bar"></div>
+      <div class="panel-body page-wrap" id="page-wrap">
+        <div class="sheet" id="sheet"></div>
+      </div>
+    </section>
+
+    <section class="panel payments" aria-label="Payments">
+      <div class="panel-head">
+        <h2>Token payments</h2>
+        <div class="token" id="token"></div>
+      </div>
+      <div class="panel-body" id="payments"></div>
+    </section>
+  </main>
+
+  <main id="results-view" class="results hidden"></main>
+
+  <script src="app.js"></script>
+</body>
+</html>
