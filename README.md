@@ -12,7 +12,9 @@ Taxonomy, with a quote and a page for every field. It then deploys a bond token 
 from those terms, runs the whole life of the bond on a local chain (issue, transfers around
 record dates, every coupon, redemption) and checks each payment against an independent QuantLib
 calculation and against the amounts printed in the documents. A reviewer sees every term next
-to the highlighted sentence it came from, and every payment next to the clauses it follows from.
+to the highlighted sentence it came from, and every payment next to the clauses it follows from,
+approves or corrects each term, and issues the token only when all of them are reviewed and the
+replay raises no red flag.
 
 Built for the Meta Global AI Developer Hackathon, October to November 2026.
 
@@ -90,7 +92,7 @@ src/tstt/        Python package and the `tstt` command
   verify.py      the per-bond report
   mutate.py      planted errors in terms and planted bugs in the contract
   eval.py        scoring against the verified terms
-  web.py         review screen
+  web.py         review screen;  review.py  reviewer sign-off and issuance
 contracts/       BondToken.sol and CashToken.sol (Foundry), with tests
 eval/groundtruth one file of verified terms per bond, each value with its page
 sources/         manifest of the public documents: URL, size, SHA-256
@@ -139,6 +141,11 @@ uv run tstt serve                 # review screen on http://127.0.0.1:8000
 
 For the local model, load Muse Glimmer in LM Studio (or `llama-server`), set `LOCAL_API_BASE`
 and `LOCAL_MODEL`, and pass `--model local`.
+
+On the review screen each term is approved or corrected (keys: A approves and moves on, J and K
+move down and up). Corrections to a model's reading are kept beside the run, so the run can still
+be scored; on the verified terms they are written into `eval/groundtruth`, and the file is marked
+verified once every term is reviewed and the bond replays cleanly.
 
 The review screen listens on 127.0.0.1 only. It answers only requests addressed to localhost
 and accepts a POST only from its own page, so a page on another site cannot start an

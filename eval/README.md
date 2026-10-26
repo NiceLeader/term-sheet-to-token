@@ -2,8 +2,9 @@
 
 One JSON file per bond in `groundtruth/<bond_id>.json`, labelled by hand from the public
 documents listed in `sources/manifest.json`. A file stays `"status": "draft"` until every field
-has been checked against the page it cites; only `"status": "verified"` files count in the
-reported accuracy.
+has been checked against the page it cites. The review screen (`tstt serve`, source "Verified
+terms") records that check field by field, writes any correction into the file, and sets
+`"status": "verified"` once every field is reviewed and the bond replays without a red flag.
 
 ## Format
 

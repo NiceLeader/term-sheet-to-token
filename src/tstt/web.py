@@ -1,8 +1,9 @@
 """Review screen: terms with their sources, the token's payments, and the red flags.
 
 `tstt serve` starts this app on localhost. It reads the saved extractions, reports, evaluation
-and mutation results under the data folder, renders cited pages on demand, and can verify
-an extraction it has not verified yet.
+and mutation results under the data folder, renders cited pages on demand, can verify an
+extraction it has not verified yet, and records the reviewer's approval or correction of each
+term before the token is issued.
 """
 
 from __future__ import annotations
@@ -14,11 +15,12 @@ import threading
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 from tstt.cite import Citations, check_fields
 from tstt.config import REPO_ROOT, Settings, load_settings
@@ -27,9 +29,18 @@ from tstt.evidence import value_in_text
 from tstt.extract import Extraction, agent, bond_source, one_pass
 from tstt.fetch import load_manifest
 from tstt.pages import page_image, page_view, search_pages
-from tstt.terms import FIELD_BY_NAME, TermsError, build_terms
+from tstt.review import (
+    GROUND_TRUTH,
+    corrected,
+    load_review,
+    mark_issued,
+    record,
+    reviewed_report_path,
+    reviewed_values,
+    unreviewed,
+)
+from tstt.terms import FIELD_BY_NAME, FIELDS, TermsError, build_terms
 
-GROUND_TRUTH = REPO_ROOT / "eval" / "groundtruth"
 WEB_DIR = REPO_ROOT / "web"
 LOCAL_HOSTS = frozenset({"127.0.0.1", "localhost"})
 RUN_NAME = re.compile(r"[a-z0-9][a-z0-9._-]*")
@@ -120,8 +131,27 @@ def _source_fields(settings: Settings, run: str, bond_id: str) -> tuple[dict, di
     }
 
 
+def _reviewed(settings: Settings, run: str, bond_id: str) -> tuple[dict, dict | None, dict]:
+    """Source fields with the reviewer's corrections applied, the extraction, the review."""
+    fields, extraction = _source_fields(settings, run, bond_id)
+    review = load_review(settings, run, bond_id)
+    return reviewed_values(fields, review), extraction, review
+
+
+def _report_path(settings: Settings, run: str, bond_id: str, review: dict) -> Path:
+    if corrected(review):
+        return reviewed_report_path(settings, run, bond_id)
+    return settings.runs_dir / "reports" / run / f"{bond_id}.json"
+
+
+def _review_summary(review: dict) -> dict[str, Any]:
+    return {"reviewed": len(FIELDS) - len(unreviewed(review)), "total": len(FIELDS),
+            "corrected": sum(e["status"] == "corrected" for e in review["fields"].values()),
+            "issued": review["issued"]}
+
+
 def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | None,
-                quoted: bool) -> list[dict[str, Any]]:
+                quoted: bool, review: dict | None = None) -> list[dict[str, Any]]:
     documents = [doc for doc, _ in bond_source(settings, bond_id).documents]
     checked = check_fields(fields, Citations(documents)) if quoted else None
     values = {n: f.get("value") for n, f in fields.items()}
@@ -146,11 +176,19 @@ def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | N
             on_page = None
             if checked and name in checked:
                 on_page = value_in_text(name, values.get(name), checked[name].texts, values)
+            spec = FIELD_BY_NAME[name]
+            entry = (review or {"fields": {}})["fields"].get(name) or {}
             rows.append({"name": name, "label": label, "group": group,
                          "value": f.get("value"), "note": f.get("note"), "cites": cites,
                          "value_on_page": on_page, "flags": flagged.get(name, []),
-                         "bdt": FIELD_BY_NAME[name].bdt if name in FIELD_BY_NAME else None})
+                         "bdt": spec.bdt, "kind": spec.kind, "options": list(spec.enum),
+                         "review": entry.get("status"), "original": entry.get("original")})
     return rows
+
+
+class ReviewAction(BaseModel):
+    action: Literal["approve", "correct", "reset"]
+    value: Any = None
 
 
 @dataclass
@@ -206,6 +244,7 @@ def create_app(settings: Settings | None = None,
     settings = settings or load_settings()
     app = FastAPI(title="Term Sheet to Token")
     jobs: dict[str, Job] = {}
+    review_lock = threading.Lock()
 
     @app.middleware("http")
     async def same_machine_only(request: Request, call_next):
@@ -237,9 +276,11 @@ def create_app(settings: Settings | None = None,
                                     / f"{bond['id']}.json")
                 if report:
                     reports[run["id"]] = report["summary"]
+            truth = _read_json(GROUND_TRUTH / f"{bond['id']}.json")
             out.append({"id": bond["id"], "label": bond["label"],
                         "isin": bond.get("isin"), "cusip": bond.get("cusip"),
-                        "dlt_native": bond.get("dlt_native", False), "reports": reports})
+                        "dlt_native": bond.get("dlt_native", False), "reports": reports,
+                        "verified": truth.get("status") == "verified"})
         return out
 
     @app.get("/api/bond/{run}/{bond_id}")
@@ -247,8 +288,8 @@ def create_app(settings: Settings | None = None,
         manifest = load_manifest()
         entry = _known_bond(bond_id)
         _known_run(settings, run)
-        fields, extraction = _source_fields(settings, run, bond_id)
-        report = _read_json(settings.runs_dir / "reports" / run / f"{bond_id}.json")
+        fields, extraction, review = _reviewed(settings, run, bond_id)
+        report = _read_json(_report_path(settings, run, bond_id, review))
         documents = []
         for d in entry["documents"]:
             meta = manifest["documents"][d["doc"]]
@@ -261,16 +302,15 @@ def create_app(settings: Settings | None = None,
         return {"bond": {k: entry.get(k) for k in ("id", "label", "isin", "cusip",
                                                     "dlt_native")},
                 "run": run, "documents": documents, "extraction": extraction,
-                "fields": _field_rows(settings, bond_id, fields, report, extraction is not None),
-                "report": report, "score": score}
+                "fields": _field_rows(settings, bond_id, fields, report, extraction is not None,
+                                      review),
+                "report": report, "score": score, "review": _review_summary(review)}
 
-    @app.post("/api/verify/{run}/{bond_id}")
-    def verify_now(run: str, bond_id: str) -> dict[str, Any]:
+    def run_verify(run: str, bond_id: str) -> tuple[dict[str, Any], dict]:
+        """Deploy and replay the bond from the reviewed terms and save the report."""
         from tstt.verify import verify
 
-        _known_bond(bond_id)
-        _known_run(settings, run)
-        fields, extraction = _source_fields(settings, run, bond_id)
+        fields, extraction, review = _reviewed(settings, run, bond_id)
         try:
             terms = build_terms({n: f.get("value") for n, f in fields.items()})
         except TermsError as exc:
@@ -280,10 +320,48 @@ def create_app(settings: Settings | None = None,
         else:
             documents = [doc for doc, _ in bond_source(settings, bond_id).documents]
             checked = check_fields(fields, Citations(documents))
-            report = verify(bond_id, terms, f"{extraction['mode']}:{extraction['model']}",
+            source = f"{extraction['mode']}:{extraction['model']}"
+            report = verify(bond_id, terms, source + (", reviewed" if corrected(review) else ""),
                             fields, checked)
-        report.save(settings.runs_dir / "reports" / run / f"{bond_id}.json")
-        return report.summary()
+        report.save(_report_path(settings, run, bond_id, review))
+        return report.summary(), review
+
+    @app.post("/api/verify/{run}/{bond_id}")
+    def verify_now(run: str, bond_id: str) -> dict[str, Any]:
+        _known_bond(bond_id)
+        _known_run(settings, run)
+        return run_verify(run, bond_id)[0]
+
+    @app.post("/api/review/{run}/{bond_id}/{name}")
+    def review_field(run: str, bond_id: str, name: str, body: ReviewAction) -> dict[str, Any]:
+        _known_bond(bond_id)
+        _known_run(settings, run)
+        if name not in FIELD_BY_NAME:
+            raise HTTPException(404, f"unknown field {name}")
+        with review_lock:
+            fields, _ = _source_fields(settings, run, bond_id)
+            try:
+                review = record(settings, run, bond_id, name, body.action,
+                                (fields.get(name) or {}).get("value"), body.value)
+            except TermsError as exc:
+                raise HTTPException(422, str(exc)) from exc
+        return _review_summary(review)
+
+    @app.post("/api/issue/{run}/{bond_id}")
+    def issue(run: str, bond_id: str) -> dict[str, Any]:
+        """Issue the token once every term is reviewed and the replay raises no red flag."""
+        _known_bond(bond_id)
+        _known_run(settings, run)
+        with review_lock:
+            missing = unreviewed(load_review(settings, run, bond_id))
+            if missing:
+                raise HTTPException(409, f"not reviewed yet: {', '.join(missing)}")
+            summary, _ = run_verify(run, bond_id)
+            passed, total = summary["probes"].split("/")
+            ok = summary["payments_ok"] and not summary["errors"] and passed == total
+            if ok:
+                mark_issued(settings, run, bond_id, summary)
+        return {"issued": ok, "summary": summary}
 
     @app.get("/api/view/{doc_id}/{number}")
     def view(doc_id: str, number: int,

@@ -111,8 +111,9 @@ const citeStatus = {
 
 async function init() {
   [state.runs, state.bonds] = await Promise.all([api("/api/runs"), api("/api/bonds")]);
-  $("#bond").innerHTML = state.bonds.map((b) => `<option value="${esc(b.id)}">${esc(b.label)}</option>`).join("");
+  renderBondPicker();
   $("#bond").addEventListener("change", () => go(state.run || "groundtruth", $("#bond").value));
+  document.addEventListener("keydown", reviewKeys);
   document.querySelectorAll("[data-left]").forEach((tab) => tab.addEventListener("click", () => leftTab(tab.dataset.left)));
   $("#prev").addEventListener("click", () => openPage(state.doc, state.page - 1, state.quotes, state.label));
   $("#next").addEventListener("click", () => openPage(state.doc, state.page + 1, state.quotes, state.label));
@@ -121,6 +122,11 @@ async function init() {
   document.querySelectorAll("#extract button").forEach((b) => b.addEventListener("click", () => startExtraction(b.dataset.kind)));
   window.addEventListener("hashchange", route);
   route();
+}
+
+function renderBondPicker() {
+  $("#bond").innerHTML = state.bonds.map((b) => `<option value="${esc(b.id)}">${esc(b.label)}${b.verified ? " ✓" : ""}</option>`).join("");
+  if (state.bond) $("#bond").value = state.bond;
 }
 
 function go(run, bond) { location.hash = `#/bond/${run}/${bond}`; }
@@ -139,7 +145,7 @@ function route() {
 }
 
 async function loadBond(run, bond, field) {
-  state.run = run; state.bond = bond; state.field = null;
+  state.run = run; state.bond = bond; state.field = null; state.doc = null;
   $("#bond").value = bond;
   renderSources();
   try {
@@ -150,6 +156,7 @@ async function loadBond(run, bond, field) {
     $("#payments").innerHTML = "";
     $("#trace").innerHTML = "";
     $("#status").innerHTML = "";
+    $("#review-bar").innerHTML = "";
     $("#model").textContent = "";
     $("#token").textContent = "";
     $("#sheet").innerHTML = `<div class="empty">No terms from this source for this bond yet.</div>`;
@@ -191,6 +198,165 @@ function renderStatus() {
                             : `<b>Verified by hand</b><br>page references`;
   $("#trace-tab").classList.toggle("hidden", !x || x.mode !== "agent");
   leftTab("terms");
+  renderReviewBar();
+}
+
+// ---------------------------------------------------------------- review
+
+const truthRun = () => state.run === "groundtruth";
+
+function renderReviewBar() {
+  const r = state.data.review;
+  const done = r.reviewed === r.total;
+  const fixes = r.corrected ? `, ${r.corrected} corrected` : "";
+  let html;
+  if (r.issued) {
+    html = `<span class="chip ok">${truthRun() ? "verified" : "issued"}</span>
+      <span>${truthRun() ? "Every term checked against its page and replayed on chain" : `Token issued after review${fixes}`}${r.issued.at ? `, ${esc(shortDate(r.issued.at.slice(0, 10)))}` : ""}.</span>`;
+  } else {
+    html = `<span class="progress"><span style="width:${(r.reviewed / r.total) * 100}%"></span></span>
+      <span title="Keys: A approves the selected term and moves to the next one, J and K move down and up">Reviewed <b>${r.reviewed}</b> of ${r.total}${fixes}</span>
+      <button class="button" id="issue" ${done ? "" : "disabled"} title="${done ? "" : "Approve or correct every term first"}">${truthRun() ? "Mark verified" : "Issue token"}</button>`;
+  }
+  $("#review-bar").innerHTML = html + `<div class="review-msg" id="review-msg"></div>`;
+  $("#issue")?.addEventListener("click", issueToken);
+}
+
+async function issueToken(event) {
+  const button = event.target;
+  button.disabled = true; button.textContent = "Deploying and paying on a local chain…";
+  try {
+    const result = await api(`/api/issue/${state.run}/${state.bond}`, { method: "POST" });
+    if (result.issued && truthRun()) { state.bonds = await api("/api/bonds"); renderBondPicker(); }
+    await refresh(state.field);
+    if (!result.issued) {
+      const s = result.summary;
+      $("#review-msg").textContent = `Not issued: ${s.errors} red flag${s.errors === 1 ? "" : "s"}${s.payments_ok ? "" : ", payment mismatch"}. See “Before issuance” on the right.`;
+    }
+  } catch (error) {
+    $("#review-msg").textContent = error.message;
+    button.disabled = false; button.textContent = truthRun() ? "Mark verified" : "Issue token";
+  }
+}
+
+async function refresh(field) {
+  const data = await api(`/api/bond/${state.run}/${state.bond}`);
+  state.data = data;
+  renderStatus();
+  renderTerms();
+  renderPayments();
+  if (field) selectField(field);
+}
+
+async function review(name, action, value) {
+  const error = document.querySelector(`.field[data-name="${CSS.escape(name)}"] .review-error`);
+  try {
+    await api(`/api/review/${state.run}/${state.bond}/${name}`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, value: value ?? null }),
+    });
+  } catch (e) {
+    if (error) error.textContent = e.message;
+    return false;
+  }
+  const next = action === "reset" ? name : nextUnreviewed(name) || name;
+  await refresh(next);
+  return true;
+}
+
+function nextUnreviewed(after) {
+  const fields = state.data.fields;
+  const at = fields.findIndex((f) => f.name === after);
+  const rest = [...fields.slice(at + 1), ...fields.slice(0, at)];
+  return rest.find((f) => !f.review)?.name;
+}
+
+function reviewKeys(event) {
+  if (!state.data || event.ctrlKey || event.metaKey || event.altKey) return;
+  if (event.target.closest("input, select, textarea")) return;
+  if ($("#bond-view").classList.contains("hidden") || $("#terms").classList.contains("hidden")) return;
+  const fields = state.data.fields;
+  const at = fields.findIndex((f) => f.name === state.field);
+  const key = event.key.toLowerCase();
+  if (key === "j" || key === "k") {
+    const next = fields[Math.min(Math.max(at + (key === "j" ? 1 : -1), 0), fields.length - 1)];
+    if (next) selectField(next.name);
+  } else if (key === "a" && state.field) {
+    const f = fields[at];
+    if (f.review !== "corrected") review(f.name, "approve");
+  } else {
+    return;
+  }
+  event.preventDefault();
+}
+
+// Corrections are typed as text and turned into the field's JSON shape; the server
+// validates them with the same rules as the model's output.
+function inputFor(f) {
+  const raw = f.value;
+  if (f.kind === "enum" || f.kind === "bool") {
+    const options = f.kind === "bool" ? [["true", "yes"], ["false", "no"]]
+                                      : f.options.map((o) => [o, NAMES[o] || o]);
+    const current = raw === null || raw === undefined ? "" : String(raw);
+    return `<select name="v"><option value="">not stated</option>${options.map(([v, label]) => `<option value="${esc(v)}" ${v === current ? "selected" : ""}>${esc(label)}</option>`).join("")}</select>`;
+  }
+  if (f.kind === "date") return `<input name="v" type="date" value="${esc(raw || "")}">`;
+  let text = raw ?? "";
+  if (f.kind === "list") text = (raw || []).join(", ");
+  if (f.kind === "coupons") text = (raw || []).map((c) => `${c.amount} per ${c.per}${c.date ? " on " + c.date : ""}`).join("; ");
+  const hint = { list: f.name === "interest_payment_dates" ? "MM-DD, MM-DD" : "London, New York",
+                 coupons: "7.50 per 1000; 6.45 per 1000 on 2020-12-15" }[f.kind] || "";
+  return `<input name="v" value="${esc(text)}" placeholder="${esc(hint)}" autocomplete="off">`;
+}
+
+function valueFrom(f, text) {
+  text = text.trim();
+  if (!text) return null;
+  if (f.kind === "bool") return text === "true";
+  if (f.kind === "int") return Number(text);
+  if (f.kind === "list") return text.split(",").map((s) => s.trim()).filter(Boolean);
+  if (f.kind === "coupons") {
+    return text.split(/[;\n]/).map((s) => s.trim()).filter(Boolean).map((s) => {
+      const m = s.match(/^([\d.,]+)\s+per\s+([\d.,]+)(?:\s+on\s+(\d{4}-\d{2}-\d{2}))?$/i);
+      if (!m) throw new Error(`write each amount as “7.50 per 1000” or “6.45 per 1000 on 2020-12-15”: ${s}`);
+      return { amount: m[1].replace(/,/g, ""), per: m[2].replace(/,/g, ""), date: m[3] || null };
+    });
+  }
+  return text;
+}
+
+function reviewHtml(f) {
+  const who = truthRun() ? "Draft value" : "Model read";
+  const original = f.review === "corrected"
+    ? `<div class="note">${who}: <s>${esc(fieldValue({ ...f, value: f.original }) ?? "not stated")}</s></div>` : "";
+  const status = { approved: "Approved", corrected: "Corrected" }[f.review];
+  return `<div class="review-controls">${original}
+      ${status ? `<span class="chip ${f.review === "approved" ? "ok" : "warn"}">${status}</span>` : ""}
+      ${f.review !== "corrected" && f.review !== "approved" ? `<button class="button small" data-act="approve">Approve</button>` : ""}
+      <button class="button small ghost" data-act="edit">Correct…</button>
+      ${f.review ? `<button class="button small ghost" data-act="reset">Undo</button>` : ""}
+    </div>
+    <form class="correct hidden">${inputFor(f)}<button class="button small">Save</button><button type="button" class="button small ghost" data-act="cancel">Cancel</button></form>
+    <div class="review-error"></div>`;
+}
+
+function bindReview(el, f) {
+  const form = el.querySelector("form.correct");
+  el.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const act = b.dataset.act;
+    if (act === "edit") { form.classList.remove("hidden"); form.elements.v.focus(); }
+    else if (act === "cancel") form.classList.add("hidden");
+    else review(f.name, act);
+  }));
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    let value;
+    try { value = valueFrom(f, form.elements.v.value); }
+    catch (e) { el.querySelector(".review-error").textContent = e.message; return; }
+    review(f.name, "correct", value);
+  });
+  form?.addEventListener("click", (event) => event.stopPropagation());
 }
 
 function leftTab(which) {
@@ -219,20 +385,24 @@ function renderTerms() {
     }).join("");
     const onPage = f.value_on_page === false ? `<div class="flag-line warning">The value is not written in the quotes or on the cited pages.</div>` : "";
     const flags = f.flags.map((x) => `<div class="flag-line ${esc(x.severity)}">${esc(x.message)}</div>`).join("");
-    html += `<div class="field" data-name="${esc(f.name)}">
-      <span class="label">${esc(f.label)}</span>
+    const reviewed = f.review ? `<span class="rv ${f.review}" title="${f.review}">${f.review === "approved" ? "✓ approved" : "corrected"}</span>` : "";
+    html += `<div class="field ${f.review ? "reviewed" : ""}" data-name="${esc(f.name)}">
+      <span class="label">${esc(f.label)}${reviewed}</span>
       <span class="mark"><span class="dot ${cls}" title="${esc(cls)}">${esc(pageRef)}</span></span>
       <span class="value ${value === null ? "empty" : ""}">${esc(value ?? "not stated")}</span>
-      <div class="detail">${flags}${onPage}${cites || `<div class="note">No source cited.</div>`}
+      <div class="detail">${reviewHtml(f)}${flags}${onPage}${cites || `<div class="note">No source cited.</div>`}
         ${f.note ? `<div class="note">${esc(f.note)}</div>` : ""}
         ${f.bdt ? `<div class="note">ICMA Bond Data Taxonomy: ${esc(f.bdt)}</div>` : ""}</div>
     </div>`;
   }
   $("#terms").innerHTML = html;
-  $("#terms").querySelectorAll(".field").forEach((el) => el.addEventListener("click", (event) => {
-    const cite = event.target.closest(".cite");
-    selectField(el.dataset.name, cite ? Number(cite.dataset.cite) : 0);
-  }));
+  $("#terms").querySelectorAll(".field").forEach((el) => {
+    bindReview(el, state.data.fields.find((f) => f.name === el.dataset.name));
+    el.addEventListener("click", (event) => {
+      const cite = event.target.closest(".cite");
+      selectField(el.dataset.name, cite ? Number(cite.dataset.cite) : 0);
+    });
+  });
 }
 
 function selectField(name, citeIndex = 0) {
@@ -244,7 +414,10 @@ function selectField(name, citeIndex = 0) {
   const row = document.querySelector(`.field[data-name="${CSS.escape(name)}"]`);
   row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   const cite = field.cites[citeIndex] || field.cites[0];
-  if (!cite) return;
+  if (!cite) {
+    if (!state.doc) openPage(state.data.documents[0].doc, 1, [], "");
+    return;
+  }
   const page = cite.found_page && cite.status === "wrong_page" ? cite.found_page : cite.page;
   const quotes = field.cites.filter((c) => c.doc === cite.doc && c.quote).map((c) => c.quote);
   openPage(cite.doc, Number(page), quotes, field.label);
@@ -399,7 +572,7 @@ function renderPayments() {
   const report = state.data.report;
   if (!report) {
     $("#token").textContent = "";
-    $("#payments").innerHTML = `<p class="empty-note">These terms have not been deployed yet.</p>
+    $("#payments").innerHTML = `<p class="empty-note">${state.data.review.corrected && !truthRun() ? "The corrected terms" : "These terms"} have not been deployed yet.</p>
       <p style="padding:0 14px"><button class="button" id="verify-now">Deploy the token and run every payment</button></p>`;
     $("#verify-now").addEventListener("click", async (e) => {
       e.target.disabled = true; e.target.textContent = "Deploying and paying on a local chain…";
