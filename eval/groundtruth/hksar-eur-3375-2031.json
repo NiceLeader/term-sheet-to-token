@@ -1,0 +1,52 @@
+{
+  "bond_id": "hksar-eur-3375-2031",
+  "isin": "HK0001031944",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "HK0001031944", "doc": "hksar-hk0001031944-ps", "page": 25},
+    "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "currency": {"value": "EUR", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "aggregate_nominal_amount": {"value": "750000000", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "specified_denomination": {"value": "100000", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "calculation_amount": {"value": "1000", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "issue_date": {"value": "2024-07-24", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "interest_commencement_date": {"value": "2024-07-24", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "maturity_date": {"value": "2031-07-24", "doc": "hksar-hk0001031944-ps", "page": 22},
+    "interest_rate": {"value": "3.375", "doc": "hksar-hk0001031944-ps", "page": 23},
+    "coupon_frequency": {"value": 1, "doc": "hksar-hk0001031944-ps", "page": 23},
+    "interest_payment_dates": {"value": ["07-24"], "doc": "hksar-hk0001031944-ps", "page": 23},
+    "first_interest_payment_date": {"value": "2025-07-24", "doc": "hksar-hk0001031944-ps", "page": 23},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "hksar-hk0001031944-ps", "page": 23,
+      "definition": {"doc": "hksar-gmtn-om-2024", "page": 53}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "hksar-hk0001031944-ps", "page": 23,
+      "definition": {"doc": "hksar-gmtn-om-2024", "page": 61},
+      "check": "Pricing supplement says Interest Payment Dates are 'not adjusted'; the move of a payment to the next following business day comes only from Condition 7(h) Non-Business Days (no extra interest). Encoded as FOLLOWING for payment with accrual unadjusted; NONE is arguable if the field is read as date adjustment."
+    },
+    "accrual_adjusted": {"value": false, "doc": "hksar-hk0001031944-ps", "page": 23},
+    "business_day": {
+      "value": ["TARGET"],
+      "doc": "hksar-hk0001031944-ps", "page": 24,
+      "definition": {"doc": "hksar-gmtn-om-2024", "page": 61},
+      "check": "The cited PS page only says Financial Centre(s): Not Applicable (item 26); TARGET comes from Condition 7(h)(ii), which for a Euro payment requires a TARGET Business Day. 7(h) also refers to the place of presentation, which is not a fixed centre and is disregarded for Global Notes (OM p.85)."
+    },
+    "final_redemption_amount": {"value": "100", "doc": "hksar-hk0001031944-ps", "page": 23},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "33.75", "per": "1000"}
+      ],
+      "doc": "hksar-hk0001031944-ps", "page": 23
+    },
+    "record_date": {
+      "value": "Close of business on the Clearing System Business Day immediately prior to the date for payment (Global Certificate)",
+      "doc": "hksar-gmtn-om-2024", "page": 85,
+      "check": "Rule for Notes represented by a Global Certificate held through Euroclear/Clearstream or the CMU (Clearing System Business Day = Monday to Friday except 25 December and 1 January). For definitive Registered Notes, Condition 7(b)(ii) (p.59) sets the Record Date at the fifteenth day before the due date."
+    },
+    "rounding_rule": {"value": "HALF_UP", "doc": "hksar-gmtn-om-2024", "page": 49}
+  },
+  "notes": "Pricing Supplement dated 17 July 2024 (Series 031, Tranche 001), Appendix 2 of the HKEX announcement PDF (pp.17-28; the same PDF also holds the pricing supplements of the USD Notes (Appendix 1) and five RMB tranches due 2026, 2029, 2034, 2044 and 2054 (Appendices 3-7), so page matching to this ISIN matters), read with the Offering Memorandum dated 3 July 2024 (hksar-gmtn-om-2024). The PS amends no Conditions (item 30 'Other terms or special conditions: Not Applicable', p.24), so all definitions are cited in the 2024 Offering Memorandum. The PS writes the day count as 'Actual/Actual (ICMA)'; the Conditions define 'Actual/Actual-ICMA' in Condition 5(k) (p.53), and with no Determination Date specified the Determination Dates are the Interest Payment Dates (p.53). Other definitions: fixed rate interest Condition 5(a) (p.44), Business Day Convention definitions Condition 5(b)(ii) (p.45, not used since the dates are not adjusted), rounding Condition 5(g)(iii)(z) (p.49: currency amounts rounded to the nearest unit with half a unit rounded up, yen rounded down), Calculations Condition 5(h) (p.49), 'Business Day' Condition 5(k) (p.50, TARGET Business Day for Euro), Interest Accrual Period and Interest Period Date (p.53-54), 'TARGET System' (p.54, still described as TARGET2 'or any successor thereto'), Non-Business Days Condition 7(h) (p.61). The EUR33.75 Fixed Coupon Amount per EUR1,000 Calculation Amount is exact (3.375% x 1,000), so rounding does not bite. Form: Registered Notes in a Regulation S Unrestricted Global Certificate (PS p.24); while in global form interest is calculated on the total aggregate amount of the Notes represented by the Global Certificate (OM p.84-85). Common Code 284928903 and CMU Instrument Number HSBCGB24098 (PS p.26). Governing law English law (PS p.26). Issue price 99.975 per cent. (PS p.22). Final Redemption Amount is EUR1,000 per Calculation Amount of EUR1,000 (par). Maturity Date 24 July 2031 is a Thursday."
+}

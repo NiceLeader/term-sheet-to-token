@@ -1,0 +1,55 @@
+{
+  "bond_id": "hksar-eur-2500-2029",
+  "isin": "HK0001201901",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "HK0001201901", "doc": "hksar-digital-green-2025-ps", "page": 75},
+    "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "currency": {"value": "EUR", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "aggregate_nominal_amount": {"value": "300000000", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "specified_denomination": {"value": "100000", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "calculation_amount": {"value": "1000", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "issue_date": {"value": "2025-11-11", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "interest_commencement_date": {"value": "2025-11-11", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "maturity_date": {"value": "2029-11-11", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "interest_rate": {"value": "2.500", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "coupon_frequency": {"value": 2, "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "interest_payment_dates": {"value": ["05-11", "11-11"], "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "first_interest_payment_date": {"value": "2026-05-11", "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "hksar-digital-green-2025-ps", "page": 73,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 41}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "hksar-digital-green-2025-ps", "page": 72,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 46},
+      "check": "Pricing supplement says Interest Payment Dates are 'not adjusted'; the move of a payment to the next following business day comes only from DN Condition 7(f) Non-Business Days (no extra interest). Encoded as FOLLOWING for payment with accrual unadjusted; NONE is arguable if the field is read as date adjustment."
+    },
+    "accrual_adjusted": {"value": false, "doc": "hksar-digital-green-2025-ps", "page": 72},
+    "business_day": {
+      "value": ["Hong Kong", "TARGET"],
+      "doc": "hksar-digital-green-2025-ps", "page": 74,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 46},
+      "check": "Item 26 names 'Hong Kong' as Financial Centre, then says 'for the avoidance of doubt' that a payment business day is a TARGET Business Day, without mentioning Hong Kong. Condition 7(f)(ii) for Euro requires a TARGET Business Day which is also a business day in Hong Kong, so both are kept."
+    },
+    "final_redemption_amount": {"value": "100", "doc": "hksar-digital-green-2025-ps", "page": 73},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "12.50", "per": "1000"}
+      ],
+      "doc": "hksar-digital-green-2025-ps", "page": 73
+    },
+    "record_date": {
+      "value": "11:30 p.m. Hong Kong time on the Clearing System Business Day immediately preceding the due date (Record Time)",
+      "doc": "hksar-digital-green-2025-ps", "page": 45
+    },
+    "rounding_rule": {
+      "value": "DOWN",
+      "doc": "hksar-digital-green-2025-ps", "page": 73,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 40}
+    }
+  },
+  "notes": "One PDF holds the supplemental offering memorandum dated 10 November 2025 for all four digitally native (DN) tranches plus four pricing supplements; this tranche's pricing supplement is on pp.70-77 (Series 44, ISIN on p.75). The supplement replaces the 'Terms and Conditions of the Notes' of the Offering Memorandum with the Terms and Conditions of the Digitally Native Notes (pp.34-62, see p.34), and PS item 30 (p.74) states that the terms and conditions in the Offering Memorandum dated 29 September 2025 do not apply. All definitions are therefore cited in the DN Conditions, not in hksar-gmtn-om-2025. Definitions: Condition 5(c) calculations and rounding (p.40: rounded to the nearest unit with anything less than a full unit rounded down), Condition 5(d) Actual/Actual-ICMA (p.41-42; Determination Dates default to the Interest Payment Dates), Condition 7(c) Record Time (p.45), Condition 7(f) Non-Business Days with TARGET Business Day and T2 (p.46), Clearing System Business Day (p.38). The PS writes the day count as 'Actual/Actual-ICMA', matching the DN Conditions. The Fixed Coupon Amount EUR 12.50 per EUR 1,000 is exact (2.500% / 2), so rounding does not bite; unless individual certificates are issued, interest is calculated on the total amount held in each Digital Token Account (PS p.73). Maturity Date 11 November 2029 is a Sunday; payment then follows Condition 7(f). Final Redemption Amount is EUR 1,000 per Calculation Amount of EUR 1,000 (par)."
+}

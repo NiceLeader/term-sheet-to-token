@@ -1,0 +1,56 @@
+{
+  "bond_id": "hksar-cny-1900-2030",
+  "isin": "HK0001201919",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "HK0001201919", "doc": "hksar-digital-green-2025-ps", "page": 82},
+    "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "currency": {"value": "CNY", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "aggregate_nominal_amount": {"value": "2500000000", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "specified_denomination": {"value": "1000000", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "calculation_amount": {"value": "10000", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "issue_date": {"value": "2025-11-11", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "interest_commencement_date": {"value": "2025-11-11", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "maturity_date": {
+      "value": "2030-11-11",
+      "doc": "hksar-digital-green-2025-ps", "page": 79,
+      "check": "Maturity Date is stated as 'Interest Payment Date falling on or nearest to 11 November 2030'; 2030-11-11 is the unadjusted date (it is a Monday)."
+    },
+    "interest_rate": {"value": "1.90", "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "coupon_frequency": {"value": 2, "doc": "hksar-digital-green-2025-ps", "page": 79},
+    "interest_payment_dates": {"value": ["05-11", "11-11"], "doc": "hksar-digital-green-2025-ps", "page": 80},
+    "first_interest_payment_date": {"value": "2026-05-11", "doc": "hksar-digital-green-2025-ps", "page": 80},
+    "day_count_fraction": {
+      "value": "ACT_365_FIXED",
+      "doc": "hksar-digital-green-2025-ps", "page": 80,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 41}
+    },
+    "business_day_convention": {
+      "value": "MODIFIED_FOLLOWING",
+      "doc": "hksar-digital-green-2025-ps", "page": 80,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 80}
+    },
+    "accrual_adjusted": {
+      "value": true,
+      "doc": "hksar-digital-green-2025-ps", "page": 80,
+      "check": "Inferred, not stated in words: the Interest Payment Dates themselves are adjusted, Interest Accrual Periods end on Interest Period Dates which default to the Interest Payment Dates (DN Condition 5(d), p.42), and each coupon is computed with Actual/365 (Fixed) over the period."
+    },
+    "business_day": {
+      "value": ["Hong Kong"],
+      "doc": "hksar-digital-green-2025-ps", "page": 80,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 80}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "hksar-digital-green-2025-ps", "page": 80},
+    "stated_coupon_amounts": {
+      "value": [],
+      "doc": "hksar-digital-green-2025-ps", "page": 80,
+      "check": "No coupon amount is printed; the Fixed Coupon Amount is given only as a formula (Rate of Interest x Calculation Amount x Day Count Fraction, rounded down to CNY 0.01). Empty list used instead of null."
+    },
+    "record_date": {
+      "value": "11:30 p.m. Hong Kong time on the Clearing System Business Day immediately preceding the due date (Record Time)",
+      "doc": "hksar-digital-green-2025-ps", "page": 45
+    },
+    "rounding_rule": {"value": "DOWN", "doc": "hksar-digital-green-2025-ps", "page": 80}
+  },
+  "notes": "One PDF holds the supplemental offering memorandum dated 10 November 2025 for all four digitally native (DN) tranches plus four pricing supplements; this tranche's pricing supplement is on pp.78-84 (Series 43, ISIN on p.82). The supplement replaces the 'Terms and Conditions of the Notes' of the Offering Memorandum with the Terms and Conditions of the Digitally Native Notes (pp.34-62, see p.34), and PS item 30 (p.82) states that the terms and conditions in the Offering Memorandum dated 29 September 2025 do not apply. The DN Conditions contain no business day convention definitions, so the pricing supplement defines 'Modified Following Business Day Convention' and its 'business day' (commercial banks open for business and settlement of Renminbi payments in Hong Kong) itself in item 16(ii) (p.80); that is cited as the definition. PS item 26 (p.81) restates the payment business day for Renminbi (Hong Kong), matching DN Condition 7(f)(iii) (p.46). Other definitions: Actual/365 (Fixed) in DN Condition 5(d) (p.41), Record Time in Condition 7(c) (p.45), Clearing System Business Day (p.38), rounding in Condition 5(c) (p.40) consistent with the PS formula (nearest CNY 0.01, anything less rounded downwards). Unless individual certificates are issued, interest is calculated on the total amount held in each Digital Token Account (PS p.80). Final Redemption Amount is CNY 10,000 per Calculation Amount of CNY 10,000 (par)."
+}

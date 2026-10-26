@@ -1,0 +1,55 @@
+{
+  "bond_id": "toyota-usd-4500-2029",
+  "isin": "US89236TQD09",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "US89236TQD09", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "issuer": {"value": "Toyota Motor Credit Corporation", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "currency": {"value": "USD", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "aggregate_nominal_amount": {"value": "750000000", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "specified_denomination": {"value": "2000", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-07-09", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "interest_commencement_date": {"value": "2026-07-09", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "maturity_date": {"value": "2029-07-09", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "interest_rate": {"value": "4.500", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "coupon_frequency": {"value": 2, "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "interest_payment_dates": {"value": ["01-09", "07-09"], "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "first_interest_payment_date": {"value": "2027-01-09", "doc": "toyota-us89236tqd09-ps", "page": 2},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "toyota-us89236tqd09-ps", "page": 2,
+      "definition": {"doc": "toyota-mtn-prosupp-2024", "page": 17}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "toyota-us89236tqd09-ps", "page": 2,
+      "definition": {"doc": "toyota-mtn-prosupp-2024", "page": 17}
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "toyota-us89236tqd09-ps", "page": 2,
+      "definition": {"doc": "toyota-mtn-prosupp-2024", "page": 17}
+    },
+    "business_day": {
+      "value": ["New York"],
+      "doc": "toyota-us89236tqd09-ps", "page": 2,
+      "definition": {"doc": "toyota-mtn-prosupp-2024", "page": 16}
+    },
+    "final_redemption_amount": {
+      "value": "100",
+      "doc": "toyota-mtn-prosupp-2024", "page": 15,
+      "check": "No percentage is printed; principal amount payable at stated maturity is implied (prospectus supplement page 15), and the pricing supplement only says the notes are not redeemable before maturity"
+    },
+    "stated_coupon_amounts": {"value": null},
+    "record_date": {
+      "value": "Close of business one Business Day before the Interest Payment Date while in global book-entry form (15th calendar day before if in definitive form)",
+      "doc": "toyota-mtn-prosupp-2024", "page": 17
+    },
+    "rounding_rule": {
+      "value": "NOT_STATED",
+      "check": "Prospectus supplement page 20 rounds dollar amounts to the nearest cent, half cent up, but only for floating rate notes; nothing is stated for fixed rate notes"
+    }
+  },
+  "notes": "The pricing supplement covers three tranches; this bond is the 2029 Fixed Rate Notes (USD 750m 4.500%, CUSIP 89236TQD0). Do not use the Floating Rate Notes block (Actual/360, Modified Following adjusted, ISIN US89236TQE81) or the 2033 Fixed Rate Notes, which sit just before and after it. In this text conversion, pricing supplement page 1 holds the cover, inside cover and table of contents, and page 2 holds 'Terms of the Notes' plus the 2029 Fixed Rate Notes term block (Day Count Convention: 30/360; Business Day Convention: Following, unadjusted; Business Days: New York). Definitions come from the Medium-Term Notes, Series B prospectus supplement of January 22, 2024: Fixed Rate Notes (page 17) give the 360-day year of twelve 30-day months and the rule that a payment due on a non-Business Day is made on the next succeeding Business Day as if made on the due date, with no interest for the delay. 'Business Day' for U.S. dollar notes is a New York Business Day (page 16). 'Regular Record Date' is on page 17; the pricing supplement does not override it, and the notes are issued as global notes through DTC (pricing supplement pages 4-5). Minimum denomination is USD 2,000 with integral multiples of USD 1,000 above that. The first coupon (2026-07-09 to 2027-01-09) is a regular full period, and no coupon amounts are printed. The base prospectus (toyota-s3asr-2024) adds nothing on day count, business days or record dates beyond a generic regular record date reference."
+}

@@ -1,0 +1,52 @@
+{
+  "bond_id": "deere-usd-4800-2029",
+  "isin": "US24422EYT09",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "US24422EYT09", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "issuer": {"value": "John Deere Capital Corporation", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "currency": {"value": "USD", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "aggregate_nominal_amount": {"value": "400000000", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "specified_denomination": {"value": "1000", "doc": "deere-s3asr-2026", "page": 6},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-09-11", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "interest_commencement_date": {"value": "2026-09-11", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "maturity_date": {"value": "2029-09-11", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "interest_rate": {"value": "4.800", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "coupon_frequency": {"value": 2, "doc": "deere-us24422eyt09-ps", "page": 1},
+    "interest_payment_dates": {"value": ["03-11", "09-11"], "doc": "deere-us24422eyt09-ps", "page": 1},
+    "first_interest_payment_date": {"value": "2027-03-11", "doc": "deere-us24422eyt09-ps", "page": 1},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "deere-s3asr-2026", "page": 75,
+      "definition": {"doc": "deere-s3asr-2026", "page": 75}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "deere-s3asr-2026", "page": 75,
+      "definition": {"doc": "deere-s3asr-2026", "page": 75}
+    },
+    "accrual_adjusted": {"value": false, "doc": "deere-s3asr-2026", "page": 75},
+    "business_day": {
+      "value": ["New York"],
+      "doc": "deere-s3asr-2026", "page": 69,
+      "definition": {"doc": "deere-s3asr-2026", "page": 69}
+    },
+    "final_redemption_amount": {
+      "value": "100",
+      "doc": "deere-s3asr-2026", "page": 75,
+      "check": "No percentage is printed; the base prospectus says principal due on the Maturity Date is paid, and the pricing supplement says 'Redemption Provisions: None'"
+    },
+    "stated_coupon_amounts": {"value": null},
+    "record_date": {
+      "value": "Fifteenth day (whether or not a Business Day) next preceding the applicable Interest Payment Date",
+      "doc": "deere-us24422eyt09-ps", "page": 1,
+      "definition": {"doc": "deere-s3asr-2026", "page": 75}
+    },
+    "rounding_rule": {
+      "value": "NOT_STATED",
+      "check": "Base prospectus page 77 rounds dollar amounts to the nearest cent, half cent up, but only in the Floating Rate Notes section; nothing is stated for Fixed Rate Notes"
+    }
+  },
+  "notes": "The pricing supplement (Pricing Supplement No. 4, one page) states no day count, business day rule or denomination. deere-s3asr-2026 holds three parts: the Medium-Term Notes, Series J prospectus supplement (pages 3-27), the JDCC InterNotes prospectus supplement (pages 28-53, not applicable to this bond) and the base prospectus of May 14, 2026 (pages 54 onward). The Series J supplement does not restate day count or business day rules; they come from the base prospectus 'Description of Debt Securities', which the Series J supplement supplements: Fixed Rate Notes (page 75, p. 21) give the 360-day year of twelve 30-day months, payment on the next Business Day with no interest accruing from and after the Interest Payment Date or Maturity Date, and the default Regular Record Date (fifteenth calendar day before), which matches the pricing supplement. 'Payment When Offices Are Closed' (page 73, p. 19) gives the same next-Business-Day rule. 'Business Day' is a New York business day (page 69, p. 15); the euro/T2 and SOFR variants there do not apply. Denomination: the Series J supplement lists minimum denominations of USD 1,000 (page 6, S-3), and the base prospectus says U.S. dollar denominations are integral multiples of USD 1,000 (page 69). The base prospectus says interest accrues from the original issue date (page 74), which matches 'accrued interest, if any, from September 11, 2026' in the pricing supplement. The InterNotes supplement has its own similar 'Business Day' definition and next-Business-Day rule (page 36); do not cite it for this bond."
+}

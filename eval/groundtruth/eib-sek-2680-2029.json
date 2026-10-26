@@ -1,0 +1,48 @@
+{
+  "bond_id": "eib-sek-2680-2029",
+  "isin": "EU000A4ETDA0",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "EU000A4ETDA0", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "issuer": {"value": "European Investment Bank", "doc": "eib-eu000a4etda0-ft", "page": 2},
+    "currency": {"value": "SEK", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "aggregate_nominal_amount": {"value": "1000000000", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "specified_denomination": {"value": "10000", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-04-22", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "interest_commencement_date": {"value": "2026-04-22", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "maturity_date": {"value": "2029-10-22", "doc": "eib-eu000a4etda0-ft", "page": 6},
+    "interest_rate": {"value": "2.680", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "coupon_frequency": {"value": 1, "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "interest_payment_dates": {"value": ["10-22"], "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "first_interest_payment_date": {"value": "2026-10-22", "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "day_count_fraction": {
+      "value": "THIRTY_E_360",
+      "doc": "eib-eu000a4etda0-ft", "page": 5,
+      "definition": {"doc": "eib-dip-2025", "page": 29}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "eib-eu000a4etda0-ft", "page": 5,
+      "definition": {"doc": "eib-dip-2025", "page": 17}
+    },
+    "accrual_adjusted": {"value": false, "doc": "eib-eu000a4etda0-ft", "page": 5},
+    "business_day": {
+      "value": ["London", "Stockholm", "TARGET"],
+      "doc": "eib-eu000a4etda0-ft", "page": 5,
+      "definition": {"doc": "eib-dip-2025", "page": 27},
+      "check": "Final Terms list 'London, Stockholm and T2'. The Business Day definition (a)(i) says that if T2 is specified as a Business Day Centre, a payment Business Day is a TARGET Settlement Day; read literally, London and Stockholm would then not count."
+    },
+    "final_redemption_amount": {"value": "100", "doc": "eib-eu000a4etda0-ft", "page": 6},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "268.00", "per": "10000"},
+        {"date": "2026-10-22", "amount": "134.00", "per": "10000"}
+      ],
+      "doc": "eib-eu000a4etda0-ft", "page": 5
+    },
+    "record_date": {"value": null},
+    "rounding_rule": {"value": "HALF_UP", "doc": "eib-dip-2025", "page": 17}
+  },
+  "notes": "Final Terms dated 20 April 2026 read with the Offering Circular dated 28 November 2025; no supplement applies. All values come from the body of the Final Terms. Day count, convention, Business Day and rounding are defined in the Offering Circular Conditions: Condition 5(d) Business Day Conventions (heading p.16, 'Following' on p.17), Condition 5(f) rounding (p.17: nearest minimum unit, halves rounded upwards, 'or otherwise in accordance with applicable market convention'), Condition 20 definitions (Business Day p.27-28, 30E/360 p.29, T2 and TARGET Settlement Day p.32). Following applies to Interest Payment Dates (item 10(iv)) and to the Maturity Date (item 18, p.6); Interest Period End Dates are the Interest Payment Dates without adjustment (item 10(ii)), so accrual is unadjusted. Payment-day rule for non-Business Days: Condition 10(f) (p.24); for a Global Bond the place of presentation is disregarded in the Business Day definition (p.35). No Calculation Amount is defined; Interest Amount and Broken Amount are stated per SEK 10,000 Specified Denomination, and while the Bonds are in global form interest is calculated on the aggregate principal amount of the Global Bond (p.36). Broken Amount cross-check: 22 April to 22 October 2026 is 180/360 under 30E/360, 0.5 x 268.00 = 134.00. The Bonds are Bearer Bonds in a Permanent Global Bond; the Record Date in Condition 10(b)(iii) (p.23) and the global-form Record Date (p.35) apply only to Registered Bonds, so record_date is null."
+}

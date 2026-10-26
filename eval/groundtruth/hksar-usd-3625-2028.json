@@ -1,0 +1,55 @@
+{
+  "bond_id": "hksar-usd-3625-2028",
+  "isin": "HK0001201893",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "HK0001201893", "doc": "hksar-digital-green-2025-ps", "page": 67},
+    "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "currency": {"value": "USD", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "aggregate_nominal_amount": {"value": "300000000", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "specified_denomination": {"value": "200000", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "calculation_amount": {"value": "1000", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "issue_date": {"value": "2025-11-12", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "interest_commencement_date": {"value": "2025-11-12", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "maturity_date": {"value": "2028-11-12", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "interest_rate": {"value": "3.625", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "coupon_frequency": {"value": 2, "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "interest_payment_dates": {"value": ["05-12", "11-12"], "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "first_interest_payment_date": {"value": "2026-05-12", "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "hksar-digital-green-2025-ps", "page": 65,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 41}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "hksar-digital-green-2025-ps", "page": 64,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 46},
+      "check": "Pricing supplement says Interest Payment Dates are 'not adjusted'; the move of a payment to the next following business day comes only from DN Condition 7(f) Non-Business Days (no extra interest). Encoded as FOLLOWING for payment with accrual unadjusted; NONE is arguable if the field is read as date adjustment."
+    },
+    "accrual_adjusted": {"value": false, "doc": "hksar-digital-green-2025-ps", "page": 64},
+    "business_day": {
+      "value": ["New York", "Hong Kong"],
+      "doc": "hksar-digital-green-2025-ps", "page": 66,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 46}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "hksar-digital-green-2025-ps", "page": 65},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "18.12", "per": "1000"}
+      ],
+      "doc": "hksar-digital-green-2025-ps", "page": 65,
+      "check": "18.12 is 3.625% / 2 x 1,000 = 18.125 rounded down under DN Condition 5(c). The same item says that, unless individual certificates are issued, interest is calculated on the total amount held in each Digital Token Account, so actual payments per 1,000 can differ from 18.12."
+    },
+    "record_date": {
+      "value": "11:30 p.m. Hong Kong time on the Clearing System Business Day immediately preceding the due date (Record Time)",
+      "doc": "hksar-digital-green-2025-ps", "page": 45
+    },
+    "rounding_rule": {
+      "value": "DOWN",
+      "doc": "hksar-digital-green-2025-ps", "page": 65,
+      "definition": {"doc": "hksar-digital-green-2025-ps", "page": 40}
+    }
+  },
+  "notes": "One PDF holds the supplemental offering memorandum dated 10 November 2025 for all four digitally native (DN) tranches plus four pricing supplements; this tranche's pricing supplement is on pp.63-69 (Series 45, ISIN on p.67). The supplement replaces the 'Terms and Conditions of the Notes' of the Offering Memorandum with the Terms and Conditions of the Digitally Native Notes (pp.34-62, see p.34), and PS item 30 (p.66) states that the terms and conditions in the Offering Memorandum dated 29 September 2025 do not apply. All definitions are therefore cited in the DN Conditions, not in hksar-gmtn-om-2025. Definitions: Condition 5(c) calculations and rounding (p.40: currency amounts 'rounded to the nearest unit ... with anything less than a full unit being rounded down', which explains 18.12), Condition 5(d) 30/360 (p.41), Condition 7(c) Record Time (p.45), Condition 7(f) Non-Business Days and payment 'business day' (p.46), Clearing System Business Day (p.38: a day on which the CMU and the Platform are open). PS item 26 (p.66) restates that a payment business day is a day on which FX transactions may be carried on in USD in New York City and which is a business day in Hong Kong. Final Redemption Amount is U.S.$1,000 per Calculation Amount of U.S.$1,000 (par). The supplement summary (p.20) says listing of this tranche was expected one day after the EUR, CNY and HKD tranches; the HKEX cover announcement (p.1-2) lists only those three tranches."
+}

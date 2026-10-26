@@ -1,0 +1,52 @@
+{
+  "bond_id": "paccar-usd-4750-2029",
+  "isin": null,
+  "status": "draft",
+  "fields": {
+    "isin": {"value": null},
+    "issuer": {"value": "PACCAR Financial Corp.", "doc": "paccar-69371ru79-ps", "page": 1},
+    "currency": {"value": "USD", "doc": "paccar-69371ru79-ps", "page": 2},
+    "aggregate_nominal_amount": {"value": "300000000", "doc": "paccar-69371ru79-ps", "page": 1},
+    "specified_denomination": {"value": "1000", "doc": "paccar-s3asr-2024", "page": 7},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-09-10", "doc": "paccar-69371ru79-ps", "page": 1},
+    "interest_commencement_date": {"value": "2026-09-10", "doc": "paccar-s3asr-2024", "page": 10},
+    "maturity_date": {"value": "2029-09-10", "doc": "paccar-69371ru79-ps", "page": 1},
+    "interest_rate": {"value": "4.750", "doc": "paccar-69371ru79-ps", "page": 1},
+    "coupon_frequency": {"value": 2, "doc": "paccar-69371ru79-ps", "page": 1},
+    "interest_payment_dates": {"value": ["03-10", "09-10"], "doc": "paccar-69371ru79-ps", "page": 1},
+    "first_interest_payment_date": {"value": "2027-03-10", "doc": "paccar-69371ru79-ps", "page": 1},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "paccar-s3asr-2024", "page": 10,
+      "definition": {"doc": "paccar-s3asr-2024", "page": 10}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "paccar-s3asr-2024", "page": 10,
+      "definition": {"doc": "paccar-s3asr-2024", "page": 10}
+    },
+    "accrual_adjusted": {"value": false, "doc": "paccar-s3asr-2024", "page": 10},
+    "business_day": {
+      "value": ["New York"],
+      "doc": "paccar-s3asr-2024", "page": 8,
+      "definition": {"doc": "paccar-s3asr-2024", "page": 8}
+    },
+    "final_redemption_amount": {
+      "value": "100",
+      "doc": "paccar-s3asr-2024", "page": 6,
+      "check": "No percentage is printed; principal amount payable at stated maturity is implied (prospectus supplement page 6), and the pricing supplement only says the notes may not be redeemed or repaid before the Maturity Date"
+    },
+    "stated_coupon_amounts": {"value": null},
+    "record_date": {
+      "value": "February 24 and August 27 preceding the applicable Interest Payment Date",
+      "doc": "paccar-69371ru79-ps", "page": 1,
+      "definition": {"doc": "paccar-s3asr-2024", "page": 10}
+    },
+    "rounding_rule": {
+      "value": "NOT_STATED",
+      "check": "Prospectus supplement page 13 rounds dollar amounts to the nearest cent, half cent up, but only for floating rate notes; nothing is stated for fixed rate notes"
+    }
+  },
+  "notes": "The documents give only a CUSIP (69371RU79, pricing supplement page 1) and no ISIN, so isin is null. The pricing supplement is a two-page form for Medium-Term Notes, Series R - Fixed Rate; it states amount, dates, rate, record dates and currency but no day count, business day rule or USD denomination ('Minimum Denominations' applies only to non-U.S. dollar notes). Those come from the Series R prospectus supplement of November 7, 2024 inside paccar-s3asr-2024: denominations of USD 1,000 and integral multiples of USD 1,000 (page 7, S-4); 'Business Day' is a New York banking day (page 8, S-5); interest from and including the date of issue on a 360-day year of twelve 30-day months, and payment on a non-Business Day made on the next succeeding Business Day as if made on the due date, with no interest for the delay (page 10, S-7). The pricing supplement overrides the default record dates (March 1 or September 1 for fixed rate notes, page 10) with February 24 and August 27, and overrides the default March 15 / September 15 interest payment dates with March 10 / September 10. Original Issue Date is September 10, 2026 (T+5). The first coupon (2026-09-10 to 2027-03-10) is a regular full period; no coupon amounts are printed."
+}

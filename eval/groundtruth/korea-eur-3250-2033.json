@@ -1,0 +1,46 @@
+{
+  "bond_id": "korea-eur-3250-2033",
+  "isin": "XS3437347787",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "XS3437347787", "doc": "korea-xs3437347787-424b2", "page": 30},
+    "issuer": {"value": "The Republic of Korea", "doc": "korea-xs3437347787-424b2", "page": 6},
+    "currency": {"value": "EUR", "doc": "korea-xs3437347787-424b2", "page": 17},
+    "aggregate_nominal_amount": {"value": "1000000000", "doc": "korea-xs3437347787-424b2", "page": 17},
+    "specified_denomination": {"value": "100000", "doc": "korea-xs3437347787-424b2", "page": 17},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-07-15", "doc": "korea-xs3437347787-fwp", "page": 1},
+    "interest_commencement_date": {"value": "2026-07-15", "doc": "korea-xs3437347787-424b2", "page": 6},
+    "maturity_date": {"value": "2033-07-15", "doc": "korea-xs3437347787-424b2", "page": 17},
+    "interest_rate": {"value": "3.250", "doc": "korea-xs3437347787-424b2", "page": 18},
+    "coupon_frequency": {"value": 1, "doc": "korea-xs3437347787-424b2", "page": 18},
+    "interest_payment_dates": {"value": ["07-15"], "doc": "korea-xs3437347787-424b2", "page": 18},
+    "first_interest_payment_date": {"value": "2027-07-15", "doc": "korea-xs3437347787-424b2", "page": 18},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "korea-xs3437347787-424b2", "page": 17,
+      "definition": {"doc": "korea-xs3437347787-424b2", "page": 17},
+      "check": "Same paragraph says a period of less than a year uses actual days / 365 (366 in a leap year), which is not the ICMA formula for broken periods; no other definition exists"
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "korea-xs3437347787-424b2", "page": 18,
+      "definition": {"doc": "korea-xs3437347787-424b2", "page": 18}
+    },
+    "accrual_adjusted": {"value": false, "doc": "korea-xs3437347787-424b2", "page": 17},
+    "business_day": {
+      "value": ["TARGET", "London"],
+      "doc": "korea-xs3437347787-424b2", "page": 18,
+      "definition": {"doc": "korea-xs3437347787-424b2", "page": 18},
+      "check": "The day must be a T2 day, a day when London banks deal in euro deposits, and a banking day at the place of payment (check mailing, surrender or transfer), which is not a named centre"
+    },
+    "final_redemption_amount": {"value": "100", "doc": "korea-xs3437347787-424b2", "page": 18},
+    "stated_coupon_amounts": {"value": null},
+    "record_date": {
+      "value": "Close of business on the fifteenth day (whether or not a business day) next preceding the interest payment date",
+      "doc": "korea-xs3437347787-424b2", "page": 18
+    },
+    "rounding_rule": {"value": "NOT_STATED"}
+  },
+  "notes": "The final prospectus supplement (424B2) covers two tranches; this bond is the EUR 1,000,000,000 3.250% 2033 Notes (common code 343734778). Do not use the 2029 Notes (EUR 700m 2.875%, ISIN XS3437347431). The 424B2 says the Notes are computed on 'Actual/Actual (ICMA), unadjusted' (page 17, also Summary page 6 and FWP page 1), but the same paragraph says interest for any period of less than a year is actual days elapsed divided by 365 or, in a leap year, 366. Full annual periods give the same result either way. The payment-day clause starts on page 17 and continues on page 18: if a due date is a day when T2 is not operating or commercial banks are not open for dealings in euro deposits in the London interbank market, payment may be made on the next succeeding day that is also not a bank holiday at the place of payment, with the same force as if made on the due date and no interest for the delay. The FWP term sheet (page 1, 'Business Center') repeats the clause in full. Principal is payable at par and the Notes are redeemed at par at maturity (page 18); no early redemption. Denominations are EUR 100,000 and integral multiples of EUR 1,000 above that. Issue Date is stated only in the FWP (page 1); the 424B2 gives delivery on or about July 15, 2026 (T+5, page 7) and interest accrual from July 15, 2026 (pages 1 and 6). The base 'Description of the Debt Securities' in korea-prelim-424b5-2026 (pages 81-82) was checked: it says only that payment dates, record dates and place of payment are set out in the prospectus supplement and defines no day count, business day or rounding rule. That file's preliminary supplement (Description of the Notes, pages 17-18 there) has the same payment-day clause with blanks for the final terms. No rounding rule is stated in any of the three documents. The 424B2 cover prints the 2033 public offering price as '99,784 %' (with a comma); the FWP gives 99.784%."
+}

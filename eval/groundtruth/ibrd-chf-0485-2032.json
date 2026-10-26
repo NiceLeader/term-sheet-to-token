@@ -1,0 +1,55 @@
+{
+  "bond_id": "ibrd-chf-0485-2032",
+  "isin": "CH1452360691",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "CH1452360691", "doc": "ibrd-ch1452360691-ft", "page": 7},
+    "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-ch1452360691-ft", "page": 1},
+    "currency": {"value": "CHF", "doc": "ibrd-ch1452360691-ft", "page": 1},
+    "aggregate_nominal_amount": {"value": "225000000", "doc": "ibrd-ch1452360691-ft", "page": 1},
+    "specified_denomination": {"value": "100000", "doc": "ibrd-ch1452360691-ft", "page": 1},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2025-06-17", "doc": "ibrd-ch1452360691-ft", "page": 1},
+    "interest_commencement_date": {
+      "value": "2025-06-17",
+      "doc": "ibrd-ch1452360691-ft", "page": 1,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 32}
+    },
+    "maturity_date": {"value": "2032-06-17", "doc": "ibrd-ch1452360691-ft", "page": 1},
+    "interest_rate": {"value": "0.4850", "doc": "ibrd-ch1452360691-ft", "page": 2},
+    "coupon_frequency": {"value": 1, "doc": "ibrd-ch1452360691-ft", "page": 2},
+    "interest_payment_dates": {"value": ["06-17"], "doc": "ibrd-ch1452360691-ft", "page": 2},
+    "first_interest_payment_date": {"value": "2026-06-17", "doc": "ibrd-ch1452360691-ft", "page": 2},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "ibrd-ch1452360691-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 30}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "ibrd-ch1452360691-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 38},
+      "check": "FT says Business Day Convention Not Applicable; FOLLOWING comes from the payment-day rule in Condition 7(h)"
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "ibrd-ch1452360691-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 39}
+    },
+    "business_day": {
+      "value": ["New York", "Zurich"],
+      "doc": "ibrd-ch1452360691-ft", "page": 3,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 39}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "ibrd-ch1452360691-ft", "page": 2},
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "ibrd-gdif-2021", "page": 28,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 28},
+      "check": "Condition 5(i) rounds to the nearest 'unit', defined as the lowest amount available as legal tender; for CHF that may be 0.05 rather than 0.01"
+    },
+    "stated_coupon_amounts": {"value": null},
+    "record_date": {"value": null}
+  },
+  "notes": "Swiss-listed bearer note under the 2021 Prospectus, represented by a Permanent Global Note deposited with SIX SIS (FT term 19, pages 2-3); Deutsche Bank AG Zurich Branch is the Swiss Principal Paying Agent and the FT's 'Other final terms' (pages 4-6) override the payment, agent and notice provisions. FT '30/360' matches Condition 5(l)(v) ('30/360', '360/360' or 'Bond Basis'; the Day Count Fraction list starts on page 29, clause (v) is on page 30). Business day convention: FT 16(ii) says Interest Payment Dates are not subject to adjustment and 16(iv) Business Day Convention Not Applicable; Condition 7(h) (pages 38-39) postpones payment to the next following business day (Financial Centres New York and Zurich, plus the principal financial centre of the currency) with no extra interest, and the amount of interest is not adjusted. Record date: the base Record Date in Condition 7(a)(ii) (page 35) applies only to Registered Notes and the FT sets none for these bearer notes. No coupon amount is printed (0.4850% of CHF 100,000 would be CHF 485.00). Calculation Amount is not specified; Condition 5(j) (page 28) defaults it to the minimum Specified Denomination. Final Redemption Amount is printed as CHF 100,000 per Specified Denomination, i.e. 100 per cent."
+}

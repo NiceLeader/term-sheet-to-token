@@ -1,0 +1,63 @@
+{
+  "bond_id": "ibrd-gbp-0750-2026",
+  "isin": "XS2113033281",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "XS2113033281", "doc": "ibrd-xs2113033281-ft", "page": 3},
+    "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-xs2113033281-ft", "page": 1},
+    "currency": {"value": "GBP", "doc": "ibrd-xs2113033281-ft", "page": 1},
+    "aggregate_nominal_amount": {"value": "1500000000", "doc": "ibrd-xs2113033281-ft", "page": 1},
+    "specified_denomination": {"value": "1000", "doc": "ibrd-xs2113033281-ft", "page": 1},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2020-02-04", "doc": "ibrd-xs2113033281-ft", "page": 1},
+    "interest_commencement_date": {
+      "value": "2020-02-04",
+      "doc": "ibrd-xs2113033281-ft", "page": 1,
+      "definition": {"doc": "ibrd-gdif-2008", "page": 28}
+    },
+    "maturity_date": {"value": "2026-12-15", "doc": "ibrd-xs2113033281-ft", "page": 1},
+    "interest_rate": {"value": "0.750", "doc": "ibrd-xs2113033281-ft", "page": 2},
+    "coupon_frequency": {"value": 1, "doc": "ibrd-xs2113033281-ft", "page": 2},
+    "interest_payment_dates": {"value": ["12-15"], "doc": "ibrd-xs2113033281-ft", "page": 2},
+    "first_interest_payment_date": {"value": "2020-12-15", "doc": "ibrd-xs2113033281-ft", "page": 2},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "ibrd-xs2113033281-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2008", "page": 28}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "ibrd-xs2113033281-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2008", "page": 35},
+      "check": "FT says Business Day Convention Not Applicable; FOLLOWING comes from the payment-day rule in Condition 7(h)"
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "ibrd-xs2113033281-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2008", "page": 35}
+    },
+    "business_day": {
+      "value": ["London", "New York"],
+      "doc": "ibrd-xs2113033281-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2008", "page": 35}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "ibrd-xs2113033281-ft", "page": 2},
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "ibrd-gdif-2008", "page": 25,
+      "definition": {"doc": "ibrd-gdif-2008", "page": 25}
+    },
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "7.50", "per": "1000"},
+        {"date": "2020-12-15", "amount": "6.45", "per": "1000"}
+      ],
+      "doc": "ibrd-xs2113033281-ft", "page": 2
+    },
+    "record_date": {
+      "value": "Close of business on the calendar day before the due date for payment",
+      "doc": "ibrd-xs2113033281-ft", "page": 2
+    }
+  },
+  "notes": "Base conditions are those of the 28 May 2008 Prospectus (ibrd-gdif-2008), not the 2021 one. The FT text is an OCR'd scan with artifacts ('Rate oflnterest', 'Actual/A ctual ICMA', 'Condition l(d)', '99. 817'); the Tranche Number value is missing from the text layer. Short first coupon: Issue Date 4 February 2020 to first Interest Payment Date 15 December 2020, Initial Broken Amount GBP 6.45 per Specified Denomination (315/366 x GBP 7.50 = 6.4549, consistent with Actual/Actual-ICMA); regular Fixed Coupon Amount GBP 7.50 per Specified Denomination. The 2008 Actual/Actual-ICMA definition (Condition 5(l)(vii), page 28) refers to ICMA Rule 251 rather than spelling out the Determination Period formula used in the 2021 conditions. Business day convention: FT 16(ii) says Interest Payment Dates are not subject to adjustment and 16(iv) Business Day Convention Not Applicable; Condition 7(h) Non-Business Days (page 35) postpones payment to the next following business day (Financial Centres London and New York, plus the principal financial centre of the currency) with no extra interest. Record date: FT term 23 replaces the first sentence of Condition 7(a)(ii); the 2008 base text (page 32) had the fifteenth day before the due date. Final Redemption Amount is printed as GBP 1,000 per Specified Denomination, i.e. 100 per cent. Calculation Amount is not specified; Condition 5(j) (page 25) defaults it to the minimum Specified Denomination. Rounding: Condition 5(i)(z), nearest unit of the currency with halves rounded up."
+}

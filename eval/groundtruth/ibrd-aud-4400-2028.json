@@ -1,0 +1,60 @@
+{
+  "bond_id": "ibrd-aud-4400-2028",
+  "isin": "AU3CB0295509",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "AU3CB0295509", "doc": "ibrd-au3cb0295509-ft", "page": 4},
+    "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-au3cb0295509-ft", "page": 1},
+    "currency": {"value": "AUD", "doc": "ibrd-au3cb0295509-ft", "page": 1},
+    "aggregate_nominal_amount": {"value": "1500000000", "doc": "ibrd-au3cb0295509-ft", "page": 1},
+    "specified_denomination": {"value": "1000", "doc": "ibrd-au3cb0295509-ft", "page": 1},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2023-01-13", "doc": "ibrd-au3cb0295509-ft", "page": 1},
+    "interest_commencement_date": {
+      "value": "2023-01-13",
+      "doc": "ibrd-au3cb0295509-ft", "page": 1,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 32}
+    },
+    "maturity_date": {"value": "2028-01-13", "doc": "ibrd-au3cb0295509-ft", "page": 1},
+    "interest_rate": {"value": "4.40", "doc": "ibrd-au3cb0295509-ft", "page": 2},
+    "coupon_frequency": {"value": 2, "doc": "ibrd-au3cb0295509-ft", "page": 2},
+    "interest_payment_dates": {"value": ["01-13", "07-13"], "doc": "ibrd-au3cb0295509-ft", "page": 2},
+    "first_interest_payment_date": {"value": "2023-07-13", "doc": "ibrd-au3cb0295509-ft", "page": 2},
+    "day_count_fraction": {
+      "value": "RBA_BOND_BASIS",
+      "doc": "ibrd-au3cb0295509-ft", "page": 2,
+      "definition": {"doc": "ibrd-au3cb0295509-ft", "page": 2}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "ibrd-au3cb0295509-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 38},
+      "check": "FT says Business Day Convention Not Applicable; FOLLOWING comes from the payment-day rule in Condition 7(h)"
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "ibrd-au3cb0295509-ft", "page": 2,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 39}
+    },
+    "business_day": {
+      "value": ["Sydney"],
+      "doc": "ibrd-au3cb0295509-ft", "page": 3,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 39}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "ibrd-au3cb0295509-ft", "page": 2},
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "ibrd-gdif-2021", "page": 28,
+      "definition": {"doc": "ibrd-gdif-2021", "page": 28}
+    },
+    "stated_coupon_amounts": {
+      "value": null,
+      "check": "No amount printed; Appendix A item 4 (FT page 9) fixes two equal semi-annual payments, implying AUD 22.00 per AUD 1,000, but no figure is stated"
+    },
+    "record_date": {
+      "value": "Close of business in Sydney on the date falling 8 calendar days before each Interest Payment Date and the Maturity Date",
+      "doc": "ibrd-au3cb0295509-ft", "page": 7
+    }
+  },
+  "notes": "Kangaroo note under the 2021 Prospectus. The FT is for AUD 1,500,000,000 (Series 101636, Tranche 1). The day count 'RBA Bond Basis' is defined in the FT itself (term 16(v), page 2): one divided by the number of Interest Payment Dates in a year, or Actual/Actual (ISDA-style 365/366 split) for a Calculation Period that is not an Interest Period; the base Day Count Fraction list has no RBA entry and only the catch-all 'such other basis as specified hereon' (ibrd-gdif-2021 page 31). Appendix A item 4 (FT page 9) adds to Condition 5(j) that interest is payable in two equal semi-annual payments and otherwise accrues on actual days over a 365-day year (366 in a leap year). Appendix A (pages 7-11) does more than replace Conditions 1-2: it amends Conditions 1(a), 1(c), 2(a)(i), 2(g), 2(h), 4, 5(j), 7(a), 10, 12(c) and 14 and defines the Record Date. It does not touch Condition 7(h), so the base payment-day rule (ibrd-gdif-2021 pages 38-39) still applies: payment on the next following business day in Sydney, no extra interest, no modified-following variant specified. Interest Payment Dates are explicitly not subject to adjustment. Calculation Amount is not specified; Condition 5(j) (page 28) defaults it to the minimum Specified Denomination. Final Redemption Amount is printed as AUD1,000 per Specified Denomination, i.e. 100 per cent. Rounding: Condition 5(i)(z), nearest unit of the currency with half a unit rounded up; 'unit' is the lowest amount available as legal tender (AUD 0.01 assumed)."
+}

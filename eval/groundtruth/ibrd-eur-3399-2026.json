@@ -1,0 +1,55 @@
+{
+  "bond_id": "ibrd-eur-3399-2026",
+  "isin": "XS2615318289",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "XS2615318289", "doc": "ibrd-xs2615318289-ft", "page": 3},
+    "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-xs2615318289-ft", "page": 1},
+    "currency": {"value": "EUR", "doc": "ibrd-xs2615318289-ft", "page": 1},
+    "aggregate_nominal_amount": {"value": "100000000", "doc": "ibrd-xs2615318289-ft", "page": 1},
+    "specified_denomination": {"value": "1000", "doc": "ibrd-xs2615318289-ft", "page": 1},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2023-10-23", "doc": "ibrd-xs2615318289-ft", "page": 1},
+    "interest_commencement_date": {
+      "value": "2023-10-23",
+      "doc": "ibrd-xs2615318289-ft", "page": 1,
+      "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 16}
+    },
+    "maturity_date": {"value": "2026-10-23", "doc": "ibrd-xs2615318289-ft", "page": 1},
+    "interest_rate": {"value": "3.399", "doc": "ibrd-xs2615318289-ft", "page": 2},
+    "coupon_frequency": {"value": 1, "doc": "ibrd-xs2615318289-ft", "page": 2},
+    "interest_payment_dates": {"value": ["10-23"], "doc": "ibrd-xs2615318289-ft", "page": 2},
+    "first_interest_payment_date": {"value": "2024-10-23", "doc": "ibrd-xs2615318289-ft", "page": 2},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "ibrd-xs2615318289-ft", "page": 2,
+      "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 15}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "ibrd-xs2615318289-ft", "page": 2,
+      "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 20},
+      "check": "FT says Business Day Convention Not Applicable; FOLLOWING comes from the payment-day rule, which FT calls Condition 7(h) but Schedule 3 numbers 7(i) (7(h) is 'Not Used')"
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "ibrd-xs2615318289-ft", "page": 2,
+      "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 20}
+    },
+    "business_day": {
+      "value": ["London", "TARGET", "New York"],
+      "doc": "ibrd-xs2615318289-ft", "page": 2,
+      "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 20},
+      "check": "FT term 20 cites Condition 7(h); in the DNN conditions the 'business day' definition is in Condition 7(i)"
+    },
+    "final_redemption_amount": {"value": "100", "doc": "ibrd-xs2615318289-ft", "page": 2},
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "ibrd-dnn-supplement-2023", "page": 12,
+      "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 12}
+    },
+    "stated_coupon_amounts": {"value": null},
+    "record_date": {"value": null}
+  },
+  "notes": "Schedule 3 of the DNN Prospectus Supplement (pages 7-23) replaces the Terms and Conditions of the 2021 Prospectus for Digitally Native Notes, so every definition is cited from ibrd-dnn-supplement-2023, not ibrd-gdif-2021. Day count: FT 'Actual/Actual (ICMA)' corresponds to Condition 5(l)(viii) 'Actual/Actual-ICMA' (the Day Count Fraction list starts on page 13, the ICMA clause is on page 15); no Determination Dates are specified, so they default to the Interest Payment Dates. Business day convention: FT 16(ii) says Interest Payment Dates are not subject to adjustment and 16(iv) says Business Day Convention Not Applicable; the payment-day rule in Condition 7(i) (page 20) postpones a payment to the next following business day without extra interest, and the modified-following variant applies only if specified, which the FT does not do. Interest periods are therefore unadjusted. Business day for payment: the Financial Centres London, TARGET and New York, plus a TARGET Business Day for euro payments. Calculation Amount is not specified; Condition 5(j) (page 13) makes it default to the minimum Specified Denomination (EUR 1,000). The first interest payment date is not printed: it follows from '23 October in each year' and the 23 October 2023 Issue Date. No coupon amount is printed (3.399% of EUR 1,000 would be EUR 33.99). No record date in the FT or in Schedule 3; the Record Date item in the DNN form of final terms (page 35) is optional and was not used. Rounding: Condition 5(i)(z), nearest unit of the currency with half a unit rounded up."
+}

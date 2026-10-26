@@ -1,0 +1,47 @@
+{
+  "bond_id": "ceb-gbp-3875-2029",
+  "isin": "XS3268973966",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "XS3268973966", "doc": "ceb-xs3268973966-ps", "page": 5},
+    "issuer": {"value": "Council of Europe Development Bank", "doc": "ceb-xs3268973966-ps", "page": 1},
+    "currency": {"value": "GBP", "doc": "ceb-xs3268973966-ps", "page": 1},
+    "aggregate_nominal_amount": {"value": "750000000", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "specified_denomination": {"value": "1000", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-01-12", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "interest_commencement_date": {"value": "2026-01-12", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "maturity_date": {"value": "2029-01-12", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "interest_rate": {"value": "3.875", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "coupon_frequency": {"value": 1, "doc": "ceb-xs3268973966-ps", "page": 2},
+    "interest_payment_dates": {"value": ["01-12"], "doc": "ceb-xs3268973966-ps", "page": 2},
+    "first_interest_payment_date": {"value": "2027-01-12", "doc": "ceb-xs3268973966-ps", "page": 2},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "ceb-xs3268973966-ps", "page": 2,
+      "definition": {"doc": "ceb-mtn-2023", "page": 50}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "ceb-xs3268973966-ps", "page": 2,
+      "definition": {"doc": "ceb-mtn-2023", "page": 49}
+    },
+    "accrual_adjusted": {"value": false, "doc": "ceb-xs3268973966-ps", "page": 2},
+    "business_day": {
+      "value": ["London", "TARGET"],
+      "doc": "ceb-xs3268973966-ps", "page": 3,
+      "definition": {"doc": "ceb-mtn-2023", "page": 49},
+      "check": "Item 25 names 'T2 and London' as Relevant Financial Centres for a GBP note. The Business Day definition (iii) for currencies other than EUR/RMB counts London, the Relevant Financial Centre of the currency and any Additional Business Centre; T2 is a payment system, not a centre, and its role here is unclear. Payment-day rule is Condition 8A.5 (p.61) with Relevant Financial Centre Day (p.64)."
+    },
+    "final_redemption_amount": {"value": "100", "doc": "ceb-xs3268973966-ps", "page": 3},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "38.75", "per": "1000"}
+      ],
+      "doc": "ceb-xs3268973966-ps", "page": 2
+    },
+    "record_date": {"value": null},
+    "rounding_rule": {"value": "HALF_UP", "doc": "ceb-mtn-2023", "page": 48}
+  },
+  "notes": "Pricing Supplement (Series 469, Tranche 1) read with the Offering Circular dated 8 December 2023 as supplemented on 17 November 2025. The 2025 supplement changes only the programme size, the issuer description ('Resources') and the General Information paragraphs (p.2); it does not amend the Terms and Conditions, so all definitions are cited in the 2023 Offering Circular. Interest Payment Dates are 'adjusted for payment purposes only in accordance with the Following Business Day Convention' and 'No Adjustments will be made to the Fixed Coupon Amount' (PS p.2), hence accrual unadjusted. Definitions: 'Applicable Business Day Convention' (p.48; for fixed rate notes with nothing specified 'No Adjustment' is deemed), 'Business Day' and 'Following Business Day Convention' (p.49), Actual/Actual (ICMA) (p.50) with 'Regular Period' (p.53), 'Relevant Financial Centre' (p.53), rounding in Condition 5.12 (p.48: amounts in currencies other than USD and JPY rounded to two decimal places with 0.005 rounded upwards). Payment-day rules: Condition 8A.5 (p.61, payment on the next day that is a Relevant Financial Centre Day and a Local Banking Day) and Condition 8C.4(x) Relevant Financial Centre Day (p.64). No Calculation Amount; the Fixed Coupon Amount is stated per GBP 1,000 Specified Denomination. Maturity Redemption Amount is GBP 1,000 per GBP 1,000 Specified Denomination (par). The Notes are Bearer Notes (Temporary then Permanent Global Note, NGN); the Record Date in Condition 8B.3 (p.62) applies only to Registered Notes, so record_date is null."
+}

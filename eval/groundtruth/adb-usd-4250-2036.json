@@ -1,0 +1,60 @@
+{
+  "bond_id": "adb-usd-4250-2036",
+  "isin": "US045167GP25",
+  "status": "draft",
+  "fields": {
+    "isin": {"value": "US045167GP25", "doc": "adb-gmtn-1927-ps", "page": 8},
+    "issuer": {"value": "Asian Development Bank", "doc": "adb-gmtn-1927-ps", "page": 4},
+    "currency": {"value": "USD", "doc": "adb-gmtn-1927-ps", "page": 4},
+    "aggregate_nominal_amount": {"value": "3500000000", "doc": "adb-gmtn-1927-ps", "page": 4},
+    "specified_denomination": {"value": "1000", "doc": "adb-gmtn-1927-ps", "page": 4},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-01-14", "doc": "adb-gmtn-1927-ps", "page": 4},
+    "interest_commencement_date": {
+      "value": "2026-01-14",
+      "doc": "adb-gmtn-1927-ps", "page": 4,
+      "definition": {"doc": "adb-gmtn-2020", "page": 36}
+    },
+    "maturity_date": {"value": "2036-01-14", "doc": "adb-gmtn-1927-ps", "page": 4},
+    "interest_rate": {"value": "4.25", "doc": "adb-gmtn-1927-ps", "page": 5},
+    "coupon_frequency": {"value": 2, "doc": "adb-gmtn-1927-ps", "page": 5},
+    "interest_payment_dates": {"value": ["01-14", "07-14"], "doc": "adb-gmtn-1927-ps", "page": 5},
+    "first_interest_payment_date": {"value": "2026-07-14", "doc": "adb-gmtn-1927-ps", "page": 5},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "adb-gmtn-1927-ps", "page": 6,
+      "definition": {"doc": "adb-gmtn-2020", "page": 34}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "adb-gmtn-1927-ps", "page": 5,
+      "definition": {"doc": "adb-gmtn-2020", "page": 32}
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "adb-gmtn-1927-ps", "page": 5,
+      "definition": {"doc": "adb-gmtn-2020", "page": 37}
+    },
+    "business_day": {
+      "value": ["New York"],
+      "doc": "adb-gmtn-1927-ps", "page": 5,
+      "definition": {"doc": "adb-gmtn-2020", "page": 37}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "adb-gmtn-1927-ps", "page": 6},
+    "rounding_rule": {
+      "value": "NOT_STATED",
+      "check": "No rounding rule for Fixed Rate Notes in the pricing supplement or Condition 5(a); the only half-up rule is Condition 5(b)(vi) for Floating Rate Notes (adb-gmtn-2020 page 30). Coupon is printed as USD 21.25, so no rounding arises"
+    },
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "21.25", "per": "1000"}
+      ],
+      "doc": "adb-gmtn-1927-ps", "page": 5
+    },
+    "record_date": {
+      "value": "Close of business at the Fiscal Agent on the day preceding the due date for payment (Book-Entry Record Date)",
+      "doc": "adb-gmtn-2020", "page": 42
+    }
+  },
+  "notes": "Pricing supplement under the ADB GMTN Prospectus of 9 December 2020. Interest Commencement Date is stated as 'Not applicable (if different from the Issue Date)', so it equals the Issue Date. Interest Payment Dates are adjusted under the Following Business Day Convention, while Interest Period End Dates are 'Unadjusted' (term 16(iii)-(v), page 5), so accrual is unadjusted; Condition 5(a) (adb-gmtn-2020 page 27) also says a postponed Fixed Rate payment carries no extra interest. Business day: Relevant Financial Center New York, Additional Business Center(s) Not applicable (page 6); 'Relevant Business Day' is defined on adb-gmtn-2020 pages 37-38. 30/360 is Condition 5(d) Day Count Fraction (vi) (pages 34-35). Form is Book-Entry Notes (Federal Reserve Book-Entry System, page 7), so the record date is the Book-Entry Record Date in Condition 7(b)(i) (page 42): close of business at the Fiscal Agent on the day before the due date, or the next preceding day the Fiscal Agent is open. Final Redemption Amount is 'Aggregate Nominal Amount' with Redemption at par, i.e. 100 per cent. ADB conditions have no Calculation Amount concept; the Fixed Coupon Amount is USD 21.25 per Specified Denomination on each Interest Payment Date."
+}
