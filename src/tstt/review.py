@@ -31,7 +31,8 @@ def normalise(name: str, value: Any) -> Any:
         raise TermsError(f"unknown field {name}")
     if value in (None, "") or (spec.kind == "list" and value == []):
         return None
-    if spec.kind == "int" and isinstance(value, bool):
+    if spec.kind == "int" and (isinstance(value, bool)
+                               or not re.fullmatch(r"\s*\d+\s*", str(value))):
         raise TermsError(f"{name}: not a whole number: {value!r}")
     if spec.kind == "list" and not isinstance(value, list):
         raise TermsError(f"{name}: expected a list")
@@ -199,6 +200,13 @@ def save_review(settings: Settings, review: dict[str, Any]) -> None:
     path.write_text(json.dumps(review, indent=1, ensure_ascii=False), encoding="utf-8")
 
 
+def discard(settings: Settings, run: str, bond_id: str) -> None:
+    """Forget the review of a model's earlier reading when the bond is read again."""
+    if run != TRUTH:
+        review_path(settings, run, bond_id).unlink(missing_ok=True)
+        reviewed_report_path(settings, run, bond_id).unlink(missing_ok=True)
+
+
 def reviewed_values(fields: dict[str, dict[str, Any]],
                     review: dict[str, Any]) -> dict[str, dict[str, Any]]:
     """The source fields with the reviewer's corrections in place of the source values."""
@@ -267,7 +275,8 @@ def record(settings: Settings, run: str, bond_id: str, name: str, action: str,
             truth["fields"][name]["value"] = (entry["value"] if entry
                                               and entry["status"] == "corrected" else original)
         write_truth(bond_id, truth)
-    else:
+    elif any(e and e["status"] == "corrected" for e in (before, entry)):
+        # The reviewed terms changed, so their earlier replay no longer applies.
         reviewed_report_path(settings, run, bond_id).unlink(missing_ok=True)
     save_review(settings, review)
     return review

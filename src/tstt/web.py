@@ -32,6 +32,7 @@ from tstt.pages import page_image, page_view, search_pages
 from tstt.review import (
     GROUND_TRUTH,
     corrected,
+    discard,
     load_review,
     mark_issued,
     record,
@@ -222,6 +223,7 @@ def _run_job(settings: Settings, job: Job) -> None:
         else:
             extraction = one_pass(client, source)
         extraction.save(settings.runs_dir / "extractions" / run)
+        discard(settings, run, job.bond_id)
         if extraction.error:
             raise ModelError(extraction.error)
         emit("extracted", seconds=round(extraction.seconds, 1), steps=extraction.steps,
@@ -235,6 +237,9 @@ def _run_job(settings: Settings, job: Job) -> None:
         emit("done", run=run, summary=report.summary())
     except (ModelError, TermsError, ValueError) as exc:
         emit("error", message=str(exc)[:500])
+    except Exception as exc:  # the page must hear that the job ended
+        emit("error", message=f"{type(exc).__name__}: {exc}"[:500])
+        raise
     finally:
         job.done = True
 
@@ -296,7 +301,12 @@ def create_app(settings: Settings | None = None,
             documents.append({"doc": d["doc"], "role": d["role"], "title": meta["title"],
                               "format": meta["format"], "url": meta["url"],
                               "pages": len(load_document(settings, d["doc"]).pages)})
-        scores = _read_json(settings.runs_dir / "eval" / f"{run}.json")
+        scored = settings.runs_dir / "eval" / f"{run}.json"
+        read = settings.runs_dir / "extractions" / run / f"{bond_id}.json"
+        # A score older than the extraction belongs to an earlier reading.
+        stale = (scored.exists() and read.exists()
+                 and read.stat().st_mtime > scored.stat().st_mtime)
+        scores = None if stale else _read_json(scored)
         score = next((b for b in (scores or {}).get("bonds", [])
                       if b["bond_id"] == bond_id), None)
         return {"bond": {k: entry.get(k) for k in ("id", "label", "isin", "cusip",

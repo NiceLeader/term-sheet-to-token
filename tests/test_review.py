@@ -8,11 +8,14 @@ from tstt.config import Settings
 from tstt.review import (
     _patched,
     corrected,
+    discard,
     load_review,
     mark_issued,
     normalise,
     read_truth,
     record,
+    review_path,
+    reviewed_report_path,
     reviewed_values,
     truth_path,
     unreviewed,
@@ -46,7 +49,8 @@ def test_values_are_normalised_to_the_ground_truth_format():
 @pytest.mark.parametrize(("name", "value"), [
     ("day_count_fraction", "ACT/ACT"), ("accrual_adjusted", "yes"), ("issue_date", "4 Feb 2020"),
     ("interest_rate", "three"), ("interest_payment_dates", ["15 December"]),
-    ("coupon_frequency", True), ("stated_coupon_amounts", "7.50 per 1000"), ("no_such", 1),
+    ("coupon_frequency", True), ("coupon_frequency", "twice"), ("coupon_frequency", 1.5),
+    ("coupon_frequency", "1.5"), ("stated_coupon_amounts", "7.50 per 1000"), ("no_such", 1),
 ])
 def test_invalid_corrections_are_refused(name, value):
     with pytest.raises(TermsError):
@@ -119,3 +123,27 @@ def test_a_verified_file_without_a_review_record_counts_as_reviewed(settings):
     review.write_truth(BOND, data)
     current = load_review(settings, "groundtruth", BOND)
     assert not unreviewed(current) and current["issued"] is not None
+
+
+def _replayed(settings):
+    path = reviewed_report_path(settings, RUN, BOND)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("{}", encoding="utf-8")
+    return path
+
+
+def test_only_a_change_of_the_reviewed_terms_drops_their_replay(settings):
+    record(settings, RUN, BOND, "currency", "correct", "USD", "GBP")
+    report = _replayed(settings)
+    record(settings, RUN, BOND, "interest_rate", "approve", "0.750")
+    assert report.exists()
+    record(settings, RUN, BOND, "currency", "reset", "USD")
+    assert not report.exists()
+
+
+def test_reading_a_bond_again_forgets_the_review_of_the_earlier_reading(settings):
+    record(settings, RUN, BOND, "currency", "approve", "GBP")
+    report = _replayed(settings)
+    discard(settings, RUN, BOND)
+    assert not review_path(settings, RUN, BOND).exists() and not report.exists()
+    assert unreviewed(load_review(settings, RUN, BOND)) == [f.name for f in FIELDS]

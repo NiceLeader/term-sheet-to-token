@@ -161,7 +161,10 @@ def _post(client: httpx.Client, url: str, body: dict[str, Any], attempts: int = 
             response = client.post(url, json=body)
         except httpx.TransportError as exc:
             if attempt == attempts - 1:
-                raise ModelError(f"request to {url} failed: {exc}") from exc
+                # The operating system's own message may be in the machine's language.
+                reason = ("the server is not reachable" if isinstance(exc, httpx.ConnectError)
+                          else type(exc).__name__)
+                raise ModelError(f"request to {url} failed: {reason}") from exc
         else:
             if response.status_code < 400:
                 return response.json()

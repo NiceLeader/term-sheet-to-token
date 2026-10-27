@@ -38,8 +38,9 @@ button, input, select { font: inherit; color: inherit; }
 /* ---------------------------------------------------------------- header */
 .top {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
+  gap: 8px 18px;
   padding: 10px 20px;
   background: var(--panel);
   border-bottom: 1px solid var(--line);
@@ -47,10 +48,10 @@ button, input, select { font: inherit; color: inherit; }
 .brand { font-weight: 700; font-size: 16px; color: var(--ink); text-decoration: none; white-space: nowrap; }
 .picker { display: flex; align-items: center; gap: 8px; color: var(--muted); }
 .picker select {
-  min-width: 340px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px;
+  width: 300px; max-width: 100%; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px;
   background: var(--panel); color: var(--ink);
 }
-.sources { display: flex; gap: 4px; background: var(--soft); padding: 3px; border-radius: 8px; }
+.sources { display: flex; flex-wrap: wrap; gap: 4px; background: var(--soft); padding: 3px; border-radius: 8px; }
 .sources button {
   border: 0; background: transparent; padding: 5px 12px; border-radius: 6px; cursor: pointer;
   color: var(--muted); white-space: nowrap;
@@ -62,7 +63,10 @@ button, input, select { font: inherit; color: inherit; }
   padding: 4px 10px; cursor: pointer; font-weight: 600;
 }
 .extract button:hover { background: var(--accent-soft); }
-.extract button:disabled { opacity: .5; cursor: default; }
+.extract button:disabled, .extract select:disabled { opacity: .5; cursor: default; }
+.extract select {
+  border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; background: var(--panel);
+}
 .live { padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--accent-soft); font-size: 13px; }
 .live b { color: var(--accent); }
 .live.error { background: var(--bad-soft); color: var(--bad); }
@@ -156,6 +160,7 @@ button, input, select { font: inherit; color: inherit; }
 .dot.warn { background: var(--warn-soft); color: var(--warn); }
 .dot.bad { background: var(--bad-soft); color: var(--bad); }
 .dot.none { background: var(--soft); color: var(--faint); }
+.dot.fix { background: var(--accent-soft); color: var(--accent); }
 .chip {
   display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-weight: 600;
   background: var(--soft); color: var(--muted);
@@ -296,3 +301,27 @@ td.num, th.num { text-align: right; }
 .results h2 { font-size: 15px; margin: 22px 0 8px; }
 
 .step .repeat { color: var(--warn); margin-left: .35em; }
+
+/* ---------------------------------------------------------------- narrow screens */
+@media (max-width: 1240px) {
+  .grid {
+    grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+    grid-auto-rows: calc(100vh - 130px);
+    overflow-y: auto;
+  }
+  .panel.payments { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .top { padding: 8px 12px; gap: 8px 12px; }
+  .picker { flex: 1 1 100%; }
+  .picker select { flex: 1; width: auto; min-width: 0; }
+  .status { margin-left: 0; justify-content: flex-start; }
+  .extract { flex-wrap: wrap; }
+  .grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 82vh; padding: 8px; gap: 8px; }
+  .checks { grid-template-columns: repeat(2, 1fr); }
+  .results { padding: 16px 12px; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .card { padding: 10px 12px; }
+  .card .big { font-size: 22px; }
+  .card .what { font-size: 12px; }
+}

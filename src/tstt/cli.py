@@ -86,6 +86,7 @@ def _cmd_verify(args: argparse.Namespace) -> int:
 def _cmd_extract(args: argparse.Namespace) -> int:
     from tstt.extract import agent, bond_source, one_pass
     from tstt.llm import ModelError, SpendLimitReached, make_client
+    from tstt.review import discard
 
     settings = load_settings()
     client = make_client(args.model, settings)
@@ -107,6 +108,7 @@ def _cmd_extract(args: argparse.Namespace) -> int:
             failed += 1
             continue
         path = extraction.save(folder)
+        discard(settings, folder.name, bond_id)
         if extraction.error:
             print(f"{bond_id}: {extraction.error} -> {path}", file=sys.stderr)
             failed += 1
