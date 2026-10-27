@@ -1,3 +1,5 @@
+import json
+
 import httpx
 import pytest
 
@@ -60,3 +62,27 @@ def test_without_a_limit_spend_is_recorded_but_never_refused(tmp_path):
     for _ in range(3):
         ask(meta)
     assert len(sent) == 3 and ledger.spent() == pytest.approx(3.75)
+
+
+def test_a_lost_conversation_is_sent_whole(tmp_path):
+    call = {"type": "function_call", "id": "fc_1", "call_id": "call_1", "name": "search",
+            "arguments": '{"query": "Interest Rate"}', "status": "completed"}
+    lost = {"error": {"message": "referenced response not found or expired"}}
+    replies = [(200, response() | {"output": [call]}), (400, lost), (200, response())]
+    sent = []
+
+    def handler(request):
+        sent.append(json.loads(request.content))
+        status, body = replies.pop(0)
+        return httpx.Response(status, json=body)
+
+    meta = MetaClient("key", spend=SpendLedger(tmp_path / "spend.jsonl", None))
+    meta.http = httpx.Client(transport=httpx.MockTransport(handler))
+    first = meta.tool_step("instructions", [], user="read the bond")
+    meta.tool_step("instructions", [], previous=first, results=[("call_1", "page 3")])
+    assert sent[1]["previous_response_id"] == "resp_1"
+    assert "previous_response_id" not in sent[2]
+    assert [item.get("type") or item["role"] for item in sent[2]["input"]] == [
+        "user", "function_call", "function_call_output"]
+    assert sent[2]["input"][1] == {"type": "function_call", "call_id": "call_1",
+                                   "name": "search", "arguments": '{"query": "Interest Rate"}'}

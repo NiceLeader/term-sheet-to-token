@@ -191,6 +191,8 @@ class MetaClient:
                                  headers={"Authorization": f"Bearer {api_key}"})
         # The server keeps the whole conversation, so no tool output is ever removed.
         self.elided: set[str] = set()
+        # A copy of the tool conversation, sent whole if the server loses its own.
+        self._history: list[dict[str, Any]] = []
 
     def _send(self, body: dict[str, Any]) -> tuple[dict[str, Any], float]:
         if self.spend:
@@ -260,9 +262,32 @@ class MetaClient:
             "tool_choice": tool_choice,
             "reasoning": {"effort": self.effort},
         }
-        if previous is not None:
+        if previous is None:
+            self._history = []
+        else:
             body["previous_response_id"] = previous.response_id
-        return self._reply(*self._send(body))
+        try:
+            data, seconds = self._send(body)
+        except ModelError as exc:
+            if previous is None or "referenced response not found" not in str(exc):
+                raise
+            # The stored conversation is gone on the server; it is rebuilt from the copy.
+            del body["previous_response_id"]
+            body["input"] = self._history + items
+            data, seconds = self._send(body)
+        self._history += items + [_as_input(item) for item in data.get("output", [])
+                                  if item.get("type") in ("message", "function_call")]
+        return self._reply(data, seconds)
+
+
+def _as_input(item: dict[str, Any]) -> dict[str, Any]:
+    """An output item of a response, as an input item of a later request."""
+    if item["type"] == "function_call":
+        return {"type": "function_call", "call_id": item["call_id"], "name": item["name"],
+                "arguments": item.get("arguments") or "{}"}
+    text = "".join(part.get("text", "") for part in item.get("content", [])
+                   if part.get("type") == "output_text")
+    return {"role": "assistant", "content": text}
 
 
 class LocalClient:
