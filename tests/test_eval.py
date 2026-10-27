@@ -1,4 +1,4 @@
-from tstt.eval import normalise
+from tstt.eval import blocking_fields, normalise
 
 
 def test_centres_compare_by_calendar():
@@ -12,3 +12,16 @@ def test_centres_compare_by_calendar():
 def test_empty_values_are_equal():
     assert normalise("record_date", None) == normalise("record_date", "") is None
     assert normalise("stated_coupon_amounts", []) is None
+
+
+def test_coupon_amounts_compare_as_numbers():
+    stated = [{"amount": "9000000", "per": "3000000000"}]
+    written = [{"amount": "9000000.00", "per": "3,000,000,000"}]
+    assert normalise("stated_coupon_amounts", stated) == normalise("stated_coupon_amounts",
+                                                                   written)
+
+
+def test_a_missing_schedule_term_or_unreadable_value_blocks_the_token():
+    assert blocking_fields({"final_redemption_amount": None, "interest_rate": "three",
+                            "record_date": None}) >= {"final_redemption_amount", "interest_rate"}
+    assert "record_date" not in blocking_fields({"record_date": None})

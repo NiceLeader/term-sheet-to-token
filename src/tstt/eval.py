@@ -21,7 +21,14 @@ from tstt.cite import Citations, check_fields
 from tstt.config import Settings
 from tstt.extract import Extraction, bond_source
 from tstt.schedule import Schedule, build_schedule
-from tstt.terms import FIELD_BY_NAME, TermsError, build_terms
+from tstt.terms import (
+    FIELD_BY_NAME,
+    FIELDS,
+    REQUIRED_FOR_SCHEDULE,
+    TermsError,
+    build_terms,
+    parse_value,
+)
 from tstt.token import record_rule
 
 EMPTY = (None, "", [], "NOT_STATED")
@@ -32,6 +39,26 @@ def _decimal(value: Any) -> Decimal | None:
         return Decimal(str(value).replace(",", ""))
     except (InvalidOperation, ValueError):
         return None
+
+
+def _number(value: Any) -> Decimal | None:
+    number = _decimal(value)
+    return None if number is None else number.normalize()
+
+
+def blocking_fields(values: dict[str, Any]) -> set[str]:
+    """Fields that stop the terms from being built: a term the schedule needs is missing, or
+    a value cannot be read. No token is issued then, which flags them as surely as a check."""
+    blocking = set()
+    for spec in FIELDS:
+        try:
+            typed = parse_value(spec, values.get(spec.name))
+        except (TermsError, ValueError, TypeError, KeyError):
+            blocking.add(spec.name)
+        else:
+            if typed is None and spec.name in REQUIRED_FOR_SCHEDULE:
+                blocking.add(spec.name)
+    return blocking
 
 
 def normalise(name: str, value: Any) -> Any:
@@ -52,8 +79,8 @@ def normalise(name: str, value: Any) -> Any:
     if kind == "list":
         return tuple(sorted(str(v).strip().lower() for v in value))
     if kind == "coupons":
-        return tuple(sorted(((c.get("date") or ""), str(_decimal(c.get("amount"))),
-                             str(_decimal(c.get("per")))) for c in value))
+        return tuple(sorted(((c.get("date") or ""), str(_number(c.get("amount"))),
+                             str(_number(c.get("per")))) for c in value))
     if name == "record_date":
         rule = record_rule(str(value))
         return rule.kind, rule.days, rule.fixed
@@ -155,6 +182,7 @@ def score_bond(settings: Settings, extraction: Extraction, truth_path: Path) -> 
     except (TermsError, ValueError, TypeError) as exc:
         detail = f"no schedule: {exc}"
         payments = len(expected_flows)
+        flagged = blocking_fields(values)
     else:
         got_flows = _flows(schedule)
         payments = max(len(expected_flows), len(got_flows))
