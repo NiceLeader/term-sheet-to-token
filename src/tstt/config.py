@@ -24,6 +24,7 @@ class Settings:
     local_model: str
     local_api_key: str | None
     sec_user_agent: str | None
+    spend_limit_usd: float | None = None
 
     @property
     def raw_dir(self) -> Path:
@@ -44,6 +45,11 @@ def load_settings() -> Settings:
         raise RuntimeError(
             "Set TSTT_DATA_DIR to a folder outside the repository (see .env.example)."
         )
+    limit = os.environ.get("MODEL_SPEND_LIMIT_USD", "").strip()
+    try:
+        spend_limit = float(limit) if limit else None
+    except ValueError:
+        raise RuntimeError(f"MODEL_SPEND_LIMIT_USD is not a number: {limit!r}") from None
     return Settings(
         data_dir=Path(data_dir),
         model_api_key=os.environ.get("MODEL_API_KEY") or None,
@@ -53,4 +59,5 @@ def load_settings() -> Settings:
         local_model=os.environ.get("LOCAL_MODEL", "muse-glimmer-30b"),
         local_api_key=os.environ.get("LOCAL_API_KEY") or None,
         sec_user_agent=os.environ.get("SEC_USER_AGENT") or None,
+        spend_limit_usd=spend_limit,
     )

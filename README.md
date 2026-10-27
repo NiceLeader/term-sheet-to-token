@@ -151,6 +151,10 @@ The review screen listens on 127.0.0.1 only. It answers only requests addressed 
 and accepts a POST only from its own page, so a page on another site cannot start an
 extraction that spends API credit.
 
+Every hosted response is recorded with its cost in `<data dir>/runs/spend.jsonl`. Once the
+total reaches `MODEL_SPEND_LIMIT_USD`, no further request is sent, from the command line or the
+review screen; the limit on the billing page only sends a notification.
+
 ## Limitations
 
 - Fixed-rate notes only. Floating rate, zero coupon, amortising and callable notes are out of

@@ -85,7 +85,7 @@ def _cmd_verify(args: argparse.Namespace) -> int:
 
 def _cmd_extract(args: argparse.Namespace) -> int:
     from tstt.extract import agent, bond_source, one_pass
-    from tstt.llm import ModelError, make_client
+    from tstt.llm import ModelError, SpendLimitReached, make_client
 
     settings = load_settings()
     client = make_client(args.model, settings)
@@ -99,6 +99,9 @@ def _cmd_extract(args: argparse.Namespace) -> int:
         try:
             run = one_pass if args.mode == "one_pass" else agent
             extraction = run(client, source)
+        except SpendLimitReached as exc:
+            print(f"{bond_id}: {exc}", file=sys.stderr)
+            return 1
         except ModelError as exc:
             print(f"{bond_id}: {exc}", file=sys.stderr)
             failed += 1
@@ -112,6 +115,10 @@ def _cmd_extract(args: argparse.Namespace) -> int:
         print(f"{bond_id}: {extraction.usage.input_tokens} in, "
               f"{extraction.usage.output_tokens} out, {extraction.seconds:.0f}s{cost}, "
               f"{extraction.steps} steps -> {path}")
+    spend = getattr(client, "spend", None)
+    if spend:
+        limit = "" if spend.limit_usd is None else f" of ${spend.limit_usd:.2f}"
+        print(f"hosted spend so far: ${spend.spent():.2f}{limit}")
     return 1 if failed else 0
 
 
