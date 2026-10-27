@@ -61,15 +61,27 @@ Motor Credit, John Deere Capital and PACCAR Financial.
 | Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 204 of 220 |
 | Verified values found on the page they are cited from | 214 of 220 |
 
-<!-- Extraction results: fill in after the full runs of both models. -->
+<!-- Muse Glimmer row: fill in after its full run on the 18 bonds. -->
 Reading the documents (field accuracy against the verified terms, bonds whose every payment
 comes out right, quotes found on the cited page, time and cost per bond):
 
-| Model and mode | Bonds | Field accuracy | All payments right | Quotes on page | Time per bond | Cost |
+| Model and mode | Bonds | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
 |---|---|---|---|---|---|---|
+| Muse Spark 1.3, agent | 18 | 99.7% | 18 of 18 | 508 of 517 | 196 s | $0.008 |
+| Muse Spark 1.3, one pass | 18 | 99.5% | 17 of 18 | 447 of 487 | 79 s | $0.015 |
 | Muse Glimmer, agent (local) | | | | | | none |
-| Muse Spark, agent | | | | | | |
-| Muse Spark, one pass | | | | | | |
+
+Muse Spark ran on the Contributor tier of the Meta Model API (the same model at a lower price,
+in exchange for the inputs being usable for training; the documents are public). Agent mode
+costs less than one pass because it reads only the pages it searches for, not the whole
+prospectus.
+
+Of 378 values, agent mode got one wrong and the single pass two. Both took the record date of one
+Hong Kong euro bond from the rule for registered notes instead of the rule for the global
+certificate held in the clearing system. That date changes no payment amount, so no check flags
+it: this is the kind of error the reviewer is there for. In one pass the model also left the
+redemption amount of the Toyota note empty (the US prospectus implies par and never prints
+"100 per cent"); the token cannot be built without it, so the bond is stopped before issuance.
 
 The errors that get through are listed in `tstt mutate terms`: values that are implied rather
 than written (a first payment date that follows from the cycle, redemption at par in a US
