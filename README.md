@@ -228,6 +228,7 @@ forge test --root contracts
 
 uv run tstt verify                # deploy and replay all 25 bonds from the verified terms
 uv run tstt extract ibrd-gbp-0750-2026 --model hosted --mode agent
+HOSTED_MODEL=muse-wonder-1.0 uv run tstt extract ibrd-gbp-0750-2026 --mode agent   # the same reading with Muse Wonder
 uv run tstt verify ibrd-gbp-0750-2026 --extraction <data dir>/runs/extractions/agent-muse-spark-1.3-contributor
 uv run tstt extract --held-out    # the seven bonds read after the field rules were frozen
 uv run tstt mutate                # planted errors and planted contract bugs
