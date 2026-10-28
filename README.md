@@ -57,7 +57,7 @@ Motor Credit, John Deere Capital and PACCAR Financial.
 |---|---|
 | Payments where the engine, QuantLib, the token on chain and the printed amounts agree (verified terms) | 149 of 149 |
 | Guard probes rejected on chain | 90 of 90 |
-| Deliberate bugs planted in the bond contract and caught by replaying the 18 bonds and the contract tests | 17 of 17 |
+| Deliberate bugs planted in the bond contract and caught by replaying the 18 bonds and the contract tests | 18 of 18 |
 | Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 204 of 220 |
 | Verified values found on the page they are cited from | 214 of 220 |
 
@@ -119,13 +119,15 @@ outside the repository and checks each file against the manifest.
 
 One contract per bond. The constructor takes the terms (currency, cash token, issuer, paying
 agent, units, denomination, calculation amount, rate, frequency, day count fraction, rounding
-rule, redemption percentage) and the schedule (accrual segments and payment dates with record
-dates), all as data. The contract then:
+rule, redemption percentage, whether interest is calculated on each holding) and the schedule
+(accrual segments and payment dates with record dates), all as data. The contract then:
 
 - computes each coupon itself from the day count fraction (Actual/Actual ICMA, 30/360,
   30E/360, Actual/365 Fixed, Actual/360, RBA Bond Basis, Actual/Actual Canadian compound) as
   an exact fraction over the segments of the period,
-  and rounds once per calculation amount with the rule from the documents;
+  and rounds once per calculation amount with the rule from the documents, or once per
+  holding where the documents calculate interest on each holder's whole holding (the Hong
+  Kong digital bonds, on each Digital Token Account);
 - pays the holders of record at the close of the record date, from balance checkpoints, so a
   sale after the record date does not move the coupon;
 - lets only the paying agent pay, not before the payment date, and only once;
@@ -199,9 +201,6 @@ the whole bond against QuantLib and the printed amounts.
 - Where a coupon is calculated on the aggregate outstanding amount, the token rounds per unit
   of the smallest denomination, which can differ by a fraction of a cent per holding.
 - Rounding to a cash unit larger than the currency's minor unit (CHF 0.05) is not modelled.
-- The Hong Kong digital bonds calculate interest on each token account's whole holding; the
-  token rounds the coupon of each calculation amount and pays per unit. On a holding of
-  USD 200,000 of the 3.625% bond that is USD 3,624.00 a half year instead of USD 3,625.00.
 - The verified terms were prepared by hand from the documents and may contain mistakes of
   their own; each value cites its page so it can be checked.
 - The field rules given to the models were refined while reading these eighteen bonds. There

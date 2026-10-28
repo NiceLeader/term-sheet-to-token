@@ -19,11 +19,11 @@ from tstt.cite import FieldCitations
 from tstt.reference import reference_flows
 from tstt.schedule import Schedule, build_schedule, minor_unit, round_amount
 from tstt.terms import BondTerms
-from tstt.token import Replay, replay
+from tstt.token import Replay, replay, to_minor
 
 CLAUSE_FIELDS = {
     "coupon": ("interest_rate", "day_count_fraction", "business_day_convention",
-               "business_day", "rounding_rule", "record_date"),
+               "business_day", "rounding_rule", "interest_on_holding", "record_date"),
     "redemption": ("final_redemption_amount", "maturity_date", "business_day_convention",
                    "record_date"),
 }
@@ -42,6 +42,7 @@ class PaymentRow:
     quantlib: str | None
     chain: str
     stated: str | None
+    on_holding: bool  # each holder's coupon computed on the whole holding
     holders_paid: dict[str, list[int]]
     total_paid: str
     gas_used: int
@@ -150,6 +151,15 @@ def verify(bond_id: str, terms: BondTerms, source: str,
     ql_redemption = next(f for f in reference.flows if f.kind == "redemption")
     result: Replay = replay(schedule, out)
     unit = minor_unit(terms.currency)
+    ql_holdings: dict[int, list[Decimal]] = {}  # units -> QuantLib coupons on that holding
+
+    def ql_on_holding(units: int, index: int) -> Decimal | None:
+        if units not in ql_holdings:
+            flows = reference_flows(terms, units * terms.specified_denomination).flows
+            ql_holdings[units] = [f.amount for f in flows if f.kind == "coupon"]
+        coupons = ql_holdings[units]
+        return coupons[index] if index < len(coupons) else None
+
     ratio = result.config.terms["denomination"] // result.config.terms["calculationAmount"]
     rows: list[PaymentRow] = []
     for executed, plan in zip(result.payments, result.config.plan, strict=True):
@@ -184,16 +194,26 @@ def verify(bond_id: str, terms: BondTerms, source: str,
         if paid_units != executed.expected_units:
             problems.append(f"paid holders {paid_units}, holders of record "
                             f"{executed.expected_units}")
+        on_holding = executed.kind == "coupon" and terms.interest_on_holding
         for holder, units in executed.expected_units.items():
             paid = executed.holders.get(holder, (0, 0))[1]
-            if paid != units * per_unit:
-                problems.append(f"holder {holder} received {paid}, expected {units * per_unit}")
+            expected = units * per_unit
+            if on_holding:
+                engine_holding = schedule.coupon_for(schedule.periods[executed.index], units)
+                ql_holding = ql_on_holding(units, executed.index)
+                if ql_holding != engine_holding:
+                    problems.append(f"QuantLib computed {ql_holding} on the holding of "
+                                    f"{holder}, engine {engine_holding}")
+                expected = to_minor(engine_holding, terms.currency)
+            if paid != expected:
+                problems.append(f"holder {holder} received {paid}, expected {expected}")
         rows.append(PaymentRow(
             index=executed.index, kind=executed.kind, scheduled=str(executed.scheduled),
             executed=str(executed.executed), record_date=str(executed.record_date),
             accrual=accrual, per=per, engine=str(engine_amount),
             quantlib=None if ql_amount is None else str(ql_amount), chain=str(chain_amount),
             stated=None if not stated else f"{stated[0]} per {stated[1]}",
+            on_holding=on_holding,
             holders_paid={k: list(v) for k, v in executed.holders.items()},
             total_paid=str(Decimal(executed.total_minor) * unit), gas_used=executed.gas_used,
             status="mismatch" if problems else "ok", problems=problems,

@@ -49,6 +49,11 @@
       "value": "DOWN",
       "doc": "hksar-digital-green-2025-ps", "page": 73,
       "definition": {"doc": "hksar-digital-green-2025-ps", "page": 40}
+    },
+    "interest_on_holding": {
+      "value": true,
+      "doc": "hksar-digital-green-2025-ps", "page": 73,
+      "check": "Fixed Rate Note Provisions, Fixed Coupon Amount: unless individual certificates are issued, 'the calculation shall be made in respect of the total aggregate amount of the DN Notes recorded in each Digital Token Account', so interest is rounded once per account, not per Calculation Amount."
     }
   },
   "notes": "One PDF holds the supplemental offering memorandum dated 10 November 2025 for all four digitally native (DN) tranches plus four pricing supplements; this tranche's pricing supplement is on pp.70-77 (Series 44, ISIN on p.75). The supplement replaces the 'Terms and Conditions of the Notes' of the Offering Memorandum with the Terms and Conditions of the Digitally Native Notes (pp.34-62, see p.34), and PS item 30 (p.74) states that the terms and conditions in the Offering Memorandum dated 29 September 2025 do not apply. All definitions are therefore cited in the DN Conditions, not in hksar-gmtn-om-2025. Definitions: Condition 5(c) calculations and rounding (p.40: rounded to the nearest unit with anything less than a full unit rounded down), Condition 5(d) Actual/Actual-ICMA (p.41-42; Determination Dates default to the Interest Payment Dates), Condition 7(c) Record Time (p.45), Condition 7(f) Non-Business Days with TARGET Business Day and T2 (p.46), Clearing System Business Day (p.38). The PS writes the day count as 'Actual/Actual-ICMA', matching the DN Conditions. The Fixed Coupon Amount EUR 12.50 per EUR 1,000 is exact (2.500% / 2), so rounding does not bite; unless individual certificates are issued, interest is calculated on the total amount held in each Digital Token Account (PS p.73). Maturity Date 11 November 2029 is a Sunday; payment then follows Condition 7(f). Final Redemption Amount is EUR 1,000 per Calculation Amount of EUR 1,000 (par)."

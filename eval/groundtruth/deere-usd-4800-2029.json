@@ -46,7 +46,8 @@
     "rounding_rule": {
       "value": "NOT_STATED",
       "check": "Base prospectus page 77 rounds dollar amounts to the nearest cent, half cent up, but only in the Floating Rate Notes section; nothing is stated for Fixed Rate Notes"
-    }
+    },
+    "interest_on_holding": {"value": false}
   },
   "notes": "The pricing supplement (Pricing Supplement No. 4, one page) states no day count, business day rule or denomination. deere-s3asr-2026 holds three parts: the Medium-Term Notes, Series J prospectus supplement (pages 3-27), the JDCC InterNotes prospectus supplement (pages 28-53, not applicable to this bond) and the base prospectus of May 14, 2026 (pages 54 onward). The Series J supplement does not restate day count or business day rules; they come from the base prospectus 'Description of Debt Securities', which the Series J supplement supplements: Fixed Rate Notes (page 75, p. 21) give the 360-day year of twelve 30-day months, payment on the next Business Day with no interest accruing from and after the Interest Payment Date or Maturity Date, and the default Regular Record Date (fifteenth calendar day before), which matches the pricing supplement. 'Payment When Offices Are Closed' (page 73, p. 19) gives the same next-Business-Day rule. 'Business Day' is a New York business day (page 69, p. 15); the euro/T2 and SOFR variants there do not apply. Denomination: the Series J supplement lists minimum denominations of USD 1,000 (page 6, S-3), and the base prospectus says U.S. dollar denominations are integral multiples of USD 1,000 (page 69). The base prospectus says interest accrues from the original issue date (page 74), which matches 'accrued interest, if any, from September 11, 2026' in the pricing supplement. The InterNotes supplement has its own similar 'Business Day' definition and next-Business-Day rule (page 36); do not cite it for this bond."
 }

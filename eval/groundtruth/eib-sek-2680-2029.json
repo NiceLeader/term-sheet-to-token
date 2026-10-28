@@ -42,7 +42,8 @@
       "doc": "eib-eu000a4etda0-ft", "page": 5
     },
     "record_date": {"value": null},
-    "rounding_rule": {"value": "HALF_UP", "doc": "eib-dip-2025", "page": 17}
+    "rounding_rule": {"value": "HALF_UP", "doc": "eib-dip-2025", "page": 17},
+    "interest_on_holding": {"value": false}
   },
   "notes": "Final Terms dated 20 April 2026 read with the Offering Circular dated 28 November 2025; no supplement applies. All values come from the body of the Final Terms. Day count, convention, Business Day and rounding are defined in the Offering Circular Conditions: Condition 5(d) Business Day Conventions (heading p.16, 'Following' on p.17), Condition 5(f) rounding (p.17: nearest minimum unit, halves rounded upwards, 'or otherwise in accordance with applicable market convention'), Condition 20 definitions (Business Day p.27-28, 30E/360 p.29, T2 and TARGET Settlement Day p.32). Following applies to Interest Payment Dates (item 10(iv)) and to the Maturity Date (item 18, p.6); Interest Period End Dates are the Interest Payment Dates without adjustment (item 10(ii)), so accrual is unadjusted. Payment-day rule for non-Business Days: Condition 10(f) (p.24); for a Global Bond the place of presentation is disregarded in the Business Day definition (p.35). No Calculation Amount is defined; Interest Amount and Broken Amount are stated per SEK 10,000 Specified Denomination, and while the Bonds are in global form interest is calculated on the aggregate principal amount of the Global Bond (p.36). Broken Amount cross-check: 22 April to 22 October 2026 is 180/360 under 30E/360, 0.5 x 268.00 = 134.00. The Bonds are Bearer Bonds in a Permanent Global Bond; the Record Date in Condition 10(b)(iii) (p.23) and the global-form Record Date (p.35) apply only to Registered Bonds, so record_date is null."
 }

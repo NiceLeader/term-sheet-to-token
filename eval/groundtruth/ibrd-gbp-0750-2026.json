@@ -47,6 +47,7 @@
       "doc": "ibrd-gdif-2008", "page": 25,
       "definition": {"doc": "ibrd-gdif-2008", "page": 25}
     },
+    "interest_on_holding": {"value": false},
     "stated_coupon_amounts": {
       "value": [
         {"date": null, "amount": "7.50", "per": "1000"},

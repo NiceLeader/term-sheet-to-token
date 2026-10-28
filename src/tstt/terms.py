@@ -97,6 +97,9 @@ FIELDS: tuple[FieldSpec, ...] = (
     FieldSpec("rounding_rule", "enum",
               "How a coupon amount is rounded to the currency sub-unit.",
               "Interest/RoundingConvention", tuple(RoundingRule), needs_definition=True),
+    FieldSpec("interest_on_holding", "bool",
+              "True if interest is calculated on the whole nominal amount held in each "
+              "holder's account, false if per calculation amount or per note.", ""),
     FieldSpec("stated_coupon_amounts", "coupons",
               "Coupon amounts printed in the documents: fixed coupon amounts (date null) "
               "and broken amounts for a short or long first or last period.",
@@ -156,6 +159,7 @@ class BondTerms:
     rounding_rule: RoundingRule = RoundingRule.NOT_STATED
     stated_coupon_amounts: list[StatedCoupon] = field(default_factory=list)
     record_date: str | None = None
+    interest_on_holding: bool = False
 
     @property
     def coupon_basis(self) -> Decimal:
@@ -230,6 +234,7 @@ def build_terms(values: dict[str, Any]) -> BondTerms:
         raise TermsError(f"missing terms needed for the schedule: {', '.join(missing)}")
     typed["interest_commencement_date"] = typed["interest_commencement_date"] or typed["issue_date"]
     typed["accrual_adjusted"] = bool(typed["accrual_adjusted"])
+    typed["interest_on_holding"] = bool(typed["interest_on_holding"])
     typed["interest_payment_dates"] = typed["interest_payment_dates"] or []
     typed["business_day"] = typed["business_day"] or []
     typed["stated_coupon_amounts"] = typed["stated_coupon_amounts"] or []

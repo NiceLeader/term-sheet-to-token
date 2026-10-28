@@ -8,7 +8,8 @@ interface ICash {
 /// @title Standard fixed rate bond token
 /// @notice One unit is one note of the smallest specified denomination. The terms are set once
 /// at deployment. Every coupon is computed on chain from the accrual segments, the day count
-/// fraction and the rounding rule, then paid in a settlement token to the holders of record.
+/// fraction and the rounding rule, then paid in a settlement token to the holders of record:
+/// per calculation amount, or on each holder's whole holding where the terms say so.
 /// @dev Payments push to every holder, which keeps the lifecycle easy to audit for a small
 /// holder base. A production deployment would switch to claims for large holder sets.
 contract BondToken {
@@ -49,6 +50,7 @@ contract BondToken {
         uint256 redemptionPercent; // percent of nominal times PERCENT_SCALE
         uint64 maturityPaymentDate;
         uint64 redemptionRecordDate;
+        bool interestOnHolding; // interest computed and rounded on each holding, not per unit
     }
 
     /// @notice Part of an accrual period that lies inside one regular (notional) period.
@@ -206,6 +208,22 @@ contract BondToken {
 
     /// @notice Coupon for payment `i` per calculation amount, in cash minor units.
     function couponPerCalculationAmount(uint256 i) public view returns (uint256) {
+        return _coupon(i, terms.calculationAmount);
+    }
+
+    function couponPerUnit(uint256 i) public view returns (uint256) {
+        return couponPerCalculationAmount(i) * (terms.denomination / terms.calculationAmount);
+    }
+
+    /// @notice Coupon for payment `i` on a holding of `units`, as the token pays it.
+    function couponOnHolding(uint256 i, uint256 units) public view returns (uint256) {
+        return terms.interestOnHolding
+            ? _coupon(i, units * terms.denomination)
+            : units * couponPerUnit(i);
+    }
+
+    /// @dev Interest on `nominal` cash minor units for payment `i`, rounded once.
+    function _coupon(uint256 i, uint256 nominal) private view returns (uint256) {
         Payment storage p = payments[i];
         uint256 num = 0;
         uint256 den = 1;
@@ -214,11 +232,7 @@ contract BondToken {
             num = num * d + n * den;
             den = den * d;
         }
-        return _round(terms.calculationAmount * terms.rate * num, 100 * RATE_SCALE * den);
-    }
-
-    function couponPerUnit(uint256 i) public view returns (uint256) {
-        return couponPerCalculationAmount(i) * (terms.denomination / terms.calculationAmount);
+        return _round(nominal * terms.rate * num, 100 * RATE_SCALE * den);
     }
 
     function redemptionPerUnit() public view returns (uint256) {
@@ -289,19 +303,17 @@ contract BondToken {
         if (p.paid) revert AlreadyPaid();
         if (block.timestamp < p.date) revert TooEarly();
         p.paid = true;
-        uint256 perCalc = couponPerCalculationAmount(i);
-        uint256 perUnit = perCalc * (terms.denomination / terms.calculationAmount);
         uint256 total;
         for (uint256 h = 0; h < holders.length; h++) {
             address holder = holders[h];
             uint256 units = balanceOfRecord(holder, p.recordDate);
             if (units == 0) continue;
-            uint256 amount = units * perUnit;
+            uint256 amount = couponOnHolding(i, units);
             total += amount;
             ICash(terms.cash).transferFrom(terms.payingAgent, holder, amount);
             emit CouponPaid(i, holder, units, amount);
         }
-        emit PaymentExecuted(i, p.date, perCalc, total);
+        emit PaymentExecuted(i, p.date, couponPerCalculationAmount(i), total);
     }
 
     function redeem() external {

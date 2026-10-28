@@ -47,6 +47,7 @@
       "doc": "ibrd-gdif-2021", "page": 28,
       "definition": {"doc": "ibrd-gdif-2021", "page": 28}
     },
+    "interest_on_holding": {"value": false},
     "stated_coupon_amounts": {
       "value": null,
       "check": "No amount printed; Appendix A item 4 (FT page 9) fixes two equal semi-annual payments, implying AUD 22.00 per AUD 1,000, but no figure is stated"

@@ -1,11 +1,11 @@
 from datetime import date
 
 import pytest
-from test_schedule import terms
+from test_schedule import hksar_usd, terms
 
 from tstt.calendars import Calendar
 from tstt.schedule import build_schedule
-from tstt.token import TokenError, forge_binary, record_date, record_rule, replay
+from tstt.token import TokenError, forge_binary, record_date, record_rule, replay, to_minor
 
 
 @pytest.mark.parametrize("phrase, kind, days", [
@@ -69,3 +69,17 @@ def test_replay_pays_holders_of_record_and_redeems():
         assert {k: units for k, (units, _) in paid.holders.items()} == paid.expected_units
     assert all(probe.passed for probe in result.probes)
     assert result.final_units == {"A": 0, "B": 0, "C": 0}
+
+
+@pytest.mark.skipif(not _have_foundry(), reason="Foundry is not installed")
+def test_replay_pays_interest_on_each_holding():
+    schedule = build_schedule(hksar_usd(interest_on_holding=True))
+    result = replay(schedule)
+    for paid in result.payments:
+        if paid.kind != "coupon":
+            continue
+        period = schedule.periods[paid.index]
+        for holder, (units, amount) in paid.holders.items():
+            assert amount == to_minor(schedule.coupon_for(period, units), "USD"), holder
+        assert paid.per_basis_minor == 1812
+    assert all(probe.passed for probe in result.probes)

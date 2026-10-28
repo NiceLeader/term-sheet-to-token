@@ -50,7 +50,12 @@
       "value": "11:30 p.m. Hong Kong time on the Clearing System Business Day immediately preceding the due date (Record Time)",
       "doc": "hksar-digital-green-2025-ps", "page": 45
     },
-    "rounding_rule": {"value": "DOWN", "doc": "hksar-digital-green-2025-ps", "page": 80}
+    "rounding_rule": {"value": "DOWN", "doc": "hksar-digital-green-2025-ps", "page": 80},
+    "interest_on_holding": {
+      "value": true,
+      "doc": "hksar-digital-green-2025-ps", "page": 80,
+      "check": "Fixed Rate Note Provisions, Fixed Coupon Amount: unless individual certificates are issued, 'the calculation shall be made in respect of the total aggregate amount of the DN Notes recorded in each Digital Token Account', so interest is rounded once per account, not per Calculation Amount."
+    }
   },
   "notes": "One PDF holds the supplemental offering memorandum dated 10 November 2025 for all four digitally native (DN) tranches plus four pricing supplements; this tranche's pricing supplement is on pp.78-84 (Series 43, ISIN on p.82). The supplement replaces the 'Terms and Conditions of the Notes' of the Offering Memorandum with the Terms and Conditions of the Digitally Native Notes (pp.34-62, see p.34), and PS item 30 (p.82) states that the terms and conditions in the Offering Memorandum dated 29 September 2025 do not apply. The DN Conditions contain no business day convention definitions, so the pricing supplement defines 'Modified Following Business Day Convention' and its 'business day' (commercial banks open for business and settlement of Renminbi payments in Hong Kong) itself in item 16(ii) (p.80); that is cited as the definition. PS item 26 (p.81) restates the payment business day for Renminbi (Hong Kong), matching DN Condition 7(f)(iii) (p.46). Other definitions: Actual/365 (Fixed) in DN Condition 5(d) (p.41), Record Time in Condition 7(c) (p.45), Clearing System Business Day (p.38), rounding in Condition 5(c) (p.40) consistent with the PS formula (nearest CNY 0.01, anything less rounded downwards). Unless individual certificates are issued, interest is calculated on the total amount held in each Digital Token Account (PS p.80). Final Redemption Amount is CNY 10,000 per Calculation Amount of CNY 10,000 (par)."
 }

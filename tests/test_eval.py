@@ -25,3 +25,8 @@ def test_a_missing_schedule_term_or_unreadable_value_blocks_the_token():
     assert blocking_fields({"final_redemption_amount": None, "interest_rate": "three",
                             "record_date": None}) >= {"final_redemption_amount", "interest_rate"}
     assert "record_date" not in blocking_fields({"record_date": None})
+
+
+def test_interest_on_holding_not_stated_means_per_note():
+    assert normalise("interest_on_holding", None) == normalise("interest_on_holding", False)
+    assert normalise("interest_on_holding", True) != normalise("interest_on_holding", None)

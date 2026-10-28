@@ -39,7 +39,8 @@ contract BondTokenTest is TestBase {
             rounding: rounding,
             redemptionPercent: 100 * 1e8,
             maturityPaymentDate: maturity,
-            redemptionRecordDate: maturity - 1 days
+            redemptionRecordDate: maturity - 1 days,
+            interestOnHolding: false
         });
     }
 
@@ -161,6 +162,46 @@ contract BondTokenTest is TestBase {
         (n, d) = rba.accrualFraction(BondToken.Segment(day(2028, 1, 31), day(2028, 6, 30), s.start, s.end));
         assertEq(n, 151, "RBA irregular period counts actual days");
         assertEq(d, 365, "RBA irregular period over 365");
+    }
+
+    function test_interestOnEachHoldingRoundsOnce() public {
+        // HKSAR USD 3.625% digital bond: USD 18.125 per USD 1,000 rounds down to 18.12, but the
+        // interest of each Digital Token Account is computed on its whole holding.
+        BondToken.Segment[] memory segments = new BondToken.Segment[](1);
+        segments[0] = seg(day(2025, 6, 4), day(2025, 12, 4));
+        BondToken.Terms memory t =
+            terms(BondToken.DayCount.Thirty360, BondToken.Rounding.Down, 362_500_000, 2, day(2025, 12, 4));
+        BondToken perUnit = new BondToken(t, segments, onePaymentPerSegment(segments));
+        t.interestOnHolding = true;
+        BondToken onHolding = new BondToken(t, segments, onePaymentPerSegment(segments));
+        assertEq(perUnit.couponOnHolding(0, 200), 362_400, "per unit: 200 x 18.12");
+        assertEq(onHolding.couponOnHolding(0, 200), 362_500, "on the holding: 3,625.00");
+        assertEq(onHolding.couponPerCalculationAmount(0), 1812, "printed amount per 1,000");
+    }
+
+    function test_holdersArePaidOnTheirWholeHolding() public {
+        BondToken.Segment[] memory segments = new BondToken.Segment[](1);
+        segments[0] = seg(day(2026, 3, 2), day(2027, 3, 2));
+        BondToken.Terms memory t =
+            terms(BondToken.DayCount.ActActICMA, BondToken.Rounding.Down, 245_550_000, 1, day(2027, 3, 2));
+        t.interestOnHolding = true;
+        BondToken bond = new BondToken(t, segments, onePaymentPerSegment(segments));
+        vm.warp(day(2026, 3, 2));
+        address[] memory to = new address[](2);
+        uint256[] memory units = new uint256[](2);
+        (to[0], units[0], to[1], units[1]) = (ALICE, 600, BOB, 1);
+        vm.prank(ISSUER);
+        bond.issue(to, units);
+        cash.mint(AGENT, 10_000_000_000);
+        vm.prank(AGENT);
+        cash.approve(address(bond), type(uint256).max);
+
+        vm.warp(day(2027, 3, 2));
+        vm.prank(AGENT);
+        bond.payCoupon(0);
+        // 2.4555% of EUR 1,000 is 24.555, which rounds down to 24.55 on a single note.
+        assertEq(cash.balanceOf(ALICE), 1_473_300, "alice: 2.4555% of EUR 600,000");
+        assertEq(cash.balanceOf(BOB), 2455, "bob: one note");
     }
 
     // ------------------------------------------------------------ lifecycle

@@ -42,7 +42,8 @@
       "doc": "kfw-us500769kt05-ps", "page": 6
     },
     "record_date": {"value": "Tenth New York business day prior to the relevant payment date", "doc": "kfw-us500769kt05-ps", "page": 7},
-    "rounding_rule": {"value": "NOT_STATED"}
+    "rounding_rule": {"value": "NOT_STATED"},
+    "interest_on_holding": {"value": false}
   },
   "notes": "The pricing supplement (424B5) restates the full Accrued Interest, Record Date and Business Days clauses on page 7 with the same wording as the prospectus supplement of June 26, 2026 (kfw-prospectus-supplement-2026 page 5, S-4); the definitions are cited from the separately filed supplement. The 424B5 file also embeds that prospectus supplement (pages 14-26, same clauses on page 17) and the base prospectus (from page 27). Day count is a 360-day year of twelve 30-day months with two exceptions: (A) a period ending on the 31st whose first day is not the 30th or 31st keeps the 31-day month, and (B) a period ending on the last day of February is not lengthened to 30 days; this matches 30/360 Bond Basis, not 30E/360. Short first coupon from 2026-09-16 to 2026-10-10 (24 days on 30/360) totals USD 9,000,000.00 for the USD 3,000,000,000 aggregate principal amount, which is 4.50% x 24/360. Payment on a non-New York business day moves to the next New York business day with no further interest; 'due date' is the unadjusted interest payment or maturity date, so accrual is unadjusted. Maturity redemption is 'at their aggregate principal amount' (100%). Denomination is USD 1,000 per note (three million notes); no Calculation Amount is defined. No rounding rule for interest amounts appears in the pricing supplement, prospectus supplement or base prospectus."
 }

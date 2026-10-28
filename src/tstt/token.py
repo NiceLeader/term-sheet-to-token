@@ -212,6 +212,7 @@ def token_config(schedule: Schedule, cash: str, issuer: str, agent: str) -> Toke
                                     "redemption amount"),
         "maturityPaymentDate": timestamp(schedule.redemption_date),
         "redemptionRecordDate": timestamp(redemption_record),
+        "interestOnHolding": terms.interest_on_holding,
     }
     return TokenConfig(config_terms, segments, payments, plan, int(total_units), notes)
 
@@ -415,6 +416,10 @@ def replay(schedule: Schedule, out: Path | None = None) -> Replay:
         per_unit_coupons = sum(p.per_basis_minor for p in config.plan if p.kind == "coupon")
         ratio = config.terms["denomination"] // config.terms["calculationAmount"]
         funding = units * (per_unit_coupons * ratio + config.plan[-1].per_basis_minor)
+        if schedule.terms.interest_on_holding:
+            # Interest rounded once per holding can exceed the sum of the coupons per
+            # calculation amount by up to one minor unit per calculation amount.
+            funding += units * (ratio + 1) * len(schedule.periods)
         chain.send(cash.functions.mint(agent, funding), operator)
         chain.send(cash.functions.approve(bond.address, 2**256 - 1), agent)
 

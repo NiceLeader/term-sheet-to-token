@@ -46,6 +46,7 @@
       "doc": "adb-gmtn-1892-ps", "page": 5,
       "definition": {"doc": "adb-gmtn-1892-ps", "page": 5}
     },
+    "interest_on_holding": {"value": false},
     "stated_coupon_amounts": {
       "value": [
         {"date": null, "amount": "13.00", "per": "1000"}

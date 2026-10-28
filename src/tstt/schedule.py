@@ -80,6 +80,20 @@ class Schedule:
     redemption_per_basis: Decimal
     warnings: list[str] = field(default_factory=list)
 
+    def coupon_on(self, period: CouponPeriod, nominal: Decimal) -> Decimal:
+        """Interest for `period` on `nominal`, rounded once."""
+        rate = Fraction(self.terms.interest_rate) / 100
+        return round_amount(rate * period.fraction * Fraction(nominal),
+                            minor_unit(self.terms.currency), self.terms.rounding_rule)
+
+    def coupon_for(self, period: CouponPeriod, units: int) -> Decimal:
+        """What a holder of `units` notes receives for `period`: interest on the whole
+        holding where the terms say so, else the coupon per note times the notes."""
+        denomination = self.terms.specified_denomination
+        if self.terms.interest_on_holding:
+            return self.coupon_on(period, units * denomination)
+        return period.amount_per_basis * (denomination / self.basis) * units
+
 
 def _regular_dates(terms: BondTerms, months: int) -> tuple[list[date], list[str]]:
     """Unadjusted payment dates from the first payment date to maturity."""

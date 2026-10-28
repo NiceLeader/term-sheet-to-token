@@ -49,7 +49,8 @@
     "rounding_rule": {
       "value": "NOT_STATED",
       "check": "Prospectus supplement page 20 rounds dollar amounts to the nearest cent, half cent up, but only for floating rate notes; nothing is stated for fixed rate notes"
-    }
+    },
+    "interest_on_holding": {"value": false}
   },
   "notes": "The pricing supplement covers three tranches; this bond is the 2029 Fixed Rate Notes (USD 750m 4.500%, CUSIP 89236TQD0). Do not use the Floating Rate Notes block (Actual/360, Modified Following adjusted, ISIN US89236TQE81) or the 2033 Fixed Rate Notes, which sit just before and after it. In this text conversion, pricing supplement page 1 holds the cover, inside cover and table of contents, and page 2 holds 'Terms of the Notes' plus the 2029 Fixed Rate Notes term block (Day Count Convention: 30/360; Business Day Convention: Following, unadjusted; Business Days: New York). Definitions come from the Medium-Term Notes, Series B prospectus supplement of January 22, 2024: Fixed Rate Notes (page 17) give the 360-day year of twelve 30-day months and the rule that a payment due on a non-Business Day is made on the next succeeding Business Day as if made on the due date, with no interest for the delay. 'Business Day' for U.S. dollar notes is a New York Business Day (page 16). 'Regular Record Date' is on page 17; the pricing supplement does not override it, and the notes are issued as global notes through DTC (pricing supplement pages 4-5). Minimum denomination is USD 2,000 with integral multiples of USD 1,000 above that. The first coupon (2026-07-09 to 2027-01-09) is a regular full period, and no coupon amounts are printed. The base prospectus (toyota-s3asr-2024) adds nothing on day count, business days or record dates beyond a generic regular record date reference."
 }

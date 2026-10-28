@@ -46,7 +46,8 @@
     "rounding_rule": {
       "value": "NOT_STATED",
       "check": "Prospectus supplement page 13 rounds dollar amounts to the nearest cent, half cent up, but only for floating rate notes; nothing is stated for fixed rate notes"
-    }
+    },
+    "interest_on_holding": {"value": false}
   },
   "notes": "The documents give only a CUSIP (69371RU79, pricing supplement page 1) and no ISIN, so isin is null. The pricing supplement is a two-page form for Medium-Term Notes, Series R - Fixed Rate; it states amount, dates, rate, record dates and currency but no day count, business day rule or USD denomination ('Minimum Denominations' applies only to non-U.S. dollar notes). Those come from the Series R prospectus supplement of November 7, 2024 inside paccar-s3asr-2024: denominations of USD 1,000 and integral multiples of USD 1,000 (page 7, S-4); 'Business Day' is a New York banking day (page 8, S-5); interest from and including the date of issue on a 360-day year of twelve 30-day months, and payment on a non-Business Day made on the next succeeding Business Day as if made on the due date, with no interest for the delay (page 10, S-7). The pricing supplement overrides the default record dates (March 1 or September 1 for fixed rate notes, page 10) with February 24 and August 27, and overrides the default March 15 / September 15 interest payment dates with March 10 / September 10. Original Issue Date is September 10, 2026 (T+5). The first coupon (2026-09-10 to 2027-03-10) is a regular full period; no coupon amounts are printed."
 }

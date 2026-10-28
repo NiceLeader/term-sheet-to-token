@@ -48,6 +48,7 @@
       "doc": "ibrd-dnn-supplement-2023", "page": 12,
       "definition": {"doc": "ibrd-dnn-supplement-2023", "page": 12}
     },
+    "interest_on_holding": {"value": false},
     "stated_coupon_amounts": {"value": null},
     "record_date": {"value": null}
   },

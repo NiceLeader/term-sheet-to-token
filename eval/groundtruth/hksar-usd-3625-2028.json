@@ -49,6 +49,11 @@
       "value": "DOWN",
       "doc": "hksar-digital-green-2025-ps", "page": 65,
       "definition": {"doc": "hksar-digital-green-2025-ps", "page": 40}
+    },
+    "interest_on_holding": {
+      "value": true,
+      "doc": "hksar-digital-green-2025-ps", "page": 65,
+      "check": "Fixed Rate Note Provisions, Fixed Coupon Amount: unless individual certificates are issued, 'the calculation shall be made in respect of the total aggregate amount of the DN Notes recorded in each Digital Token Account', so interest is rounded once per account, not per Calculation Amount."
     }
   },
   "notes": "One PDF holds the supplemental offering memorandum dated 10 November 2025 for all four digitally native (DN) tranches plus four pricing supplements; this tranche's pricing supplement is on pp.63-69 (Series 45, ISIN on p.67). The supplement replaces the 'Terms and Conditions of the Notes' of the Offering Memorandum with the Terms and Conditions of the Digitally Native Notes (pp.34-62, see p.34), and PS item 30 (p.66) states that the terms and conditions in the Offering Memorandum dated 29 September 2025 do not apply. All definitions are therefore cited in the DN Conditions, not in hksar-gmtn-om-2025. Definitions: Condition 5(c) calculations and rounding (p.40: currency amounts 'rounded to the nearest unit ... with anything less than a full unit being rounded down', which explains 18.12), Condition 5(d) 30/360 (p.41), Condition 7(c) Record Time (p.45), Condition 7(f) Non-Business Days and payment 'business day' (p.46), Clearing System Business Day (p.38: a day on which the CMU and the Platform are open). PS item 26 (p.66) restates that a payment business day is a day on which FX transactions may be carried on in USD in New York City and which is a business day in Hong Kong. Final Redemption Amount is U.S.$1,000 per Calculation Amount of U.S.$1,000 (par). The supplement summary (p.20) says listing of this tranche was expected one day after the EUR, CNY and HKD tranches; the HKEX cover announcement (p.1-2) lists only those three tranches."

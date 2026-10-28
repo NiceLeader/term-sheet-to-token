@@ -257,6 +257,8 @@ MUTANTS: tuple[Mutant, ...] = (
            "if (2 * r >= den) q += 1;"),
     Mutant("down_as_up", "round down rounds up",
            "} else if (rule == Rounding.Up) {", "} else {"),
+    Mutant("holding_paid_per_unit", "interest due on a whole holding is paid per unit",
+           "? _coupon(i, units * terms.denomination)", "? units * couponPerUnit(i)"),
     Mutant("record_date_ignored", "coupons go to current holders, not holders of record",
            "uint256 units = balanceOfRecord(holder, p.recordDate);",
            "uint256 units = balanceOf(holder);"),

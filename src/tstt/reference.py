@@ -102,7 +102,14 @@ def _day_counter(terms: BondTerms, schedule: ql.Schedule, notes: list[str]) -> q
     raise ValueError(f"QuantLib mapping missing for {terms.day_count_fraction}")
 
 
-def reference_flows(terms: BondTerms) -> ReferenceResult:
+def _trimmed(value: float) -> Decimal:
+    """QuantLib's double without its float noise: thirteen significant digits."""
+    raw = Decimal(repr(value))
+    return raw.quantize(Decimal(1).scaleb(raw.adjusted() - 12)) if raw else raw
+
+
+def reference_flows(terms: BondTerms, notional: Decimal | None = None) -> ReferenceResult:
+    """Coupons and redemption on `notional`, by default on the calculation amount."""
     notes: list[str] = []
     calendar = _calendar(terms.business_day, notes)
     accrual_convention = (
@@ -120,7 +127,7 @@ def reference_flows(terms: BondTerms) -> ReferenceResult:
         to_ql(terms.first_interest_payment_date),
     )
     day_counter = _day_counter(terms, schedule, notes)
-    basis = float(terms.coupon_basis)
+    basis = float(terms.coupon_basis if notional is None else notional)
     bond = ql.FixedRateBond(
         0,
         basis,
@@ -136,8 +143,7 @@ def reference_flows(terms: BondTerms) -> ReferenceResult:
     for cashflow in bond.cashflows():
         coupon = ql.as_fixed_rate_coupon(cashflow)
         # QuantLib returns doubles; trim float noise before applying the bond's rounding rule.
-        raw = Decimal(repr(cashflow.amount())).quantize(Decimal("1e-9"))
-        amount = round_amount(raw, unit, terms.rounding_rule)
+        amount = round_amount(_trimmed(cashflow.amount()), unit, terms.rounding_rule)
         if coupon is not None:
             flows.append(ReferenceFlow(
                 kind="coupon",

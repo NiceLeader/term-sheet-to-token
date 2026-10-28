@@ -45,6 +45,7 @@
       "value": "NOT_STATED",
       "check": "No rounding rule for Fixed Rate Notes in the pricing supplement or Condition 5(a); the only half-up rule is Condition 5(b)(vi) for Floating Rate Notes (adb-gmtn-2020 page 30). Coupon is printed as USD 21.25, so no rounding arises"
     },
+    "interest_on_holding": {"value": false},
     "stated_coupon_amounts": {
       "value": [
         {"date": null, "amount": "21.25", "per": "1000"}

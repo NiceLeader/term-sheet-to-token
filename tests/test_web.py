@@ -57,7 +57,7 @@ def test_run_and_document_ids_cannot_leave_the_data_folder(client):
 
 def test_bond_view_carries_the_review_state(client):
     data = client.get("/api/bond/groundtruth/ibrd-gbp-0750-2026").json()
-    assert data["review"]["total"] == 21
+    assert data["review"]["total"] == 22
     rate = next(f for f in data["fields"] if f["name"] == "interest_rate")
     assert rate["kind"] == "decimal"
     convention = next(f for f in data["fields"] if f["name"] == "business_day_convention")

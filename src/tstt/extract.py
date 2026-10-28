@@ -74,6 +74,11 @@ Field rules:
   calculation under the conditions, counts even if it stands next to the floating rate
   provisions; "anything less than a full unit being rounded down" is DOWN. If the only
   rounding clause is for floating rate notes or for rates, it is NOT_STATED.
+- interest_on_holding is true only if the documents say that interest is calculated on the
+  total amount of the notes recorded in each holder's account (for example each account on a
+  digital platform), so that it is rounded once per holding. Interest calculated on the whole
+  amount of a global note or global certificate held for a clearing system does not count.
+  Otherwise it is false.
 - stated_coupon_amounts lists only amounts printed in the documents (fixed coupon amount,
   broken amount); never amounts you compute. per is the nominal amount they are paid on.
 - Amounts are plain decimals without separators or currency, e.g. "100000000".

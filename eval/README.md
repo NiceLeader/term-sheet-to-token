@@ -56,5 +56,6 @@ terms") records that check field by field, writes any correction into the file, 
 | `business_day` | Financial centres whose business days count, e.g. `["London", "TARGET", "New York"]` |
 | `final_redemption_amount` | Percent of nominal, e.g. `"100"` |
 | `rounding_rule` | Rounding of coupon amounts to the sub-unit: `HALF_UP`, `HALF_EVEN`, `DOWN`, `UP`, `NOT_STATED` |
+| `interest_on_holding` | `true` if interest is calculated on the whole amount in each holder's account and rounded once, `false` if per calculation amount or per note |
 | `stated_coupon_amounts` | Coupon amounts printed in the documents, list of `{"date": "YYYY-MM-DD" or null, "amount": "33.99", "per": "1000"}`; a fixed coupon amount that applies to every regular date has `date: null` |
 | `record_date` | Record date rule as a short phrase, or `null` |

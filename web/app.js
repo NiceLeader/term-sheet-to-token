@@ -14,7 +14,7 @@ const ROLES = {
 };
 const CLAUSE_FIELDS = {
   coupon: ["interest_rate", "day_count_fraction", "business_day_convention", "business_day",
-           "rounding_rule", "record_date"],
+           "rounding_rule", "interest_on_holding", "record_date"],
   first: ["interest_commencement_date", "first_interest_payment_date"],
   redemption: ["final_redemption_amount", "maturity_date", "business_day_convention",
                "record_date"],
@@ -677,12 +677,12 @@ function renderPayments() {
     const deps = [...(isCoupon ? CLAUSE_FIELDS.coupon : CLAUSE_FIELDS.redemption), ...(isCoupon && coupon === 1 ? CLAUSE_FIELDS.first : [])];
     const depChips = deps.map((name) => {
       const f = state.data.fields.find((x) => x.name === name);
-      return f && f.value != null ? `<button data-field="${esc(name)}">${esc(f.label)}</button>` : "";
+      return f && f.value != null && f.value !== false ? `<button data-field="${esc(name)}">${esc(f.label)}</button>` : "";
     }).join("");
     html += `<div class="pay ${esc(r.kind)} ${r.status === "ok" ? "" : "mismatch"}">
       <div class="pay-top"><span class="pay-kind">${isCoupon ? `Coupon ${coupon}` : "Redemption"}</span>
         <span class="pay-date">paid ${shortDate(r.executed)}${r.executed !== r.scheduled ? ` (due ${shortDate(r.scheduled)})` : ""} · record ${shortDate(r.record_date)}</span></div>
-      <div class="pay-amount">${cur} ${amount(r.engine)} <small>per ${per}${r.accrual ? ` · interest ${r.accrual.split(" to ").map(shortDate).join(" – ")}` : ""}</small></div>
+      <div class="pay-amount">${cur} ${amount(r.engine)} <small>per ${per}${r.accrual ? ` · interest ${r.accrual.split(" to ").map(shortDate).join(" – ")}` : ""}${r.on_holding ? " · each holder paid on the whole holding" : ""}</small></div>
       <div class="checks">${checks}</div>
       <div class="holders" title="Holders of record">${bar}</div>
       <div class="holders-legend">${legend}</div>

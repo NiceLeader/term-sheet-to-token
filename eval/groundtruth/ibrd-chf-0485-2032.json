@@ -48,6 +48,7 @@
       "definition": {"doc": "ibrd-gdif-2021", "page": 28},
       "check": "Condition 5(i) rounds to the nearest 'unit', defined as the lowest amount available as legal tender; for CHF that may be 0.05 rather than 0.01"
     },
+    "interest_on_holding": {"value": false},
     "stated_coupon_amounts": {"value": null},
     "record_date": {"value": null}
   },

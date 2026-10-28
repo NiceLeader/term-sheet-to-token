@@ -41,7 +41,8 @@
       "doc": "ceb-xs3268973966-ps", "page": 2
     },
     "record_date": {"value": null},
-    "rounding_rule": {"value": "HALF_UP", "doc": "ceb-mtn-2023", "page": 48}
+    "rounding_rule": {"value": "HALF_UP", "doc": "ceb-mtn-2023", "page": 48},
+    "interest_on_holding": {"value": false}
   },
   "notes": "Pricing Supplement (Series 469, Tranche 1) read with the Offering Circular dated 8 December 2023 as supplemented on 17 November 2025. The 2025 supplement changes only the programme size, the issuer description ('Resources') and the General Information paragraphs (p.2); it does not amend the Terms and Conditions, so all definitions are cited in the 2023 Offering Circular. Interest Payment Dates are 'adjusted for payment purposes only in accordance with the Following Business Day Convention' and 'No Adjustments will be made to the Fixed Coupon Amount' (PS p.2), hence accrual unadjusted. Definitions: 'Applicable Business Day Convention' (p.48; for fixed rate notes with nothing specified 'No Adjustment' is deemed), 'Business Day' and 'Following Business Day Convention' (p.49), Actual/Actual (ICMA) (p.50) with 'Regular Period' (p.53), 'Relevant Financial Centre' (p.53), rounding in Condition 5.12 (p.48: amounts in currencies other than USD and JPY rounded to two decimal places with 0.005 rounded upwards). Payment-day rules: Condition 8A.5 (p.61, payment on the next day that is a Relevant Financial Centre Day and a Local Banking Day) and Condition 8C.4(x) Relevant Financial Centre Day (p.64). No Calculation Amount; the Fixed Coupon Amount is stated per GBP 1,000 Specified Denomination. Maturity Redemption Amount is GBP 1,000 per GBP 1,000 Specified Denomination (par). The Notes are Bearer Notes (Temporary then Permanent Global Note, NGN); the Record Date in Condition 8B.3 (p.62) applies only to Registered Notes, so record_date is null."
 }

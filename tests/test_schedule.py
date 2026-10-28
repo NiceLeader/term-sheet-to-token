@@ -129,3 +129,37 @@ def test_modified_following_stays_in_month():
               business_day_convention="MODIFIED_FOLLOWING", accrual_adjusted=True,
               business_day=["Hong Kong"])
     assert_matches_quantlib(t)
+
+
+def hksar_usd(**overrides):
+    # HKSAR USD 3.625% digital notes: USD 200,000 notes, calculation amount USD 1,000.
+    return terms(currency="USD", aggregate_nominal_amount="300000000",
+                 specified_denomination="200000", calculation_amount="1000",
+                 issue_date="2025-11-12", maturity_date="2028-11-12", interest_rate="3.625",
+                 coupon_frequency=2, first_interest_payment_date="2026-05-12",
+                 day_count_fraction="THIRTY_360", rounding_rule="DOWN", **overrides)
+
+
+def test_interest_on_a_holding_is_rounded_once():
+    per_note = build_schedule(hksar_usd())
+    on_holding = build_schedule(hksar_usd(interest_on_holding=True))
+    period = on_holding.periods[0]
+    assert per_note.coupon_for(per_note.periods[0], 1) == Decimal("3624.00")
+    assert on_holding.coupon_for(period, 1) == Decimal("3625.00")
+    for units in (1, 7, 750):
+        ql = reference_flows(on_holding.terms, units * Decimal(200000)).flows[0]
+        assert on_holding.coupon_for(period, units) == ql.amount
+
+
+def test_quantlib_amounts_on_a_large_holding_keep_their_cents():
+    # CNY 1.90% Actual/365 (Fixed), rounded down: float noise must not cost a fen.
+    t = terms(currency="CNY", aggregate_nominal_amount="2500000000",
+              specified_denomination="1000000", calculation_amount="10000",
+              issue_date="2025-11-11", maturity_date="2030-11-11", interest_rate="1.90",
+              coupon_frequency=2, first_interest_payment_date="2026-05-11",
+              day_count_fraction="ACT_365_FIXED", rounding_rule="DOWN",
+              interest_on_holding=True)
+    schedule = build_schedule(t)
+    coupons = [f for f in reference_flows(t, Decimal("2500000000")).flows if f.kind == "coupon"]
+    assert [schedule.coupon_on(p, Decimal("2500000000")) for p in schedule.periods] == [
+        f.amount for f in coupons]

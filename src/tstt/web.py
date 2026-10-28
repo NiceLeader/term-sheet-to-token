@@ -59,6 +59,7 @@ FIELD_GROUPS: dict[str, list[tuple[str, str]]] = {
                  ("interest_payment_dates", "Payment dates"),
                  ("day_count_fraction", "Day count fraction"),
                  ("rounding_rule", "Rounding"),
+                 ("interest_on_holding", "Interest on each holding"),
                  ("stated_coupon_amounts", "Printed coupon amounts")],
     "Payment days": [("business_day_convention", "Business day convention"),
                      ("accrual_adjusted", "Accrual adjusted"),

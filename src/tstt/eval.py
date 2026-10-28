@@ -63,6 +63,8 @@ def blocking_fields(values: dict[str, Any]) -> set[str]:
 
 def normalise(name: str, value: Any) -> Any:
     """A comparable form of a field value."""
+    if name == "interest_on_holding":
+        return bool(value)  # not stated means interest per note, as when terms are built
     if value in EMPTY:
         return None
     spec = FIELD_BY_NAME.get(name)
@@ -89,14 +91,21 @@ def normalise(name: str, value: Any) -> Any:
     return value
 
 
-def _flows(schedule: Schedule) -> list[tuple[str, str, Decimal]]:
-    """Every payment per unit of the smallest denomination."""
+# Units in a holding on which interest per note and interest on the whole holding can differ.
+HOLDING_UNITS = 7
+
+
+def _flows(schedule: Schedule) -> list[tuple[str, str, Decimal, Decimal]]:
+    """Every payment per unit of the smallest denomination, and on a holding of
+    HOLDING_UNITS units."""
     terms = schedule.terms
     ratio = terms.specified_denomination / schedule.basis
-    flows = [("coupon", str(p.payment_date), (p.amount_per_basis * ratio).normalize())
+    flows = [("coupon", str(p.payment_date), (p.amount_per_basis * ratio).normalize(),
+              schedule.coupon_for(p, HOLDING_UNITS).normalize())
              for p in schedule.periods]
-    flows.append(("redemption", str(schedule.redemption_date),
-                  (schedule.redemption_per_basis * ratio).normalize()))
+    per_unit = (schedule.redemption_per_basis * ratio).normalize()
+    flows.append(("redemption", str(schedule.redemption_date), per_unit,
+                  (per_unit * HOLDING_UNITS).normalize()))
     return flows
 
 
