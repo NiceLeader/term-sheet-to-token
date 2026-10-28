@@ -1,0 +1,61 @@
+{
+  "bond_id": "eib-sek-3638-2025",
+  "isin": "LU2637450516",
+  "status": "verified",
+  "fields": {
+    "isin": {"value": "LU2637450516", "doc": "eib-lu2637450516-om", "page": 38},
+    "issuer": {"value": "European Investment Bank", "doc": "eib-lu2637450516-om", "page": 38},
+    "currency": {"value": "SEK", "doc": "eib-lu2637450516-om", "page": 38},
+    "aggregate_nominal_amount": {"value": "1000000000", "doc": "eib-lu2637450516-om", "page": 38},
+    "specified_denomination": {"value": "2000000", "doc": "eib-lu2637450516-om", "page": 42},
+    "calculation_amount": {"value": "2000000", "doc": "eib-lu2637450516-om", "page": 43},
+    "issue_date": {"value": "2023-06-19", "doc": "eib-lu2637450516-om", "page": 38},
+    "interest_commencement_date": {"value": "2023-06-19", "doc": "eib-lu2637450516-om", "page": 39},
+    "maturity_date": {"value": "2025-06-19", "doc": "eib-lu2637450516-om", "page": 40},
+    "interest_rate": {"value": "3.638", "doc": "eib-lu2637450516-om", "page": 43},
+    "coupon_frequency": {"value": 1, "doc": "eib-lu2637450516-om", "page": 39},
+    "interest_payment_dates": {"value": ["06-19"], "doc": "eib-lu2637450516-om", "page": 39},
+    "first_interest_payment_date": {"value": "2024-06-19", "doc": "eib-lu2637450516-om", "page": 39},
+    "day_count_fraction": {
+      "value": "THIRTY_E_360",
+      "doc": "eib-lu2637450516-om", "page": 39,
+      "definition": {"doc": "eib-lu2637450516-om", "page": 39},
+      "check": "The Day Count Fraction is given as wording, not by name: days divided by 360 on a year of 360 days with twelve 30-day months, without regard to the date of the first or last day of the period, with the February exception only when the Maturity Date is the last day of February. This is the 30E/360 (Eurobond basis) wording, not the US 30/360 wording with its 31st-day exception; neither name appears."
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "eib-lu2637450516-om", "page": 39,
+      "definition": {"doc": "eib-lu2637450516-om", "page": 39}
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "eib-lu2637450516-om", "page": 43,
+      "check": "The Interest Payment Date definition (page 39) is itself 'subject to the Following Business Day Convention' and the Interest Period runs between Interest Payment Dates, which read literally would move the period end. The coupon is nevertheless a fixed SEK 72,760 per Specified Denomination on every Interest Payment Date (Condition 5, page 43) and Condition 6.5 (page 44) pays no interest for a postponement, so the amount is not recomputed. Neither 19 June 2024 nor 19 June 2025 falls on a non-Business Day."
+    },
+    "business_day": {
+      "value": ["Stockholm", "TARGET"],
+      "doc": "eib-lu2637450516-om", "page": 38,
+      "definition": {"doc": "eib-lu2637450516-om", "page": 38}
+    },
+    "final_redemption_amount": {
+      "value": "100",
+      "doc": "eib-lu2637450516-om", "page": 6,
+      "check": "Redemption 'at their principal amount' is stated only on the cover page; Condition 7.1 (page 44) says each Note is redeemed on 19 June 2025 without naming the amount. The Issue Price is 100.00 per cent."
+    },
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "eib-lu2637450516-om", "page": 43,
+      "definition": {"doc": "eib-lu2637450516-om", "page": 43},
+      "check": "Condition 5 rounds interest payable on a date other than an Interest Payment Date 'to the nearest SEK (with one half of öre rounded down)': the unit is the whole krona rather than the öre sub-unit and the tie is rounded down, which no enum value expresses. HALF_UP is the nearest-rounding value and differs only on an exact half; the fixed SEK 72,760 coupon never needs rounding."
+    },
+    "interest_on_holding": {"value": false, "doc": "eib-lu2637450516-om", "page": 43},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "72760.00", "per": "2000000"}
+      ],
+      "doc": "eib-lu2637450516-om", "page": 43
+    },
+    "record_date": {"value": "Close of business (17.00 Luxembourg time) on the Business Day immediately preceding the due date", "doc": "eib-lu2637450516-om", "page": 44}
+  },
+  "notes": "Standalone Offering Memorandum dated 19 June 2023 for Climate Awareness Bonds issued as dematerialised notes recorded through a Register Smart Contract on the PoCR Network under the Luxembourg 2013 Law, with Credit Agricole Corporate and Investment Bank as central account keeper and CACEIS Bank as Paying Agent; there is no base prospectus, so every term and definition is cited from the Terms and Conditions of the Notes in the same document (pages 38-50). The preamble of the Conditions (p.38) states the Issue Date, the Issue Price of 100.00 per cent. of the principal amount, the ISIN and the issuer name; the SEK 1,000,000,000 aggregate amount appears in the title of the Notes (p.38, also the cover p.6) and nowhere as a separate item. Condition 2 (p.42) gives the SEK 2,000,000 Specified Denomination; Condition 5 (p.43) the 3.638 per cent. Rate of Interest, the fixed interest amount of SEK 72,760 per Specified Denomination on each Interest Payment Date (3.638 per cent. of SEK 2,000,000), the Calculation Amount of SEK 2,000,000 and the rounding of interest payable on any other date to the nearest SEK with one half of öre rounded down. Condition 1 defines Business Day (p.38: commercial banks and foreign exchange markets open in Stockholm and the T2 system open for euro payments; T2 is labelled TARGET), Day Count Fraction (p.39: the 30E/360 wording without the name), Following Business Day Convention (p.39: a date falling on a non-Business Day falls on the first following Business Day), Interest Commencement Date (p.39: the Issue Date, with no adjustment), Interest Payment Date (p.39: 19 June in each year from and including 19 June 2024 to and including the Maturity Date, subject to the Following Business Day Convention), Interest Period (p.39: from and including one Interest Payment Date to but excluding the next) and Maturity Date (p.40: 19 June 2025, or an earlier substitution, redemption or purchase date). Conditions 6.1 and 6.5 (p.44) pay any amount due on a non-Business Day on the immediately following Business Day with no interest or other sum for the postponement, so the convention is FOLLOWING for interest and principal; the operational summary (p.36) repeats that redemption on 19 June 2025 moves to the following Business Day. Because the coupon is a fixed amount per Specified Denomination, accrual is treated as unadjusted even though the Interest Payment Date definition carries the convention; both scheduled payment dates (19 June 2024 and 19 June 2025) fall on weekdays. Redemption at principal amount (100 per cent.) is stated on the cover (p.6); Condition 7.1 (p.44) only says each Note is redeemed on 19 June 2025 (Condition 14.3, p.49, mentions redemption at par only for a substitution by Replacement Notes). Interest is stated per Specified Denomination, so interest_on_holding is false. Record Time: Condition 6.3 (p.44), the CAK pays Account Holders based on their holdings in the Securities Accounts at the close of business (17.00 Luxembourg time) on the Business Day immediately preceding the due date; Conditions 3 (p.43) and 7.3 (p.45) make the Notes non-transferable after the Record Time before the Maturity Date, and the operational summary (p.35) repeats the rule. The rounding clause does not fit the enum (whole krona unit, ties rounded down); HALF_UP is the nearest-rounding value and matters only for a broken period. The ISIN is repeated in General Information (p.73)."
+}

@@ -256,6 +256,70 @@
       "url": "https://www.sec.gov/Archives/edgar/data/873465/000119312526299082/d124581d424b2.htm",
       "sha256": "5c692af1521dbbfffe974fd23d8e54fdf53d5d53df882097cb968325f2416639",
       "bytes": 261712
+    },
+    "eib-lu2542747121-om": {
+      "title": "EIB EUR 100m 2.507% Notes due 2024 (Project Venus), Offering Memorandum 29 November 2022",
+      "issuer": "EIB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=1ubCLtaakzu%2B0pIYaIhqpDW%2FXH4oT3a%2BMMl2aIDqiJu64GMCtoq0YpX3tJxR3RkpCH71qz%2B9ZKuaE%2BBlNKFa7Gh%2FITNGSaXNi9mb3CI8Lv5yOlVJbjvvtH1mqeUFMZx3VHmx9%2BfRcHUozw20hnb61v6Oyj0EhYYXQJIO2pBp0dvbdmk0Vyn82ZSi%2Ba7tgw8W",
+      "sha256": "1ea078e15d29eee790cdb851c75055e49bacde691cdb348709562df23f8732b6",
+      "bytes": 770891
+    },
+    "eib-lu2637450516-om": {
+      "title": "EIB SEK 1bn 3.638% Climate Awareness Bonds due 2025 (Project Saturn), Offering Memorandum 19 June 2023",
+      "issuer": "EIB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=8Ztpm2fdRbULK%2BjP2mY%2BZMr4iDSh%2F9HLtWE2vUjsLklzmP1aHzkMHM4Lmz66I360PBeACk7iZuLqR1lXQlNBMLt8HtZ8xXYWKk1g4SGLQF%2BUMxrWCL4VvRCiTtDkADLuq%2ByqKVfX1K%2FmW5STL%2BxIqj7iDFxtkv0ciOxC2LKSUa93bfjy6sKS4Y4lZ8nYlopS",
+      "sha256": "160db28511ae97d79593597ef99688c3c9472d9fca012077650b959c585295ef",
+      "bytes": 1023587
+    },
+    "eib-us298785ku94-ps": {
+      "title": "EIB USD 4bn 4.375% Global Notes due 2031, Prospectus Supplement 18 August 2026 with the Prospectus of 21 December 2023",
+      "issuer": "EIB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=G0nsrwM5emekuD%2BdigNLyxPHCSBuuGCfgA%2Frw1YmpWkA30oTIwAM8debTD91Ju%2F5jf0Pv1MOVktT2wy0QPJeSKnPtleMI4COb0KTDkgzSfKiiOMA1fLOeml8OYm8dLFLjOnG8WaO5N5Umw8rzhNF9HGTxCYZy2u%2FMMHZj46dfGM%3D",
+      "sha256": "31ab1c1a8166b1ce4e70e7e88d00329898d2b3249a679cee04dcabc3a5597403",
+      "bytes": 1097130
+    },
+    "ceb-xs3344655512-ps": {
+      "title": "CEB EUR 1bn 3.000% Social Inclusion Bonds due 2033, Pricing Supplement",
+      "issuer": "CEB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=fmRon67UdDQ6WYktGZUz3NG7myMzDFZArFzBeA9uhBqzFUpSGq612Xaoj9qhUGmDjLfGIOFdqYqQ5yoT4mC7rzEie3CQTX87V2snyBVB%2BmYyCtxjCRfn5UgAv5biY9FRGqbzYKvzXoUPL5dOnRVtgdRyhGZK%2Bv4Z5Nkuxp6HPnNhIDl2ux39p%2BEenR2gTewtSXPfMeiGvZkXADL9rz%2FqwQ%3D%3D",
+      "sha256": "68e093c1aad08dd1a2259e3aed94d85cd3bc02a71818055c6ac4affe727c8111",
+      "bytes": 197135
+    },
+    "nib-us65562qc458-ps": {
+      "title": "NIB USD 1bn 3.750% Global Notes due 2031, Pricing Supplement 15 January 2026 with the Series D Prospectus of 18 December 2020",
+      "issuer": "NIB",
+      "format": "pdf",
+      "url": "https://dl.luxse.com/dl?v=rFgho9pDebGKodz4%2FfY9b3gdfTVTNWvZm3APo6O8eduS3ehB12RZpofzx9%2BtiymY1QY7pB4wTXtMWw7Fd0oPheXdeAeS4fLAdmnmAADiW7QyIwgqSPYF2Vu84m%2BZJ86ohWFU95EPHy%2B04v7lk0oOkmmLXT5F6UB%2FlnHHLpWy7cQ%3D",
+      "sha256": "8a8921f8ef915b89e1bf0a232103946e31668da457b9183903435a5aaa2f14e7",
+      "bytes": 579084
+    },
+    "kfw-us500769kn35-ps": {
+      "title": "KfW USD 5bn 3.750% Global Notes due 2031, Pricing Supplement 16 January 2026 (424B5)",
+      "issuer": "KfW",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/821533/000110465926004438/tm263055-1_424b5.htm",
+      "sha256": "10106517540c1276f7e29571944ea9794870a6e08eb71f2bb2f13fbda44d6fbe",
+      "bytes": 529244
+    },
+    "kfw-prospectus-2024": {
+      "title": "KfW Prospectus, 14 June 2024 (424B3)",
+      "issuer": "KfW",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/821533/000110465924072153/tm2414155-4_424b3.htm",
+      "sha256": "dee85c7abbfbb3738097797ee9618fa57341d7e56c6e60376e998f3769780382",
+      "bytes": 269916
+    },
+    "kfw-us500769kr49-ps": {
+      "title": "KfW USD 3bn 4.25% Global Notes due 2029, Pricing Supplement 10 July 2026 (424B5)",
+      "issuer": "KfW",
+      "format": "html",
+      "url": "https://www.sec.gov/Archives/edgar/data/821533/000119312526300441/d13016d424b5.htm",
+      "sha256": "5b457785d04de3d4371bc2a28e1c909ed0438073c88ad9970b548ed0d95c4bfc",
+      "bytes": 375388
     }
   },
   "bonds": [
@@ -552,6 +616,112 @@
         },
         {
           "doc": "korea-prelim-424b5-2026",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "eib-eur-2507-2024",
+      "isin": "LU2542747121",
+      "label": "EIB EUR 100m 2.507% 2024, digitally native (Project Venus)",
+      "dlt_native": true,
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "eib-lu2542747121-om",
+          "role": "offering_memorandum"
+        }
+      ]
+    },
+    {
+      "id": "eib-sek-3638-2025",
+      "isin": "LU2637450516",
+      "label": "EIB SEK 1bn 3.638% 2025, digitally native (Project Saturn)",
+      "dlt_native": true,
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "eib-lu2637450516-om",
+          "role": "offering_memorandum"
+        }
+      ]
+    },
+    {
+      "id": "eib-usd-4375-2031",
+      "isin": "US298785KU94",
+      "label": "EIB USD 4bn 4.375% 2031, short first coupon",
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "eib-us298785ku94-ps",
+          "role": "final_terms"
+        }
+      ]
+    },
+    {
+      "id": "ceb-eur-3000-2033",
+      "isin": "XS3344655512",
+      "label": "CEB EUR 1bn 3.000% 2033 Social Inclusion Bond",
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "ceb-xs3344655512-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "ceb-mtn-supplement-2025",
+          "role": "supplement"
+        },
+        {
+          "doc": "ceb-mtn-2023",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "nib-usd-3750-2031",
+      "isin": "US65562QC458",
+      "label": "NIB USD 1bn 3.750% 2031",
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "nib-us65562qc458-ps",
+          "role": "final_terms"
+        }
+      ]
+    },
+    {
+      "id": "kfw-usd-3750-2031",
+      "isin": "US500769KN35",
+      "label": "KfW USD 5bn 3.750% 2031, short first coupon",
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "kfw-us500769kn35-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "kfw-prospectus-2024",
+          "role": "base_prospectus"
+        }
+      ]
+    },
+    {
+      "id": "kfw-usd-4250-2029",
+      "isin": "US500769KR49",
+      "label": "KfW USD 3bn 4.25% 2029, long first coupon",
+      "held_out": true,
+      "documents": [
+        {
+          "doc": "kfw-us500769kr49-ps",
+          "role": "final_terms"
+        },
+        {
+          "doc": "kfw-prospectus-supplement-2026",
+          "role": "supplement"
+        },
+        {
+          "doc": "kfw-prospectus-2026",
           "role": "base_prospectus"
         }
       ]

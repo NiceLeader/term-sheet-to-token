@@ -1,0 +1,57 @@
+{
+  "bond_id": "eib-eur-2507-2024",
+  "isin": "LU2542747121",
+  "status": "verified",
+  "fields": {
+    "isin": {"value": "LU2542747121", "doc": "eib-lu2542747121-om", "page": 28},
+    "issuer": {"value": "European Investment Bank", "doc": "eib-lu2542747121-om", "page": 28},
+    "currency": {"value": "EUR", "doc": "eib-lu2542747121-om", "page": 28},
+    "aggregate_nominal_amount": {"value": "100000000", "doc": "eib-lu2542747121-om", "page": 28},
+    "specified_denomination": {"value": "100000", "doc": "eib-lu2542747121-om", "page": 30},
+    "calculation_amount": {"value": "100000", "doc": "eib-lu2542747121-om", "page": 31},
+    "issue_date": {"value": "2022-11-29", "doc": "eib-lu2542747121-om", "page": 28},
+    "interest_commencement_date": {"value": "2022-11-29", "doc": "eib-lu2542747121-om", "page": 29},
+    "maturity_date": {"value": "2024-11-29", "doc": "eib-lu2542747121-om", "page": 30},
+    "interest_rate": {"value": "2.507", "doc": "eib-lu2542747121-om", "page": 31},
+    "coupon_frequency": {"value": 1, "doc": "eib-lu2542747121-om", "page": 29},
+    "interest_payment_dates": {"value": ["11-29"], "doc": "eib-lu2542747121-om", "page": 29},
+    "first_interest_payment_date": {"value": "2023-11-29", "doc": "eib-lu2542747121-om", "page": 29},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "eib-lu2542747121-om", "page": 29,
+      "definition": {"doc": "eib-lu2542747121-om", "page": 29},
+      "check": "The Day Count Fraction is given as a formula, not by name: actual days in the Calculation Period divided by the product of the actual days in the Interest Period and the number of Interest Periods normally ending in a year (with the two-part sum for a Calculation Period longer than an Interest Period). This is the Actual/Actual (ICMA) definition; the word ICMA does not appear."
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "eib-lu2542747121-om", "page": 28,
+      "definition": {"doc": "eib-lu2542747121-om", "page": 28}
+    },
+    "accrual_adjusted": {"value": false, "doc": "eib-lu2542747121-om", "page": 28},
+    "business_day": {
+      "value": ["Frankfurt", "Luxembourg"],
+      "doc": "eib-lu2542747121-om", "page": 28,
+      "definition": {"doc": "eib-lu2542747121-om", "page": 28},
+      "check": "The definition names Frankfurt am Main and Luxembourg and adds 'any day on which the Issuer is closed for business', which is not a financial centre and is not represented in the list."
+    },
+    "final_redemption_amount": {
+      "value": "100",
+      "doc": "eib-lu2542747121-om", "page": 4,
+      "check": "Redemption 'at their principal amount' is stated only on the cover page; Condition 6.1 (page 32) says each Note is redeemed on the Maturity Date without naming the amount. The Issue Price is 100.000 per cent."
+    },
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "eib-lu2542747121-om", "page": 31,
+      "definition": {"doc": "eib-lu2542747121-om", "page": 31}
+    },
+    "interest_on_holding": {"value": false, "doc": "eib-lu2542747121-om", "page": 31},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "2507.00", "per": "100000"}
+      ],
+      "doc": "eib-lu2542747121-om", "page": 31
+    },
+    "record_date": {"value": "Close of business on the Business Day before the due date for payment", "doc": "eib-lu2542747121-om", "page": 31}
+  },
+  "notes": "Standalone Offering Memorandum dated 29 November 2022 for dematerialised notes registered on a blockchain-based platform operated by Goldman Sachs Bank Europe SE as central account keeper under the Luxembourg 2013 Law; there is no base prospectus, so every term and definition is cited from the Terms and Conditions of the Notes in the same document (pages 28-37). The preamble of the Conditions (p.28) states the Issue Date, the Issue Price of 100.000 per cent. of the total principal amount of EUR 100,000,000, the ISIN and the issuer name; Condition 2 (p.30) the EUR 100,000 denomination; Condition 4 (p.31) the 2.507 per cent. Rate of Interest, the fixed interest amount of EUR 2,507 in respect of each Note on each Interest Payment Date, the Calculation Amount of EUR 100,000 and the rounding of interest payable on any other date to the nearest cent with half a cent rounded upwards (HALF_UP; the regular coupon is fixed and never rounded). Condition 1 defines Business Day (p.28: Frankfurt am Main and Luxembourg, plus any day on which the Issuer is closed for business), Business Day Convention (p.28: a payment due on an Interest Payment Date that is not a Business Day is postponed to the next Business Day and interest does not accrue for the postponement), Day Count Fraction (p.29: the Actual/Actual (ICMA) formula without the name), Interest Commencement Date (p.29: the Issue Date, with no adjustment), Interest Payment Date (p.29: 29 November in each year from and including 29 November 2023, subject to the Business Day Convention), Interest Period (p.29-30: from and including one Interest Payment Date to but excluding the next) and Maturity Date (p.30: 29 November 2024). Condition 5.4 (p.31) applies the same next-following-Business-Day rule to any payment date, including the Maturity Date, with no interest or other sum for the postponement, so the convention is FOLLOWING for all payments and accrual is unadjusted. Both scheduled payment dates (29 November 2023 and 29 November 2024) fall on weekdays. Redemption at principal amount (100 per cent.) is stated on the cover (p.4); Condition 6.1 (p.32) only says each Note is redeemed on the Maturity Date. Interest is stated per Note, so interest_on_holding is false. Record Date: Condition 5.2 (p.31), the CAK pays Account Holders based on their holdings in the Securities Accounts at the close of business on the Business Day before the due date; the operational section (p.56) also blocks transfers from ten calendar days before any Interest Payment Date or the Maturity Date and (p.57) tells Account Holders to pay on to Noteholders by their holdings at the Record Date. The ISIN is repeated in General Information (p.64)."
+}

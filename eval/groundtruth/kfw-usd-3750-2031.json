@@ -1,0 +1,49 @@
+{
+  "bond_id": "kfw-usd-3750-2031",
+  "isin": "US500769KN35",
+  "status": "verified",
+  "fields": {
+    "isin": {"value": "US500769KN35", "doc": "kfw-us500769kn35-ps", "page": 2},
+    "issuer": {"value": "KfW", "doc": "kfw-us500769kn35-ps", "page": 2},
+    "currency": {"value": "USD", "doc": "kfw-us500769kn35-ps", "page": 6},
+    "aggregate_nominal_amount": {"value": "5000000000", "doc": "kfw-us500769kn35-ps", "page": 6},
+    "specified_denomination": {"value": "1000", "doc": "kfw-us500769kn35-ps", "page": 6},
+    "calculation_amount": {"value": null},
+    "issue_date": {
+      "value": "2026-01-22",
+      "doc": "kfw-us500769kn35-ps", "page": 2,
+      "check": "No field named issue date; cover gives expected delivery 'on or about January 22, 2026', footnote (1) accrues interest from that date and interest runs from that date (page 6)"
+    },
+    "interest_commencement_date": {"value": "2026-01-22", "doc": "kfw-us500769kn35-ps", "page": 6},
+    "maturity_date": {"value": "2031-03-14", "doc": "kfw-us500769kn35-ps", "page": 7},
+    "interest_rate": {"value": "3.750", "doc": "kfw-us500769kn35-ps", "page": 6},
+    "coupon_frequency": {"value": 2, "doc": "kfw-us500769kn35-ps", "page": 6},
+    "interest_payment_dates": {"value": ["03-14", "09-14"], "doc": "kfw-us500769kn35-ps", "page": 6},
+    "first_interest_payment_date": {"value": "2026-03-14", "doc": "kfw-us500769kn35-ps", "page": 6},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "kfw-us500769kn35-ps", "page": 7,
+      "definition": {"doc": "kfw-us500769kn35-ps", "page": 17}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "kfw-us500769kn35-ps", "page": 7,
+      "definition": {"doc": "kfw-us500769kn35-ps", "page": 17}
+    },
+    "accrual_adjusted": {"value": false, "doc": "kfw-us500769kn35-ps", "page": 7},
+    "business_day": {
+      "value": ["New York"],
+      "doc": "kfw-us500769kn35-ps", "page": 7,
+      "definition": {"doc": "kfw-us500769kn35-ps", "page": 17}
+    },
+    "final_redemption_amount": {"value": "100", "doc": "kfw-us500769kn35-ps", "page": 7},
+    "stated_coupon_amounts": {
+      "value": [{"date": "2026-03-14", "amount": "27083333.33", "per": "5000000000"}],
+      "doc": "kfw-us500769kn35-ps", "page": 6
+    },
+    "record_date": {"value": "Tenth New York business day prior to the relevant payment date", "doc": "kfw-us500769kn35-ps", "page": 7},
+    "rounding_rule": {"value": "NOT_STATED"},
+    "interest_on_holding": {"value": false}
+  },
+  "notes": "The pricing supplement (424B5 of January 16, 2026, pages 2-13 of kfw-us500769kn35-ps, printed PS-1 to PS-12) states every term under 'Terms of the Notes' on pages 6-7 (PS-5, PS-6). The same file embeds the prospectus supplement of June 14, 2024, 'Information Relating to U.S. Dollar-Denominated Global Notes' (pages 14-26, printed S-1 to S-13), whose 'Description of the Notes' defines the general terms, and the base prospectus of June 14, 2024 (from page 27). The separately filed base prospectus (kfw-prospectus-2024, 424B3) only lists on page 9 the terms the supplements will specify and contains no day count, business day, record date or rounding provision, so every definition is cited from the embedded prospectus supplement. 'Interest Rate and Due Dates' on page 6 gives 3.750% per year as from January 22, 2026, payable semi-annually in arrear on March 14 and September 14, with the first payment due March 14, 2026 for the period from January 22, 2026 (inclusive) to March 14, 2026 (exclusive), totalling $27,083,333.33 for the aggregate principal amount of $5,000,000,000; no amount per $1,000 note is printed. 'Accrued Interest' on page 7 restates the clause defined on page 17 (S-4) of the embedded prospectus supplement: a 360-day year of twelve 30-day months with two exceptions, (A) a Calculation Period ending on the 31st whose first day is not the 30th or 31st keeps the 31-day month and (B) a Calculation Period ending on the last day of February is not lengthened to 30 days; this is 30/360 Bond Basis (THIRTY_360), not 30E/360. The short first coupon from 2026-01-22 to 2026-03-14 is 52 days on 30/360 (two 30-day months less 22 plus 14), and 5,000,000,000 x 3.750% x 52/360 = 27,083,333.33, which matches the printed amount. 'Record Date', 'Business Days' and 'Payment Date and Due Date' on page 7 restate the clauses on pages 17-18 (S-4, S-5) of the embedded prospectus supplement: if a due date is not a New York business day the payment is made on the next New York business day and no further interest is paid for the delay (FOLLOWING); 'due date' means the interest payment date or maturity date without that adjustment, so accrual runs on the unadjusted dates (accrual_adjusted false). 'New York business day' is any day other than a Saturday or Sunday that is neither a legal holiday nor a day on which commercial banks in New York City are authorized or required to close, so New York is the only business centre. March 14, 2026 falls on a Saturday, so the first coupon of $27,083,333.33 is paid on Monday March 16, 2026 unchanged; March 14, 2027 (Sunday) and September 14, 2030 (Saturday) move the same way. The record date is the tenth New York business day prior to the relevant payment date. 'Maturity' on page 7 redeems the notes at their aggregate principal amount on March 14, 2031 (100%), with no redemption before maturity other than termination for default. Denomination is $1,000 per note (five million notes); no Calculation Amount is defined. Interest is stated for the aggregate principal amount of the issue, not for the amount in each holder's account, so interest_on_holding is false. No rounding rule for interest amounts appears in the pricing supplement, the embedded prospectus supplement or the base prospectus. No field is named issue date; the cover (page 2) expects delivery 'on or about January 22, 2026' and footnote (1) adds accrued interest from that date if settlement occurs later."
+}

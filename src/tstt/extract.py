@@ -29,8 +29,8 @@ from tstt.fetch import load_manifest
 from tstt.llm import LocalClient, MetaClient, Reply, Usage
 from tstt.terms import FIELDS, FieldSpec
 
-ROLE_ORDER = {"final_terms": 0, "term_sheet": 0, "pricing_supplement": 0, "supplement": 1,
-              "base_prospectus": 2}
+ROLE_ORDER = {"final_terms": 0, "term_sheet": 0, "pricing_supplement": 0, "offering_memorandum": 0,
+              "supplement": 1, "base_prospectus": 2}
 
 INSTRUCTIONS = """\
 You read the offering documents of a fixed rate bond and return its economic terms as JSON.

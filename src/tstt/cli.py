@@ -92,7 +92,7 @@ def _cmd_extract(args: argparse.Namespace) -> int:
     client = make_client(args.model, settings)
     if args.effort and hasattr(client, "effort"):
         client.effort = args.effort
-    folder = settings.runs_dir / "extractions" / f"{args.mode}-{client.model}"
+    folder = settings.runs_dir / "extractions" / (args.run or f"{args.mode}-{client.model}")
     bonds = args.bond or [p.stem for p in sorted(GROUND_TRUTH.glob("*.json"))]
     failed = 0
     for bond_id in bonds:
@@ -213,6 +213,7 @@ def main(argv: list[str] | None = None) -> int:
                          help="hosted Muse Spark or local Muse Glimmer")
     extract.add_argument("--mode", choices=["one_pass", "agent"], default="one_pass")
     extract.add_argument("--effort", help="effort level for the hosted model (low, medium, high)")
+    extract.add_argument("--run", help="name of the run folder (default: <mode>-<model>)")
     extract.set_defaults(func=_cmd_extract)
 
     mutate = sub.add_parser("mutate", help="inject known errors and count how many are caught")

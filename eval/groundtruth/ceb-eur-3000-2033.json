@@ -1,0 +1,52 @@
+{
+  "bond_id": "ceb-eur-3000-2033",
+  "isin": "XS3344655512",
+  "status": "verified",
+  "fields": {
+    "isin": {"value": "XS3344655512", "doc": "ceb-xs3344655512-ps", "page": 4},
+    "issuer": {"value": "Council of Europe Development Bank", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "currency": {"value": "EUR", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "aggregate_nominal_amount": {"value": "1000000000", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "specified_denomination": {"value": "1000", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-04-16", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "interest_commencement_date": {"value": "2026-04-16", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "maturity_date": {"value": "2033-04-16", "doc": "ceb-xs3344655512-ps", "page": 1},
+    "interest_rate": {"value": "3.000", "doc": "ceb-xs3344655512-ps", "page": 2},
+    "coupon_frequency": {"value": 1, "doc": "ceb-xs3344655512-ps", "page": 2},
+    "interest_payment_dates": {"value": ["04-16"], "doc": "ceb-xs3344655512-ps", "page": 2},
+    "first_interest_payment_date": {"value": "2027-04-16", "doc": "ceb-xs3344655512-ps", "page": 2},
+    "day_count_fraction": {
+      "value": "ACT_ACT_ICMA",
+      "doc": "ceb-xs3344655512-ps", "page": 2,
+      "definition": {"doc": "ceb-mtn-2023", "page": 50}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "ceb-xs3344655512-ps", "page": 2,
+      "definition": {"doc": "ceb-mtn-2023", "page": 49}
+    },
+    "accrual_adjusted": {"value": false, "doc": "ceb-xs3344655512-ps", "page": 2},
+    "business_day": {
+      "value": ["TARGET"],
+      "doc": "ceb-xs3344655512-ps", "page": 3,
+      "definition": {"doc": "ceb-mtn-2023", "page": 49},
+      "check": "Item 25 prints 'T2', the payment system, not a city. For a sum payable in Euro the Business Day definition (i) (p.49) is a TARGET Settlement Day, i.e. a day on which T2 is open (p.53), plus any Additional Business Centre, and none is specified; the Relevant Financial Centre Day for Euro (p.64) is likewise a day on which the TARGET System is operating. The single centre is therefore labelled TARGET."
+    },
+    "final_redemption_amount": {"value": "100", "doc": "ceb-xs3344655512-ps", "page": 2},
+    "stated_coupon_amounts": {
+      "value": [
+        {"date": null, "amount": "30.00", "per": "1000"}
+      ],
+      "doc": "ceb-xs3344655512-ps", "page": 2
+    },
+    "record_date": {"value": null},
+    "rounding_rule": {
+      "value": "HALF_UP",
+      "doc": "ceb-mtn-2023", "page": 48,
+      "definition": {"doc": "ceb-mtn-2023", "page": 48}
+    },
+    "interest_on_holding": {"value": false}
+  },
+  "notes": "Pricing Supplement (Series 474, Tranche 1, Social Inclusion Bonds) read with the Offering Circular dated 8 December 2023 as supplemented on 17 November 2025. The 2025 supplement changes only the programme size, the issuer description ('Resources') and the General Information paragraphs (p.2); it does not amend the Terms and Conditions, so all definitions are cited in the 2023 Offering Circular. Items 1 to 8 (PS p.1) give the Issuer, the Specified Currency Euro, the Aggregate Nominal Amount of EUR 1,000,000,000 for both Series and Tranche, the Specified Denomination of EUR 1,000, the Issue Date of 16 April 2026 with the Interest Commencement Date equal to the Issue Date, and the Maturity Date of 16 April 2033. Item 16 (PS p.2): 3.000 per cent. per annum payable annually in arrear; Interest Payment Dates 16 April in each year commencing 16 April 2027 to the Maturity Date, 'in each case adjusted for payment purposes only in accordance with the Following Business Day Convention. No Adjustments will be made to the Fixed Coupon Amount', hence FOLLOWING for the payment date and accrual unadjusted; Fixed Coupon Amount EUR 30.00 per EUR 1,000 in Specified Denomination payable on each Interest Payment Date, which is 3.000 per cent. of EUR 1,000 for one annual Regular Period under Actual/Actual (ICMA); Broken Amounts Not Applicable, so the coupon list holds the single fixed amount with date null. Definitions: 'Applicable Business Day Convention' (p.48; for fixed rate notes with nothing specified 'No Adjustment' is deemed, here the Pricing Supplement specifies Following), 'Business Day' and 'Following Business Day Convention' (p.49), Actual/Actual (ICMA) (p.50) with 'Regular Period' (p.53), 'T2' and 'TARGET Settlement Day' (p.53), rounding in Condition 5.12 (p.48: amounts in currencies other than USD and JPY rounded to two decimal places with 0.005 rounded upwards, hence HALF_UP, applied per Note since Condition 5.12 computes interest 'in respect of any Note'). Business Day for a Euro note is limb (i) of the definition: a TARGET Settlement Day and a day on which banks settle in each Additional Business Centre; the Pricing Supplement names no Additional Business Centre and item 25 (PS p.3) gives 'T2' as the Relevant Financial Centre, so the only centre is TARGET. Payment-day rules: Condition 8A.5 (p.61, payment on the next day that is a Relevant Financial Centre Day and a Local Banking Day, with no further interest for the delay) and Condition 8C.4(x) Relevant Financial Centre Day (p.64: for a payment in Euro, a day on which the TARGET System is operating). 16 April 2028 is Easter Sunday and 16 April 2033, the Maturity Date, is the Saturday before Easter; as Easter Monday is a TARGET closing day, those payments fall on Tuesday 18 April 2028 and Tuesday 19 April 2033 with the amounts unchanged. No Calculation Amount. Item 10 is 'Redemption at par' and item 21 gives a Maturity Redemption Amount of EUR 1,000 per Note of EUR 1,000 Specified Denomination (PS p.2), i.e. 100 per cent.; items 12, 19 and 20 make the Call and Put Options Not Applicable. The Notes are Bearer Notes (Temporary Global Note exchangeable for a Permanent Global Note, New Global Note form, PS p.3); the Record Date in Condition 8B.3 (p.62) applies only to Registered Notes, so record_date is null. ISIN is item 37 (PS p.4); page 5 of the Pricing Supplement carries no terms and page 6 is the Use of Proceeds annex."
+}

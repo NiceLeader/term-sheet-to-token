@@ -1,0 +1,52 @@
+{
+  "bond_id": "eib-usd-4375-2031",
+  "isin": "US298785KU94",
+  "status": "verified",
+  "fields": {
+    "isin": {"value": "US298785KU94", "doc": "eib-us298785ku94-ps", "page": 22},
+    "issuer": {"value": "European Investment Bank", "doc": "eib-us298785ku94-ps", "page": 1},
+    "currency": {"value": "USD", "doc": "eib-us298785ku94-ps", "page": 1},
+    "aggregate_nominal_amount": {"value": "4000000000", "doc": "eib-us298785ku94-ps", "page": 13},
+    "specified_denomination": {"value": "1000", "doc": "eib-us298785ku94-ps", "page": 12},
+    "calculation_amount": {"value": null},
+    "issue_date": {
+      "value": "2026-08-25",
+      "doc": "eib-us298785ku94-ps", "page": 1,
+      "check": "No field named issue date; cover gives expected delivery 'on or about August 25, 2026' (repeated under 'Closing and Delivery' on page 10, T+5 after pricing on page 16) and interest runs from that date (page 12)"
+    },
+    "interest_commencement_date": {"value": "2026-08-25", "doc": "eib-us298785ku94-ps", "page": 12},
+    "maturity_date": {"value": "2031-11-25", "doc": "eib-us298785ku94-ps", "page": 13},
+    "interest_rate": {"value": "4.375", "doc": "eib-us298785ku94-ps", "page": 12},
+    "coupon_frequency": {"value": 2, "doc": "eib-us298785ku94-ps", "page": 12},
+    "interest_payment_dates": {"value": ["05-25", "11-25"], "doc": "eib-us298785ku94-ps", "page": 12},
+    "first_interest_payment_date": {"value": "2026-11-25", "doc": "eib-us298785ku94-ps", "page": 12},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "eib-us298785ku94-ps", "page": 13,
+      "definition": {"doc": "eib-us298785ku94-ps", "page": 13},
+      "check": "Page 13 says only 'a 360-day year, consisting of twelve 30-day months (unadjusted)' with no rule for the 31st or the end of February; read as the US 30/360 Bond Basis, the usual meaning of this wording under New York law. Every period runs from the 25th to the 25th, so 30E/360 would give the same amounts"
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "eib-us298785ku94-ps", "page": 12,
+      "definition": {"doc": "eib-us298785ku94-ps", "page": 12}
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "eib-us298785ku94-ps", "page": 13,
+      "definition": {"doc": "eib-us298785ku94-ps", "page": 12}
+    },
+    "business_day": {
+      "value": ["New York"],
+      "doc": "eib-us298785ku94-ps", "page": 12,
+      "definition": {"doc": "eib-us298785ku94-ps", "page": 12},
+      "check": "New York is the only centre named (as 'the financial center for the currency of payment'); the same clause also lets a payment slip when banking institutions are closed 'in any place of payment', which is not named (the Fiscal Agent and paying agent is Citibank, N.A., London Branch, page 10)"
+    },
+    "final_redemption_amount": {"value": "100", "doc": "eib-us298785ku94-ps", "page": 13},
+    "stated_coupon_amounts": {"value": []},
+    "record_date": {"value": "Close of business on May 15 and November 15 (whether or not a business day), ten calendar days prior to each Interest Payment Date", "doc": "eib-us298785ku94-ps", "page": 13},
+    "rounding_rule": {"value": "NOT_STATED"},
+    "interest_on_holding": {"value": false}
+  },
+  "notes": "One PDF: the prospectus supplement (424B5) of August 18, 2026 is pages 1-22 (S-1 to S-22) and the EIB prospectus of December 21, 2023 follows from page 23. The prospectus only lists the terms a supplement must fix, including the interest payment dates, the dates from which interest accrues and the record date (pages 36-37), and says interest on registered securities is paid to the holders registered at the close of business on the record dates designated in the supplement (page 37); it has no day count, business day, payment convention or rounding clause, so the four definitions are cited from the supplement itself. 'Description of Notes' (pages 12-13) is the terms section. Page 12: minimum denominations of $1,000 and integral multiples thereof; 4.375% per year; Interest Payment Dates May 25 and November 25 of each year with the initial payment on November 25, 2026 (short first coupon from and including August 25, 2026 to but excluding November 25, 2026); 'The Notes will bear interest from August 25, 2026'. 'Payment of Principal and Interest' (page 12): if an Interest Payment Date or the maturity date is a day on which banking institutions are authorized or obligated by law to close in New York (the place that is the financial center for the currency of payment) or in any place of payment, the EIB may pay on the next succeeding day that is not such a day, 'with the same force and effect as if made on the Interest Payment Date or maturity date and no additional interest shall accrue', so the convention is Following and accrual is unadjusted. Page 13: 'Interest will be calculated on the basis of a 360-day year, consisting of twelve 30-day months (unadjusted)'; record holders are those registered at the close of business on May 15 and November 15, 'being the date (whether or not a business day) that is ten calendar days prior to each Interest Payment Date' (the Summary on page 9 states the same Record Dates); 'The EIB will redeem the Notes on November 25, 2031 at 100% of the principal amount of the Notes plus accrued but unpaid interest', no sinking fund and no redemption before scheduled maturity; initial aggregate principal amount $4,000,000,000. The cover (page 1) carries the issuer name, '$4,000,000,000 4.375% Notes due 2031' and delivery 'on or about August 25, 2026'; '$' is defined as U.S. dollars on page 3. No field is named issue date, so the issue date is the expected delivery date, which is also the date interest runs from. Short first coupon arithmetic: August 25, 2026 to November 25, 2026 is 90 days on 30/360, 4.375% x 90/360 = USD 10.9375 per USD 1,000, USD 43,750,000 on the aggregate principal amount; a regular semi-annual coupon is USD 21.875 per USD 1,000. The document names the short first coupon but prints no coupon amount, so stated_coupon_amounts is empty. ISIN US298785KU94, CUSIP 298785KU9 and Common Code 348077180 are in 'General Information' on page 22. Notes are in book-entry form through DTC (pages 1 and 10). No Calculation Amount is defined and no rounding rule for interest amounts appears in the supplement or the prospectus."
+}

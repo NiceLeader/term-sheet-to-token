@@ -34,6 +34,7 @@ _CENTRES = {
 _ALIASES = {
     "target2": "target", "t2": "target", "target system": "target", "euro": "target",
     "new york city": "new york", "nyc": "new york",
+    "frankfurt am main": "frankfurt",
     "hongkong": "hong kong", "hk": "hong kong",
     "prc": "beijing", "mainland china": "beijing",
 }

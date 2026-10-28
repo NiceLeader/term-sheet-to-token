@@ -6,6 +6,8 @@ def test_centres_compare_by_calendar():
                                                                     ["TARGET", "London"])
     assert normalise("business_day", ["New York City"]) == normalise("business_day",
                                                                      ["New York"])
+    assert normalise("business_day", ["Frankfurt am Main"]) == normalise("business_day",
+                                                                         ["Frankfurt"])
     assert normalise("business_day", ["London"]) != normalise("business_day", ["TARGET"])
 
 

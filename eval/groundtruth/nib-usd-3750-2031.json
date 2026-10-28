@@ -1,0 +1,55 @@
+{
+  "bond_id": "nib-usd-3750-2031",
+  "isin": "US65562QC458",
+  "status": "verified",
+  "fields": {
+    "isin": {"value": "US65562QC458", "doc": "nib-us65562qc458-ps", "page": 4},
+    "issuer": {"value": "Nordic Investment Bank", "doc": "nib-us65562qc458-ps", "page": 1},
+    "currency": {"value": "USD", "doc": "nib-us65562qc458-ps", "page": 3},
+    "aggregate_nominal_amount": {"value": "1000000000", "doc": "nib-us65562qc458-ps", "page": 3},
+    "specified_denomination": {"value": "200000", "doc": "nib-us65562qc458-ps", "page": 3},
+    "calculation_amount": {"value": null},
+    "issue_date": {"value": "2026-01-23", "doc": "nib-us65562qc458-ps", "page": 3},
+    "interest_commencement_date": {
+      "value": "2026-01-23",
+      "doc": "nib-us65562qc458-ps", "page": 3,
+      "definition": {"doc": "nib-us65562qc458-ps", "page": 38},
+      "check": "No field names the date interest starts; the pricing supplement gives the Original Issue Date (page 3) and charges accrued interest from January 23, 2026 if delivery is later (page 1), and the prospectus supplement says interest accrues from and including the issue date (page 38)"
+    },
+    "maturity_date": {"value": "2031-01-23", "doc": "nib-us65562qc458-ps", "page": 3},
+    "interest_rate": {"value": "3.750", "doc": "nib-us65562qc458-ps", "page": 3},
+    "coupon_frequency": {"value": 2, "doc": "nib-us65562qc458-ps", "page": 3},
+    "interest_payment_dates": {"value": ["01-23", "07-23"], "doc": "nib-us65562qc458-ps", "page": 3},
+    "first_interest_payment_date": {"value": "2026-07-23", "doc": "nib-us65562qc458-ps", "page": 3},
+    "day_count_fraction": {
+      "value": "THIRTY_360",
+      "doc": "nib-us65562qc458-ps", "page": 3,
+      "definition": {"doc": "nib-us65562qc458-ps", "page": 39}
+    },
+    "business_day_convention": {
+      "value": "FOLLOWING",
+      "doc": "nib-us65562qc458-ps", "page": 3,
+      "definition": {"doc": "nib-us65562qc458-ps", "page": 41}
+    },
+    "accrual_adjusted": {
+      "value": false,
+      "doc": "nib-us65562qc458-ps", "page": 3,
+      "definition": {"doc": "nib-us65562qc458-ps", "page": 41}
+    },
+    "business_day": {
+      "value": ["New York"],
+      "doc": "nib-us65562qc458-ps", "page": 3,
+      "definition": {"doc": "nib-us65562qc458-ps", "page": 54},
+      "check": "The pricing supplement names New York only; the prospectus supplement adds that a payment due on a day that is not a Business Day in the relevant place of payment is paid on the next Business Day there (page 41), and page 10 moves a payment presented in Luxembourg to the next Luxembourg Business Day, both without extra interest"
+    },
+    "final_redemption_amount": {"value": "100", "doc": "nib-us65562qc458-ps", "page": 1},
+    "stated_coupon_amounts": {"value": []},
+    "record_date": {"value": "The Business Day immediately preceding the Interest Payment Date", "doc": "nib-us65562qc458-ps", "page": 3},
+    "rounding_rule": {
+      "value": "NOT_STATED",
+      "check": "Prospectus supplement page 43 rounds specified currency amounts to the nearest one-hundredth of a unit, .005 upward, but only for the calculation agent's floating rate interest calculations; nothing is stated for fixed rate notes"
+    },
+    "interest_on_holding": {"value": false}
+  },
+  "notes": "One PDF of Listing Particulars: the Pricing Supplement of January 15, 2026 is pages 1-12 (P-1 to P-12), the Prospectus Supplement of December 18, 2020 for Medium-Term Notes, Series D is pages 13-58 (S-pages; Annex A, the form of pricing supplement, is pages 59-63) and the Prospectus of December 18, 2020 follows from page 64. The term block 'Description of the Notes' on page 3 states: Aggregate Principal Amount US$1,000,000,000; Original Issue Date January 23, 2026; Maturity Date January 23, 2031; Specified Currency U.S. Dollars; Authorized Denominations US$200,000 and integral multiples of US$1,000 thereafter (the Series D default of $1,000 on page 30 is overridden); book-entry form under a master global security registered in the name of Cede & Co.; Interest Rate 3.750% per annum payable semi-annually; Interest Payment Dates January 23 and July 23 in each year starting with July 23, 2026 until and including the Maturity Date, 'Any payment required to be made on a day that is not a Business Day will be made on the next succeeding Business Day, and no additional interest shall accrue as a result of such delayed payment'; Day Count Fraction '30/360 (Unadjusted)'; Regular Record Date 'The Business Day immediately preceding the Interest Payment Date'; Business Days New York; Optional Repayment and Optional Redemption No. Page 4 gives the Closing Date January 23, 2026 and the Securities Codes CUSIP 65562QC45, ISIN US65562QC458 and Common Code 327880136. Definitions come from the prospectus supplement. '30/360' is the formula on page 39 in which D2 becomes 30 only when it would be 31 and D1 is greater than 29, which is the US 30/360 Bond Basis; '30E/360 or Eurobond basis' and '30E/360 (ISDA)' are separate entries on pages 39-40. 'Fixed Rate Notes' on page 41 repeats the 360-day year of twelve 30-day months and says that a payment date falling on a day that is not a Business Day is paid on the next Business Day, treated as if made on the due date with no additional interest, so the payment-date convention is Following and accrual is unadjusted; 'following' is defined among the Business Day conventions on pages 40-41. 'Business Day' is defined in the Glossary on page 54: not a Saturday or Sunday, banking institutions not authorized or required to close in The City of New York, and for notes in a currency other than euro a day on which banks settle payments in the relevant financial center of the specified currency and in any city specified in the pricing supplement. Interest periods run from and including the issue date or the last interest payment date to but excluding the next interest payment date (page 38), so interest commences on the Original Issue Date; the cover (page 1) also charges accrued interest from January 23, 2026 if the Notes are delivered after that date. The first coupon from January 23, 2026 to July 23, 2026 is a regular 180-day period, USD 18.75 per USD 1,000 and USD 37,500,000 on the aggregate principal amount; no coupon amount is printed, so stated_coupon_amounts is empty. 'Payment of Principal and Interest' (page 37) makes the record date for global notes the one specified in the pricing supplement (15 calendar days before the interest payment date only for certificated notes). Final redemption: 'The Notes will mature at 100% of their principal amount on January 23, 2031', not redeemable before maturity and no sinking fund (page 1). The only rounding rule (page 43, nearest one-hundredth of a unit with .005 rounded upward) belongs to the calculation agent's floating rate interest calculations and is not applied to fixed rate notes. No Calculation Amount concept exists in these documents."
+}

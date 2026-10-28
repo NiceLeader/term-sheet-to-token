@@ -52,22 +52,25 @@ prospectus). Nothing the model says is trusted without a check:
 
 ## Results
 
-Eighteen live fixed-rate bonds from 32 public documents: four IBRD notes (EUR, GBP, AUD, CHF;
-the EUR note is digitally native), the Hong Kong SAR digital green bonds (USD, EUR, HKD, CNY) and
-a conventional HKSAR green bond, and notes of ADB, EIB, CEB, KfW, the Republic of Korea, Toyota
-Motor Credit, John Deere Capital and PACCAR Financial.
+Twenty-five live fixed-rate bonds from 40 public documents. Eighteen were read while the field
+rules were being written: four IBRD notes (EUR, GBP, AUD, CHF; the EUR note is digitally
+native), the Hong Kong SAR digital green bonds (USD, EUR, HKD, CNY) and a conventional HKSAR
+green bond, and notes of ADB, EIB, CEB, KfW, the Republic of Korea, Toyota Motor Credit, John
+Deere Capital and PACCAR Financial. Seven more were fetched, labelled and read after the rules
+were frozen: two digitally native EIB notes (EUR on GS DAP, SEK on so|bond), an EIB USD global
+note, a CEB euro bond, a NIB USD note and two KfW USD global notes.
 
 | Check | Result |
 |---|---|
-| Payments where the engine, QuantLib, the token on chain and the printed amounts agree (verified terms) | 149 of 149 |
-| Guard probes rejected on chain | 90 of 90 |
-| Deliberate bugs planted in the bond contract and caught by replaying the 18 bonds and the contract tests | 18 of 18 |
-| Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 204 of 220 |
-| Verified values found on the page they are cited from | 214 of 220 |
+| Payments where the engine, QuantLib, the token on chain and the printed amounts agree (verified terms) | 205 of 205 |
+| Guard probes rejected on chain | 125 of 125 |
+| Deliberate bugs planted in the bond contract and caught by replaying the 25 bonds and the contract tests | 18 of 18 |
+| Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 281 of 306 |
+| Verified values found on the page they are cited from | 261 of 306 |
 
-Reading the documents (bonds for which the model submitted a full set of terms, field accuracy
-of those against the verified terms, bonds whose every payment comes out right, quotes found on
-the cited page, time and cost per bond):
+Reading the documents of the first eighteen bonds (bonds for which the model submitted a full
+set of terms, field accuracy of those against the verified terms, bonds whose every payment
+comes out right, quotes found on the cited page, time and cost per bond):
 
 | Model and mode | Terms submitted | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
 |---|---|---|---|---|---|---|
@@ -96,10 +99,32 @@ instead of the payment on the next business day that the conditions provide for;
 payment dates, and the consistency checks flag it. Nine of its thirteen wrong values are
 flagged before issuance.
 
+The seven bonds fetched and labelled after the field rules were frozen (154 values):
+
+| Model and mode | Terms submitted | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
+|---|---|---|---|---|---|---|
+| Muse Spark 1.3, agent | 7 of 7 | 98.1% | 7 of 7 | 184 of 184 | 192 s | $0.006 |
+| Muse Spark 1.3, one pass | 7 of 7 | 98.1% | 7 of 7 | 191 of 198 | 90 s | $0.008 |
+| Muse Glimmer 30B, agent (local) | 7 of 7 | 98.1% | 7 of 7 | 166 of 166 | 232 s | none |
+
+All three readings miss the same values of the EIB krona note, whose conditions are written
+without the usual labels. Its day count is the 30E/360 wording of the ISDA definitions ("without
+regard to the date of the first day or last day of the period"), and all three read it as
+30/360. Its coupon amounts are rounded "to the nearest SEK (with one half of öre rounded down)",
+which none of the five rounding rules expresses; the verified terms carry half up as the nearest
+rounding, all three models chose rounding down. The single pass and Glimmer also took the
+interest periods as adjusted, because the payment dates are defined "subject to the Following
+Business Day Convention", although the coupon is a fixed amount per note. Agent mode of Spark
+wrote the KfW issuer with its seat again. None of these changes a payment of the seven bonds;
+the day count is flagged by the checks, the others are not. Glimmer completed all seven bonds
+within its step budget, against fifteen of eighteen before.
+
 The errors that get through are listed in `tstt mutate terms`: values that are implied rather
 than written (a first payment date that follows from the cycle, redemption at par in a US
 prospectus that never says "100 per cent"), a wrong currency code that also appears elsewhere
-on the page, and day count swaps in documents that describe the fraction in words.
+on the page, day count swaps in documents that describe the fraction in words, and a preceding
+instead of a following convention, which moves a payment date without changing any printed
+amount.
 
 ## What is in the repository
 
@@ -155,11 +180,11 @@ Requirements: Python 3.12 or later with [uv](https://docs.astral.sh/uv/), and
 ```sh
 uv sync
 cp .env.example .env              # set TSTT_DATA_DIR, MODEL_API_KEY, SEC_USER_AGENT
-uv run tstt fetch                 # download the public documents (about 16 MB)
+uv run tstt fetch                 # download the public documents (about 21 MB)
 uv run tstt parse
 forge test --root contracts
 
-uv run tstt verify                # deploy and replay all 18 bonds from the verified terms
+uv run tstt verify                # deploy and replay all 25 bonds from the verified terms
 uv run tstt extract ibrd-gbp-0750-2026 --model hosted --mode agent
 uv run tstt verify ibrd-gbp-0750-2026 --extraction <data dir>/runs/extractions/agent-muse-spark-1.3
 uv run tstt mutate                # planted errors and planted contract bugs
@@ -217,8 +242,10 @@ the whole bond against QuantLib and the printed amounts.
 - Rounding to a cash unit larger than the currency's minor unit (CHF 0.05) is not modelled.
 - The verified terms were prepared by hand from the documents and may contain mistakes of
   their own; each value cites its page so it can be checked.
-- The field rules given to the models were refined while reading these eighteen bonds. There
-  is no held-out set, so the accuracy figures are likely higher than on unseen documents.
+- The field rules given to the models were refined while reading the first eighteen bonds. The
+  seven bonds read afterwards are a small set, and their issuers other than NIB (EIB, CEB, KfW)
+  also appear among the eighteen, so they test unseen documents more than unseen drafting
+  styles.
 
 ## License
 
