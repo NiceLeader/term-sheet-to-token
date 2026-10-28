@@ -196,6 +196,28 @@ def _cmd_eval(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_second(args: argparse.Namespace) -> int:
+    from tstt.second import compare_runs, save_comparison
+
+    settings = load_settings()
+    result = compare_runs(settings, args.run_a, args.run_b, GROUND_TRUTH, args.bond or None)
+    for row in result["bonds"]:
+        wrong = []
+        for side in ("a", "b"):
+            for name, w in row.get(f"wrong_{side}", {}).items():
+                how = ", ".join(k for k, on in (("differs", w["differs"]),
+                                                ("flagged", w["flagged"])) if on) or "missed"
+                wrong.append(f"{name} ({side}: {how})")
+        print(f"  {row['bond_id']:24} differ {len(row['differing']):2}  "
+              f"wrong: {'; '.join(wrong) or '-'}")
+    summary = result["summary"]
+    if not summary["checks_from_eval"]:
+        print("  (run tstt eval first to count the wrong values flagged by the checks)")
+    print(json.dumps(summary))
+    save_comparison(settings, result)
+    return 0
+
+
 def _cmd_serve(args: argparse.Namespace) -> int:
     import uvicorn
 
@@ -249,6 +271,14 @@ def main(argv: list[str] | None = None) -> int:
     evaluate = sub.add_parser("eval", help="score extraction runs against the ground truth")
     evaluate.add_argument("run", nargs="*", help="extraction folders (default: all runs)")
     evaluate.set_defaults(func=_cmd_eval)
+
+    second = sub.add_parser("second", help="compare two readings of the same bonds field by "
+                                           "field, and count the wrong values a disagreement "
+                                           "would have caught")
+    second.add_argument("run_a", help="extraction run folder name")
+    second.add_argument("run_b", help="the second reading to compare with")
+    second.add_argument("bond", nargs="*", help="bond ids (default: all read by both runs)")
+    second.set_defaults(func=_cmd_second)
 
     serve = sub.add_parser("serve", help="open the review screen on localhost")
     serve.add_argument("--port", type=int, default=8000)

@@ -69,3 +69,7 @@ the expected and the extracted value. Runs named `-unseen` cover the seven bonds
 fetched and labelled after the field rules were frozen; the others cover the first eighteen. The
 extractions themselves are not in the repository, because their tool logs contain pages of the
 documents.
+
+`results/second-<run a>-vs-<run b>.json` is the output of `tstt second` for two runs: the fields
+on which the two readings differ for each bond, and for each wrong value whether the other
+reading differs from it and whether the consistency checks flagged it.

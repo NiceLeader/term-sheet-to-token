@@ -1,6 +1,7 @@
 import json
 import shutil
 import threading
+from types import SimpleNamespace
 
 import pytest
 
@@ -10,6 +11,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from tstt import review, web  # noqa: E402
 from tstt.config import Settings, load_settings  # noqa: E402
+from tstt.extract import Extraction, Usage  # noqa: E402
 from tstt.web import create_app  # noqa: E402
 
 
@@ -108,6 +110,47 @@ def test_a_bond_being_read_again_cannot_be_reviewed(tmp_path, monkeypatch):
         assert approve.status_code == 200
     finally:
         release.set()
+
+
+def test_a_second_reading_is_shown_beside_a_models_reading(tmp_path, monkeypatch):
+    truth = tmp_path / "groundtruth"
+    truth.mkdir()
+    shutil.copy(review.GROUND_TRUTH / "ibrd-gbp-0750-2026.json", truth)
+    monkeypatch.setattr(review, "GROUND_TRUTH", truth)
+    # No documents in this data folder: the readings carry no quotes to check.
+    monkeypatch.setattr(web, "bond_source", lambda s, b: SimpleNamespace(documents=[]))
+    monkeypatch.setattr(web, "load_document", lambda s, d: SimpleNamespace(pages=[]))
+    settings = Settings(tmp_path / "data", None, "", "", "", "", None, None)
+    source = json.loads((truth / "ibrd-gbp-0750-2026.json").read_text(encoding="utf-8"))
+    values = {name: f.get("value") for name, f in source["fields"].items()}
+
+    def save(run, model, mode, changes):
+        fields = {name: {"value": v, "stated_in": [], "defined_in": [], "note": None}
+                  for name, v in (values | changes).items()}
+        Extraction("ibrd-gbp-0750-2026", mode, model, fields, Usage(0, 0, 0), 1.0,
+                   None).save(settings.runs_dir / "extractions" / run)
+
+    save("agent-spark", "muse-spark", "agent", {})
+    save("one_pass-spark", "muse-spark", "one_pass", {"interest_rate": "0.75"})
+    save("agent-glimmer", "muse-glimmer", "agent", {"rounding_rule": "DOWN"})
+    client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
+
+    data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026").json()
+    assert data["second"]["run"] == "agent-glimmer"  # another model by default
+    assert [c["id"] for c in data["second"]["choices"]] == ["agent-glimmer", "one_pass-spark"]
+    rounding = next(f for f in data["fields"] if f["name"] == "rounding_rule")
+    assert rounding["second"] == {"value": "DOWN", "agrees": False}
+    assert all(f["second"]["agrees"] for f in data["fields"] if f["name"] != "rounding_rule")
+
+    data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026",
+                      params={"second": "one_pass-spark"}).json()
+    rate = next(f for f in data["fields"] if f["name"] == "interest_rate")
+    assert rate["second"]["agrees"] is True  # 0.75 and 0.750 are the same rate
+    data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026",
+                      params={"second": "none"}).json()
+    assert data["second"]["run"] is None and data["fields"][0]["second"] is None
+    data = client.get("/api/bond/groundtruth/ibrd-gbp-0750-2026").json()
+    assert data["second"] == {"run": None, "label": None, "choices": []}
 
 
 def test_the_page_is_checked_for_changes_on_every_load(client):

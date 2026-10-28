@@ -267,6 +267,12 @@ button, input, select { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--muted);
 }
 .review-bar b { color: var(--ink); }
+.second-bar {
+  display: flex; align-items: center; gap: 10px; padding: 6px 14px;
+  border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--muted);
+}
+.second-bar:empty { display: none; }
+.second-bar select { border: 1px solid var(--line); border-radius: 6px; padding: 2px 6px; background: var(--panel); margin-left: 4px; }
 .review-bar .button { margin-left: auto; }
 .progress { width: 80px; height: 6px; border-radius: 3px; background: var(--soft); overflow: hidden; }
 .progress span { display: block; height: 100%; background: var(--ok); }

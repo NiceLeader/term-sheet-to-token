@@ -32,7 +32,10 @@ const NAMES = {
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const state = { runs: [], bonds: [], run: null, bond: null, data: null, documents: [],
-                field: null, view: null, doc: null, page: 1, quotes: [], label: "" };
+                field: null, view: null, doc: null, page: 1, quotes: [], label: "",
+                second: undefined };  // run id of the second reading, "none", or the default
+
+const secondQuery = () => (state.second ? `?second=${encodeURIComponent(state.second)}` : "");
 
 async function api(path, options) {
   const response = await fetch(path, options);
@@ -72,7 +75,7 @@ function modelName(model) {
 function runLabel(run) {
   if (run.kind === "truth") return "Verified terms";
   const where = run.model.startsWith("muse-glimmer") ? "local" : "Meta API";
-  return `${modelName(run.model)} · ${run.mode.replace("_", "-")} (${where})`;
+  return `${modelName(run.model)} · ${run.mode.replace("_", "-")}${run.tag ? ` · ${run.tag}` : ""} (${where})`;
 }
 
 function fieldValue(field) {
@@ -94,6 +97,7 @@ function fieldValue(field) {
 function fieldStatus(field, quoted) {
   if (field.flags.some((f) => f.severity === "error")) return ["bad", "!"];
   if (field.flags.some((f) => f.severity === "warning")) return ["warn", "?"];
+  if (field.second && !field.second.agrees) return ["warn", "?"];
   if (!quoted) return field.cites.length ? ["none", "p"] : ["none", ""];
   const stated = field.cites.filter((c) => c.role === "stated_in");
   if (field.value === null || field.value === undefined) return ["none", ""];
@@ -147,10 +151,11 @@ function route() {
 
 async function loadBond(run, bond, field) {
   state.run = run; state.bond = bond; state.field = null; state.doc = null;
+  if (state.second === run) state.second = undefined;  // the reading shown cannot be its own second
   $("#bond").value = bond;
   renderSources();
   try {
-    state.data = await api(`/api/bond/${run}/${bond}`);
+    state.data = await api(`/api/bond/${run}/${bond}${secondQuery()}`);
     state.documents = state.data.documents;
   } catch (error) {
     state.data = null;
@@ -211,7 +216,28 @@ function renderStatus() {
                             : `<b>Verified by hand</b><br>page references`;
   $("#trace-tab").classList.toggle("hidden", !x || x.mode !== "agent");
   leftTab("terms");
+  renderSecondBar();
   renderReviewBar();
+}
+
+// A second reading of the same documents, by another model or in another mode: the terms
+// where the two readings differ are marked for the reviewer, the others agree.
+function renderSecondBar() {
+  const s = state.data.second;
+  if (!s || !(s.run || s.choices.length)) { $("#second").innerHTML = ""; return; }
+  const options = [`<option value="none" ${s.run ? "" : "selected"}>none</option>`]
+    .concat(s.choices.map((c) => `<option value="${esc(c.id)}" ${c.id === s.run ? "selected" : ""}>${esc(secondLabel(c.label))}</option>`)).join("");
+  const differ = state.data.fields.filter((f) => f.second && !f.second.agrees).length;
+  const chip = !s.run ? "" : differ ? `<span class="chip warn">${differ} term${differ === 1 ? "" : "s"} differ</span>`
+                                    : `<span class="chip ok">all terms agree</span>`;
+  $("#second").innerHTML = `<label>Second reading <select id="second-run" aria-label="Second reading to compare with">${options}</select></label>${chip}`;
+  $("#second-run").addEventListener("change", (e) => { state.second = e.target.value; refresh(state.field); });
+}
+
+function secondLabel(label) {
+  // "muse-glimmer-30b, agent" -> "Muse Glimmer 30B, agent"
+  const [model, mode] = label.split(", ");
+  return `${modelName(model)}${mode ? `, ${mode}` : ""}`;
 }
 
 // ---------------------------------------------------------------- review
@@ -253,7 +279,7 @@ async function issueToken(event) {
 }
 
 async function refresh(field) {
-  const data = await api(`/api/bond/${state.run}/${state.bond}`);
+  const data = await api(`/api/bond/${state.run}/${state.bond}${secondQuery()}`);
   state.data = data;
   renderStatus();
   renderTerms();
@@ -403,12 +429,15 @@ function renderTerms() {
     }).join("");
     const onPage = f.value_on_page === false ? `<div class="flag-line warning">The value is not written in the quotes or on the cited pages.</div>` : "";
     const flags = f.flags.map((x) => `<div class="flag-line ${esc(x.severity)}">${esc(x.message)}</div>`).join("");
+    const second = !f.second ? "" : f.second.agrees
+      ? `<div class="note">The second reading (${esc(secondLabel(state.data.second.label))}) agrees.</div>`
+      : `<div class="flag-line warning">The second reading (${esc(secondLabel(state.data.second.label))}) gives: ${esc(fieldValue({ name: f.name, value: f.second.value }) ?? "not stated")}</div>`;
     const reviewed = f.review ? `<span class="rv ${f.review}" title="${f.review}">${f.review === "approved" ? "✓ approved" : "corrected"}</span>` : "";
     html += `<div class="field ${f.review ? "reviewed" : ""}" data-name="${esc(f.name)}">
       <span class="label">${esc(f.label)}${reviewed}</span>
       <span class="mark"><span class="dot ${cls}" title="${esc(cls)}">${esc(pageRef)}</span></span>
       <span class="value ${value === null ? "empty" : ""}">${esc(value ?? "not stated")}</span>
-      <div class="detail">${reviewHtml(f)}${flags}${onPage}${cites || `<div class="note">No source cited.</div>`}
+      <div class="detail">${reviewHtml(f)}${flags}${second}${onPage}${cites || `<div class="note">No source cited.</div>`}
         ${f.note ? `<div class="note">${esc(f.note)}</div>` : ""}
         ${f.bdt ? `<div class="note">ICMA Bond Data Taxonomy: ${esc(f.bdt)}</div>` : ""}</div>
     </div>`;

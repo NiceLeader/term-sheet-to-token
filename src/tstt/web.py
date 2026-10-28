@@ -40,6 +40,7 @@ from tstt.review import (
     reviewed_values,
     unreviewed,
 )
+from tstt.second import differing, pick_second, reading_label, readings
 from tstt.terms import FIELD_BY_NAME, FIELDS, TermsError, build_terms
 
 WEB_DIR = REPO_ROOT / "web"
@@ -92,7 +93,8 @@ def _run_entry(path: Path) -> dict[str, Any]:
     tag = path.name.removeprefix(default).lstrip("-") if path.name.startswith(default) \
         else path.name
     label = f"{model} ({mode.replace('_', '-')}{', ' + tag if tag else ''})"
-    return {"id": path.name, "kind": "extraction", "mode": mode, "model": model, "label": label}
+    return {"id": path.name, "kind": "extraction", "mode": mode, "model": model, "label": label,
+            "tag": tag or None}
 
 
 def _known_run(settings: Settings, run: str) -> str:
@@ -164,10 +166,13 @@ def _review_summary(review: dict) -> dict[str, Any]:
 
 
 def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | None,
-                quoted: bool, review: dict | None = None) -> list[dict[str, Any]]:
+                quoted: bool, review: dict | None = None,
+                second: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """One row per term; `second` holds the values of a second reading to compare with."""
     documents = [doc for doc, _ in bond_source(settings, bond_id).documents]
     checked = check_fields(fields, Citations(documents)) if quoted else None
     values = {n: f.get("value") for n, f in fields.items()}
+    differ = set(differing(values, second)) if second is not None else set()
     flagged: dict[str, list[dict]] = {}
     for flag in (report or {}).get("flags", []):
         for name in flag.get("fields", []):
@@ -195,8 +200,28 @@ def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | N
                          "value": f.get("value"), "note": f.get("note"), "cites": cites,
                          "value_on_page": on_page, "flags": flagged.get(name, []),
                          "bdt": spec.bdt, "kind": spec.kind, "options": list(spec.enum),
-                         "review": entry.get("status"), "original": entry.get("original")})
+                         "review": entry.get("status"), "original": entry.get("original"),
+                         "second": None if second is None else
+                         {"value": second.get(name), "agrees": name not in differ}})
     return rows
+
+
+def _second_reading(settings: Settings, run: str, bond_id: str, extraction: dict | None,
+                    wanted: str | None) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """The second reading to show beside a model's reading: the one asked for, or by default
+    another model's reading of the same bond. The verified terms have none."""
+    choices = readings(settings, bond_id) if extraction else {}
+    choices.pop(run, None)
+    if wanted == "none":
+        chosen = None
+    elif wanted in choices:
+        chosen = wanted
+    else:
+        chosen = pick_second(choices, extraction["model"] if extraction else None)
+    other = choices[chosen] if chosen else None
+    return ({"run": chosen, "label": reading_label(other) if other else None,
+             "choices": [{"id": r, "label": reading_label(e)} for r, e in choices.items()]},
+            other.values() if other else None)
 
 
 class ReviewAction(BaseModel):
@@ -318,10 +343,11 @@ def create_app(settings: Settings | None = None,
         return out
 
     @app.get("/api/bond/{run}/{bond_id}")
-    def bond(run: str, bond_id: str) -> dict[str, Any]:
+    def bond(run: str, bond_id: str, second: str | None = None) -> dict[str, Any]:
         entry = _known_bond(bond_id)
         _known_run(settings, run)
         fields, extraction, review = _reviewed(settings, run, bond_id)
+        chosen, other = _second_reading(settings, run, bond_id, extraction, second)
         report = _read_json(_report_path(settings, run, bond_id, review))
         scored = settings.runs_dir / "eval" / f"{run}.json"
         read = settings.runs_dir / "extractions" / run / f"{bond_id}.json"
@@ -335,7 +361,8 @@ def create_app(settings: Settings | None = None,
                                                     "dlt_native")},
                 "run": run, "documents": documents(bond_id), "extraction": extraction,
                 "fields": _field_rows(settings, bond_id, fields, report, extraction is not None,
-                                      review),
+                                      review, other),
+                "second": chosen,
                 "report": report, "score": score, "review": _review_summary(review)}
 
     def run_verify(run: str, bond_id: str) -> tuple[dict[str, Any], dict]:

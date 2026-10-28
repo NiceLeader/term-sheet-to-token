@@ -68,6 +68,7 @@ note, a CEB euro bond, a NIB USD note and two KfW USD global notes.
 | Deliberate bugs planted in the bond contract and caught by replaying the 25 bonds and the contract tests | 18 of 18 |
 | Deliberate errors planted in the verified terms that change a cash flow, flagged by the consistency checks before issuance | 290 of 306 |
 | Verified values found on the page they are cited from | 299 of 306 |
+| Wrong values in the readings of Spark and Glimmer, marked by a disagreement between the two readings | 14 of 22 |
 
 Reading the documents of the first eighteen bonds (bonds for which the model submitted a full
 set of terms, field accuracy of those against the verified terms, bonds whose every payment
@@ -127,6 +128,15 @@ swapped rounding rule where the documents state none, and swaps of the day count
 business day convention where the cited page is the glossary of the conditions and defines
 every option.
 
+Two readers make different mistakes. On the 22 bonds that both models read to the end as an agent,
+the two readings together hold 22 wrong values; the readings disagree on 14 of them, the consistency
+checks flag 11, and one or the other marks 17. The five that pass both are the two business day
+centres of the EIB krona note, where both models kept London and Stockholm, a record date both
+took from the rule for registered notes, and the day count and rounding of the second krona note.
+The review screen shows a second reading beside the first, by default the other model's, and
+marks every term where the two differ, so the reviewer looks there first and approves the terms
+that two readers and the checks agree on quickly (`tstt second` counts the disagreements).
+
 ## What is in the repository
 
 ```
@@ -143,10 +153,11 @@ src/tstt/        Python package and the `tstt` command
   verify.py      the per-bond report
   mutate.py      planted errors in terms and planted bugs in the contract
   eval.py        scoring against the verified terms
+  second.py      a second reading of the same bond, compared field by field
   web.py         review screen;  review.py  reviewer sign-off and issuance
 contracts/       BondToken.sol and CashToken.sol (Foundry), with tests
 eval/groundtruth one file of verified terms per bond, each value with its page
-eval/results     score of each extraction run behind the tables above
+eval/results     score of each extraction run behind the tables above, and the comparisons of two runs
 sources/         manifest of the public documents: URL, size, SHA-256
 web/             review screen (plain HTML, CSS and JavaScript)
 ```
@@ -191,6 +202,7 @@ uv run tstt verify ibrd-gbp-0750-2026 --extraction <data dir>/runs/extractions/a
 uv run tstt extract --held-out    # the seven bonds read after the field rules were frozen
 uv run tstt mutate                # planted errors and planted contract bugs
 uv run tstt eval                  # score every extraction run
+uv run tstt second agent-muse-spark-1.3-contributor agent-muse-glimmer-30b   # where two readings differ
 uv run tstt serve                 # review screen on http://127.0.0.1:8000
 ```
 
@@ -198,7 +210,8 @@ For the local model, load Muse Glimmer in LM Studio (or `llama-server`), set `LO
 and `LOCAL_MODEL`, and pass `--model local`.
 
 On the review screen each term is approved or corrected (keys: A approves and moves on, J and K
-move down and up). Corrections to a model's reading are kept beside the run, so the run can still
+move down and up). A second reading of the bond, by the other model or by Spark in the other
+mode, is shown beside the first, and the terms where the two differ are marked. Corrections to a model's reading are kept beside the run, so the run can still
 be scored; on the verified terms they are written into `eval/groundtruth`, and the file is marked
 verified once every term is reviewed and the bond replays cleanly.
 
