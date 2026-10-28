@@ -18,10 +18,17 @@ MONTHS = ("January", "February", "March", "April", "May", "June", "July", "Augus
 
 DAY_COUNT_PHRASES = {
     "ACT_ACT_ICMA": [r"actual\s*/\s*actual\s*[-(\[]?\s*\(?icma", r"act\s*/\s*act\s*\(?icma",
-                     r"actual\s*/\s*actual\s*\(?isma"],
+                     r"actual\s*/\s*actual\s*\(?isma",
+                     # The ICMA definition written out, as in a standalone offering memorandum.
+                     r"actual number of days in (?:the|such) (?:calculation|accrual) period "
+                     r"(?:is )?divided by the product of"],
     "THIRTY_360": [r"30\s*/\s*360",
-                   r"360[- ]day year (?:consisting )?of twelve 30[- ]day months"],
-    "THIRTY_E_360": [r"30e\s*/\s*360", r"eurobond basis"],
+                   r"360[- ]day year,? (?:consisting )?of twelve 30[- ]day months"],
+    "THIRTY_E_360": [r"30e\s*/\s*360", r"eurobond basis",
+                     # The ISDA definition: 30E/360 is the one that ignores the first and
+                     # last day of the period.
+                     r"year of 360 days with (?:12|twelve) 30[- ]day months,? without regard "
+                     r"to the date of the first day or last day"],
     "ACT_365_FIXED": [r"actual\s*/\s*365\s*\(?fixed", r"act\s*/\s*365\s*\(?f",
                       r"actual number of days .{0,80}divided by 365"],
     "ACT_360": [r"actual\s*/\s*360", r"divided by 360"],
@@ -30,7 +37,11 @@ DAY_COUNT_PHRASES = {
 }
 CONVENTION_PHRASES = {
     "MODIFIED_FOLLOWING": [r"modified following"],
-    "FOLLOWING": [r"following business day", r"next (?:following )?(?:day which is a )?"
+    "FOLLOWING": [r"following business day",
+                  # "the next day which is a New York business day", "the next day that is a
+                  # Business Day": up to three short words may name the place. The words are
+                  # bounded so the pattern stays bounded when compared without spaces.
+                  r"next (?:following )?(?:day (?:which|that) is a )?(?:[a-z0-9]{2,10} ){0,3}"
                   r"(?:business|payment|banking) day", r"next succeeding",
                   r"convention:?\s*following"],
     "PRECEDING": [r"preceding business day"],
@@ -60,8 +71,12 @@ def date_patterns(day: date) -> list[str]:
     ]
 
 
-def amount_pattern(value: Decimal) -> str:
-    """An amount with any thousands separator and optional trailing zeros after the point."""
+def amount_pattern(value: Decimal, zeros: str = "{1,2}") -> str:
+    """An amount with any thousands separator and optional trailing zeros after the point.
+
+    `zeros` bounds the zero decimals a whole number may carry; a rate followed by "per cent"
+    may carry any number ("3.000 per cent.").
+    """
     sign, digits, exponent = value.normalize().as_tuple()
     text = format(value.normalize(), "f")
     whole, _, fraction = text.partition(".")
@@ -75,8 +90,9 @@ def amount_pattern(value: Decimal) -> str:
     if fraction:
         body += rf"[.,]{fraction}0*"
     else:
-        # At most two zero decimals, so 1,000,000 does not match inside 1,000,000,000.
-        body += r"(?:[.,]0{1,2})?"
+        # By default at most two zero decimals, so 1,000,000 does not match inside
+        # 1,000,000,000.
+        body += rf"(?:[.,]0{zeros})?"
     return rf"(?<![\d.,]){body}(?![\d]|[.,']\d)"
 
 
@@ -110,7 +126,7 @@ def value_patterns(name: str, value: object,
     if name in ("aggregate_nominal_amount", "specified_denomination", "calculation_amount"):
         return [amount_pattern(Decimal(str(value)))]
     if name == "interest_rate":
-        return [amount_pattern(Decimal(str(value))) + PERCENT]
+        return [amount_pattern(Decimal(str(value)), zeros="+") + PERCENT]
     if name == "final_redemption_amount":
         return redemption_patterns(Decimal(str(value)), context or {})
     if name == "day_count_fraction":
@@ -118,7 +134,12 @@ def value_patterns(name: str, value: object,
     if name == "business_day_convention":
         return CONVENTION_PHRASES.get(str(value))
     if name == "currency":
-        return [re.escape(n) for n in CURRENCY_NAMES.get(str(value), [str(value).lower()])]
+        patterns = [re.escape(n) for n in CURRENCY_NAMES.get(str(value), [str(value).lower()])]
+        if value == "USD":
+            # A bare dollar sign before an amount, as in a US prospectus ("$4,000,000,000
+            # 4.375% Notes"); HK$, A$ and C$ are preceded by a letter.
+            patterns.append(r"(?<![a-z])\$\s?\d")
+        return patterns
     if name == "isin":
         return [re.escape(str(value).lower())]
     return None
