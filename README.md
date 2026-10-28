@@ -167,6 +167,29 @@ Every hosted response is recorded with its cost in `<data dir>/runs/spend.jsonl`
 total reaches `MODEL_SPEND_LIMIT_USD`, no further request is sent, from the command line or the
 review screen; the limit on the billing page only sends a notification.
 
+## Related work
+
+Reading bond documents with models is not new. The World Bank Treasury extracts fields from
+final terms and compares them with vendor data through the ICMA Bond Data Taxonomy, and a person
+approves the result ([EuroFinance, February 2026](https://www.eurofinance.com/news/dressing-the-wires-of-the-world-bank-groups-bond-operations-using-ai/)).
+Origin Markets extracts term sheet data with machine learning, and the Deutsche Bundesbank checks
+collateral eligibility criteria in prospectuses with a language model
+([arXiv 2606.27316](https://arxiv.org/abs/2606.27316)). These stop at the data: none of them
+configures a token or follows the payments.
+
+The opposite route starts from data. In the DZ BANK and KfW Smart Bond Contract pilot (March
+2026) the term sheet is an ICMA Bond Data Taxonomy record stored in the contract, and the legal
+terms are generated from it
+([KfW](https://www.kfw.de/Presse-Newsroom/Aktuelles/News/SmartBondContract-Pilot-March2026-DZ-KfW.pdf)).
+That works for new issues; the bonds already outstanding exist only as prose.
+
+The closest project is DOS Chain RWA ([github.com/DOS/RWA](https://github.com/DOS/RWA), an entry
+in a 2026 hackathon): Qwen extracts the parameters of a prospectus, a person reviews them, and an
+ERC-3643 token is deployed. Its README describes no quotes or pages, no payment schedule, and no
+coupons computed by the token. Term Sheet to Token is about the check between paper and code: a
+quote and a page for every term, a contract that computes each payment itself, and a replay of
+the whole bond against QuantLib and the printed amounts.
+
 ## Limitations
 
 - Fixed-rate notes only. Floating rate, zero coupon, amortising and callable notes are out of
