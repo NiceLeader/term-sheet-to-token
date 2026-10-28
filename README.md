@@ -1,5 +1,7 @@
 # Term Sheet to Token
 
+[![CI](https://github.com/NiceLeader/term-sheet-to-token/actions/workflows/ci.yml/badge.svg)](https://github.com/NiceLeader/term-sheet-to-token/actions/workflows/ci.yml)
+
 A tokenized bond pays its investors through code, but what it owes them is written in legal
 documents. The final terms of a note are a few pages long and point to definitions in a base
 prospectus of a hundred pages or more: the day count fraction, the business day rules, the

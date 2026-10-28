@@ -14,7 +14,10 @@ from tstt.web import create_app  # noqa: E402
 
 @pytest.fixture(scope="module")
 def client():
-    settings = load_settings()
+    try:
+        settings = load_settings()
+    except RuntimeError:
+        pytest.skip("TSTT_DATA_DIR is not set")
     if not (settings.parsed_dir / "ibrd-xs2113033281-ft.json").exists():
         pytest.skip("bond documents are not fetched")
     return TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
