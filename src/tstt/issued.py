@@ -2,8 +2,9 @@
 
 Once every term is reviewed and the replay raises no red flag, the issuance keeps in one file
 the documents the terms were read from with their hashes, the reading, every decision of the
-reviewer, the terms the token was configured with and the result of the replay, under one hash.
-A later question about a payment goes back to the page, the reading and the reviewer.
+reviewer, the terms the token was configured with, where each was read, and the result of the
+replay, under one hash. A later question about a payment goes back to the page, the reading
+and the reviewer.
 """
 
 from __future__ import annotations
@@ -65,11 +66,18 @@ def issuance_record(run: str, bond_id: str, fields: dict[str, dict[str, Any]],
         "documents": documents,
         "reading": reading,
         "terms": {spec.name: (fields.get(spec.name) or {}).get("value") for spec in FIELDS},
+        "citations": {spec.name: _citations(fields.get(spec.name)) for spec in FIELDS},
         "review": decisions,
         "replay": {"summary": report.get("summary"), "token": report.get("token")},
     }
     record["sha256"] = digest(record)
     return record
+
+
+def _citations(field: dict[str, Any] | None) -> list[dict[str, Any]]:
+    """Where the reading found the term: document, page and quote, stated or defined."""
+    return [{"role": role, "doc": c.get("doc"), "page": c.get("page"), "quote": c.get("quote")}
+            for role in ("stated_in", "defined_in") for c in (field or {}).get(role) or []]
 
 
 def save_record(settings: Settings, record: dict[str, Any]) -> Path:

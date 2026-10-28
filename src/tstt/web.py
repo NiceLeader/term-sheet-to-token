@@ -12,6 +12,7 @@ import asyncio
 import json
 import threading
 import uuid
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Annotated, Any, Literal
@@ -256,6 +257,7 @@ class Job:
     run: str | None = None  # known once the model is
     events: list[dict[str, Any]] = field(default_factory=list)
     done: bool = False
+    lock: Any = None  # the review lock, so a new reading never lands mid-issuance
 
 
 def _run_job(settings: Settings, job: Job) -> None:
@@ -276,8 +278,9 @@ def _run_job(settings: Settings, job: Job) -> None:
             extraction = agent(client, source, on_step=lambda e: emit("step", **e))
         else:
             extraction = one_pass(client, source)
-        extraction.save(settings.runs_dir / "extractions" / run)
-        discard(settings, run, job.bond_id)
+        with job.lock or nullcontext():
+            extraction.save(settings.runs_dir / "extractions" / run)
+            discard(settings, run, job.bond_id)
         emit("saved", run=run)
         if extraction.error:
             raise ModelError(extraction.error)
@@ -505,7 +508,7 @@ def create_app(settings: Settings | None = None,
         if any(not j.done for j in jobs.values()):
             raise HTTPException(409, "another extraction is running")
         _known_bond(bond_id)
-        job = Job(uuid.uuid4().hex[:12], bond_id, kind, mode)
+        job = Job(uuid.uuid4().hex[:12], bond_id, kind, mode, lock=review_lock)
         jobs[job.id] = job
         threading.Thread(target=_run_job, args=(settings, job), daemon=True).start()
         return {"job": job.id}

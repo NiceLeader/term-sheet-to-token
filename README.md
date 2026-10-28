@@ -221,8 +221,9 @@ be scored; on the verified terms they are written into `eval/groundtruth`, and t
 verified once every term is reviewed and the bond replays cleanly. Issuing writes an issuance
 record (`runs/issued/<run>/<bond>.json`, also served by the screen): the documents with their
 SHA-256, the reading, every decision of the reviewer with the value it replaced, the terms the
-token was configured with and the result of the replay, under one hash. A question about a
-payment years later goes back to the page, the reading and the reviewer.
+token was configured with, the page and quote each was read from, and the result of the replay,
+under one hash. A question about a payment years later goes back to the page, the reading and
+the reviewer.
 
 The review screen listens on 127.0.0.1 only. It answers only requests addressed to localhost
 and accepts a POST only from its own page, so a page on another site cannot start an

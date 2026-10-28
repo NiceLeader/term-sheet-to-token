@@ -24,6 +24,9 @@ def _fields(**values):
     return {name: {"value": value} for name, value in values.items()}
 
 
+CITE = {"doc": "ft", "page": 2, "quote": "0.750 per cent. per annum"}
+
+
 def test_the_record_holds_documents_reading_decisions_terms_and_replay(tmp_path):
     review = {"run": "agent-spark", "bond_id": "bond", "issued": None, "fields": {
         "currency": {"status": "approved", "at": "2026-10-28T10:00:00+00:00"},
@@ -31,8 +34,10 @@ def test_the_record_holds_documents_reading_decisions_terms_and_replay(tmp_path)
                           "at": "2026-10-28T10:01:00+00:00"}}}
     extraction = {"model": "muse-spark", "mode": "agent", "seconds": 12.5, "cost_usd": 0.01,
                   "tool_log": ["not copied"]}
-    record = issuance_record("agent-spark", "bond", _fields(currency="GBP", interest_rate="1.000"),
-                             extraction, review, REPORT, MANIFEST, now="2026-10-28T10:02:00+00:00")
+    fields = _fields(currency="GBP", interest_rate="1.000")
+    fields["interest_rate"]["stated_in"] = [CITE]
+    record = issuance_record("agent-spark", "bond", fields, extraction, review, REPORT, MANIFEST,
+                             now="2026-10-28T10:02:00+00:00")
     assert record["bond"] == {"id": "bond", "label": "Test 1% 2030", "isin": "XS0000000000",
                               "cusip": None}
     assert [d["doc"] for d in record["documents"]] == ["ft", "bp"]
@@ -41,6 +46,8 @@ def test_the_record_holds_documents_reading_decisions_terms_and_replay(tmp_path)
                                  "seconds": 12.5, "cost_usd": 0.01}
     assert record["terms"]["currency"] == "GBP" and record["terms"]["issuer"] is None
     assert len(record["terms"]) == len(FIELDS)
+    assert record["citations"]["interest_rate"] == [{"role": "stated_in", **CITE}]
+    assert record["citations"]["currency"] == []
     assert record["review"]["interest_rate"] == {
         "status": "corrected", "at": "2026-10-28T10:01:00+00:00", "read": "1.100",
         "corrected_to": "1.000"}
