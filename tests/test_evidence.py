@@ -40,7 +40,18 @@ from tstt.evidence import value_in_text
     ("business_day_convention", "PRECEDING",
      "in which event it shall be brought forward to the immediately preceding Business Day",
      False),
+    ("business_day_convention", "PRECEDING",
+     "in which case it shall be brought forward to the preceding Business Day", False),
     ("business_day_convention", "PRECEDING", "Business Day Convention: Preceding", True),
+    ("business_day_convention", "PRECEDING",
+     "(iv) the preceding business day convention, in which case", True),
+    # The comparison without spaces must stay bounded: a short gap is not a convention.
+    ("business_day_convention", "FOLLOWING",
+     "if the next Interest Payment Date is not a Business Day", False),
+    ("currency", "USD", "Aggregate principal amount: $750,000,000 (Canadian dollars)", False),
+    ("currency", "USD", "Cdn.$750,000,000 2.600% Notes", False),
+    ("day_count_fraction", "THIRTY_360",
+     "computed on the basis of a year of 360 days with 12 30-day months", True),
 ])
 def test_value_in_text(name, value, text, found):
     assert value_in_text(name, value, [text]) is found

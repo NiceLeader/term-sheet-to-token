@@ -23,7 +23,10 @@ DAY_COUNT_PHRASES = {
                      r"actual number of days in (?:the|such) (?:calculation|accrual) period "
                      r"(?:is )?divided by the product of"],
     "THIRTY_360": [r"30\s*/\s*360",
-                   r"360[- ]day year,? (?:consisting )?of twelve 30[- ]day months"],
+                   r"360[- ]day year,? (?:consisting )?of (?:12|twelve) 30[- ]day months",
+                   # The ISDA definition; with "without regard to the date of the first day or
+                   # last day" it is 30E/360 instead.
+                   r"year of 360 days with (?:12|twelve) 30[- ]day months(?!,? without regard)"],
     "THIRTY_E_360": [r"30e\s*/\s*360", r"eurobond basis",
                      # The ISDA definition: 30E/360 is the one that ignores the first and
                      # last day of the period.
@@ -39,16 +42,21 @@ CONVENTION_PHRASES = {
     "MODIFIED_FOLLOWING": [r"modified following"],
     "FOLLOWING": [r"following business day",
                   # "the next day which is a New York business day", "the next day that is a
-                  # Business Day": up to three short words may name the place. The words are
-                  # bounded so the pattern stays bounded when compared without spaces.
-                  r"next (?:following )?(?:day (?:which|that) is a )?(?:[a-z0-9]{2,10} ){0,3}"
+                  # Business Day". The place is a closed list, so the pattern stays bounded
+                  # when compared without spaces.
+                  r"next (?:following )?(?:day (?:which|that) is a )?"
+                  r"(?:(?:new york|london|target2?|t2|tokyo|hong kong|toronto|sydney|"
+                  r"frankfurt|luxembourg|stockholm|zurich|beijing|seoul|relevant|applicable) )?"
                   r"(?:business|payment|banking) day", r"next succeeding",
                   r"convention:?\s*following"],
-    "PRECEDING": [r"preceding business day convention", r"convention:?\s*preceding",
-                  # Not the "immediately preceding Business Day" that the definition of
-                  # Modified Following falls back to.
-                  r"(?<!immediately )preceding business day"],
+    # Only the convention named as such: the definition of Modified Following also speaks of
+    # "the preceding Business Day".
+    "PRECEDING": [r"preceding business day convention", r"convention:?\s*preceding"],
 }
+# A page that names another dollar; a bare "$" on it is not evidence of US dollars.
+OTHER_DOLLARS = (r"(?<![a-z])(?:cad|c\$|cdn\.?\s?\$|canadian dollars?|aud|a\$|australian dollars?|"
+                 r"nzd|nz\$|new zealand dollars?|hkd|hk\$|hong kong dollars?|sgd|s\$|"
+                 r"singapore dollars?)(?![a-z])")
 # Regular expressions, matched between non-letters so that EUR is not found in "European".
 CURRENCY_NAMES = {
     "EUR": [r"eur", r"euros?", "€"],
@@ -140,12 +148,7 @@ def value_patterns(name: str, value: object,
         return CONVENTION_PHRASES.get(str(value))
     if name == "currency":
         names = CURRENCY_NAMES.get(str(value), [re.escape(str(value).lower())])
-        patterns = [rf"(?<![a-z]){n}(?![a-z])" for n in names]
-        if value == "USD":
-            # A bare dollar sign before an amount, as in a US prospectus ("$4,000,000,000
-            # 4.375% Notes"); HK$, A$ and C$ are preceded by a letter.
-            patterns.append(r"(?<![a-z])\$\s?\d")
-        return patterns
+        return [rf"(?<![a-z]){n}(?![a-z])" for n in names]
     if name == "isin":
         return [re.escape(str(value).lower())]
     return None
@@ -167,4 +170,10 @@ def value_in_text(name: str, value: object, texts: list[str],
         flat += [t.replace(" ", "") for t in flat]
         patterns = patterns + [p.replace(r"\s*", "").replace(r"\s+", "").replace(" ", "")
                                for p in patterns]
-    return any(re.search(p, t) for p in patterns for t in flat)
+    found = any(re.search(p, t) for p in patterns for t in flat)
+    if not found and name == "currency" and str(value) == "USD":
+        # A bare dollar sign before an amount, as in a US prospectus ("$4,000,000,000 4.375%
+        # Notes"), unless the page names another dollar.
+        found = any(re.search(r"(?<![a-z])\$\s?\d", t) and not re.search(OTHER_DOLLARS, t)
+                    for t in flat)
+    return found

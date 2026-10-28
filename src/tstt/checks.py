@@ -64,14 +64,14 @@ def date_flags(terms: BondTerms, schedule: Schedule) -> list[Flag]:
                           ("interest_commencement_date", "first_interest_payment_date")))
     else:
         start, first = terms.interest_commencement_date, terms.first_interest_payment_date
-        span = (first.year - start.year) * 12 + first.month - start.month - (first.day < start.day)
         regular = 12 // terms.coupon_frequency
-        if span >= 2 * regular:
+        if first >= add_months(start, 2 * regular, start.day):
             # A long first coupon is shorter than two regular periods; otherwise a payment
             # date would fall inside it.
             flags.append(Flag("error", "first_period",
-                              f"the first interest period runs {span} months, two or more "
-                              f"regular periods of {regular} months: a payment date is missing",
+                              f"the first interest period, {start} to {first}, covers two or "
+                              f"more regular periods of {regular} months: a payment date is "
+                              "missing",
                               ("interest_commencement_date", "first_interest_payment_date",
                                "coupon_frequency")))
     if terms.interest_commencement_date < terms.issue_date:
