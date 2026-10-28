@@ -23,7 +23,7 @@ Built for the Meta Global AI Developer Hackathon, October to November 2026.
 | Model | Where it runs | What it does |
 |---|---|---|
 | Muse Spark | Meta Model API (Responses API) | Reads the documents of a bond in two ways: in one pass, with all documents in context and a strict JSON schema for the answer, or as an agent that calls four tools (`list_documents`, `search`, `read_page`, `submit_terms`) until its submission passes validation. |
-| Muse Glimmer | Open weights on the reviewer's own machine, through a local chat completions server (LM Studio or llama.cpp) | The same agent, for documents that should not leave the building. On a single RTX 5090 it reads a bond in about four and a half minutes. |
+| Muse Glimmer | Open weights on the reviewer's own machine, through a local chat completions server (LM Studio or llama.cpp) | The same agent, for documents that should not leave the building. On a single RTX 5090 it reads a bond in about six and a half minutes. |
 
 Every field the model returns carries the quote it relied on and the page of the document,
 both where the value is stated (the final terms) and where the term is defined (the base
