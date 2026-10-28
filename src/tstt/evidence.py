@@ -44,15 +44,20 @@ CONVENTION_PHRASES = {
                   r"next (?:following )?(?:day (?:which|that) is a )?(?:[a-z0-9]{2,10} ){0,3}"
                   r"(?:business|payment|banking) day", r"next succeeding",
                   r"convention:?\s*following"],
-    "PRECEDING": [r"preceding business day"],
+    "PRECEDING": [r"preceding business day convention", r"convention:?\s*preceding",
+                  # Not the "immediately preceding Business Day" that the definition of
+                  # Modified Following falls back to.
+                  r"(?<!immediately )preceding business day"],
 }
+# Regular expressions, matched between non-letters so that EUR is not found in "European".
 CURRENCY_NAMES = {
-    "EUR": ["eur", "euro", "€"], "USD": ["usd", "u.s. dollar", "us dollar", "us$", "u.s.$"],
-    "GBP": ["gbp", "sterling", "£"], "AUD": ["aud", "australian dollar", "a$"],
-    "CHF": ["chf", "swiss franc"], "SEK": ["sek", "swedish kron"],
-    "CAD": ["cad", "canadian dollar"],
-    "HKD": ["hkd", "hong kong dollar"], "CNY": ["cny", "renminbi", "rmb", "cnh"],
-    "JPY": ["jpy", "yen"],
+    "EUR": [r"eur", r"euros?", "€"],
+    "USD": [r"usd", r"u\.s\. dollars?", r"us dollars?", r"us\$", r"u\.s\.\$"],
+    "GBP": [r"gbp", r"sterling", "£"], "AUD": [r"aud", r"australian dollars?", r"a\$"],
+    "CHF": [r"chf", r"swiss francs?"], "SEK": [r"sek", r"swedish kron(?:a|or)"],
+    "CAD": [r"cad", r"canadian dollars?"],
+    "HKD": [r"hkd", r"hong kong dollars?"], "CNY": [r"cny", r"renminbi", r"rmb", r"cnh"],
+    "JPY": [r"jpy", r"yen"],
 }
 
 
@@ -134,7 +139,8 @@ def value_patterns(name: str, value: object,
     if name == "business_day_convention":
         return CONVENTION_PHRASES.get(str(value))
     if name == "currency":
-        patterns = [re.escape(n) for n in CURRENCY_NAMES.get(str(value), [str(value).lower()])]
+        names = CURRENCY_NAMES.get(str(value), [re.escape(str(value).lower())])
+        patterns = [rf"(?<![a-z]){n}(?![a-z])" for n in names]
         if value == "USD":
             # A bare dollar sign before an amount, as in a US prospectus ("$4,000,000,000
             # 4.375% Notes"); HK$, A$ and C$ are preceded by a letter.

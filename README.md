@@ -38,9 +38,10 @@ prospectus). Nothing the model says is trusted without a check:
 2. **Value check.** The value itself must be written in the quote or on the cited page, in any
    of the ways prospectuses write it (`22nd October, 2029`, `CAD750,000,000`,
    `GBP 1,000 per Specified Denomination` for redemption at 100 per cent).
-3. **Consistency checks.** Dates in order, payment dates on the stated cycle, denomination
-   dividing the amount issued, printed coupon amounts reproduced by the day count fraction and
-   rounding rule, known calendars and conventions.
+3. **Consistency checks.** Dates in order, payment dates on the stated cycle, a first interest
+   period shorter than two regular periods, denomination dividing the amount issued, printed
+   coupon amounts reproduced by the day count fraction and rounding rule, known calendars and
+   conventions.
 4. **Three-way payment check.** Every coupon and the redemption are computed by the schedule
    engine, by QuantLib, and by the token contract on chain, and compared with the amount
    printed in the documents where there is one.
@@ -65,7 +66,7 @@ note, a CEB euro bond, a NIB USD note and two KfW USD global notes.
 | Payments where the engine, QuantLib, the token on chain and the printed amounts agree (verified terms) | 205 of 205 |
 | Guard probes rejected on chain | 125 of 125 |
 | Deliberate bugs planted in the bond contract and caught by replaying the 25 bonds and the contract tests | 18 of 18 |
-| Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 285 of 306 |
+| Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 290 of 306 |
 | Verified values found on the page they are cited from | 299 of 306 |
 
 Reading the documents of the first eighteen bonds (bonds for which the model submitted a full
@@ -120,11 +121,11 @@ the day count is flagged by the checks, the others are not. Glimmer completed al
 within its step budget, against fifteen of eighteen before.
 
 The errors that get through are listed in `tstt mutate terms`: values that are implied rather
-than written (a first payment date that follows from the cycle, redemption at par in a US
-prospectus that never says "100 per cent"), a wrong currency code that also appears elsewhere
-on the page, day count swaps in documents that describe the fraction in words, and a preceding
-instead of a following convention, which moves a payment date without changing any printed
-amount.
+than written (redemption at par in a US prospectus that never says "100 per cent", an interest
+commencement date given only as "the Issue Date"), a financial centre left out of a list, a
+swapped rounding rule where the documents state none, and swaps of the day count or the
+business day convention where the cited page is the glossary of the conditions and defines
+every option.
 
 ## What is in the repository
 

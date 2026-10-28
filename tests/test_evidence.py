@@ -34,6 +34,13 @@ from tstt.evidence import value_in_text
     ("day_count_fraction", "ACT_ACT_ICMA",
      "the actual number of days in the Calculation Period is divided by the product of (1) the "
      "actual number of days in such Interest Period", True),
+    ("currency", "EUR", "European Investment Bank $4,000,000,000 4.375% Notes", False),
+    ("currency", "EUR", "Aggregate Nominal Amount: EUR 1,000,000,000", True),
+    ("currency", "SEK", "an aggregate of one billion Swedish Kronor", True),
+    ("business_day_convention", "PRECEDING",
+     "in which event it shall be brought forward to the immediately preceding Business Day",
+     False),
+    ("business_day_convention", "PRECEDING", "Business Day Convention: Preceding", True),
 ])
 def test_value_in_text(name, value, text, found):
     assert value_in_text(name, value, [text]) is found
