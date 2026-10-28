@@ -16,6 +16,9 @@ from tstt.token import TokenError, forge_binary, record_date, record_rule, repla
      "the due date", "business", 1),
     ("Close of business one Business Day before the Interest Payment Date while in global "
      "book-entry form (15th calendar day before if in definitive form)", "business", 1),
+    ("Close of business one Business Day before payment if global; 15th calendar day before "
+     "payment if definitive", "business", 1),
+    ("15th day before payment, whether in global or definitive form", "calendar", 15),
     ("Tenth New York business day prior to the relevant payment date", "business", 10),
     ("Close of business in Sydney on the date falling 8 calendar days before each Interest "
      "Payment Date", "calendar", 8),

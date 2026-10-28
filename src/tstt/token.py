@@ -81,6 +81,10 @@ def record_rule(phrase: str | None) -> RecordRule:
     # are not part of the rule for a global or token form.
     text = re.sub(r"\([^)]*\)", " ", phrase.lower())
     text = re.sub(r"\b\d{1,2}[:.]\d{2}\s*(?:a\.?m\.?|p\.?m\.?)?", " ", text)
+    # A separate rule for notes in definitive form does not apply to the token either.
+    without = re.sub(r"[^;,]*\bdefinitive\b[^;,]*", " ", text)
+    if without.strip(" ;,"):
+        text = without
     fixed = re.findall(r"(" + "|".join(MONTHS) + r")\s+(\d{1,2})", text)
     if fixed:
         return RecordRule("fixed", fixed=tuple((MONTHS.index(m) + 1, int(d)) for m, d in fixed))
