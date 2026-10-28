@@ -172,7 +172,11 @@ def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | N
     documents = [doc for doc, _ in bond_source(settings, bond_id).documents]
     checked = check_fields(fields, Citations(documents)) if quoted else None
     values = {n: f.get("value") for n, f in fields.items()}
-    differ = set(differing(values, second)) if second is not None else set()
+    entries = (review or {"fields": {}})["fields"]
+    # The second reading is compared with what the model read, not with the correction.
+    read = {n: entries[n]["original"] if (entries.get(n) or {}).get("status") == "corrected"
+            else v for n, v in values.items()}
+    differ = set(differing(read, second)) if second is not None else set()
     flagged: dict[str, list[dict]] = {}
     for flag in (report or {}).get("flags", []):
         for name in flag.get("fields", []):
@@ -195,7 +199,7 @@ def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | N
             if checked and name in checked:
                 on_page = value_in_text(name, values.get(name), checked[name].texts, values)
             spec = FIELD_BY_NAME[name]
-            entry = (review or {"fields": {}})["fields"].get(name) or {}
+            entry = entries.get(name) or {}
             rows.append({"name": name, "label": label, "group": group,
                          "value": f.get("value"), "note": f.get("note"), "cites": cites,
                          "value_on_page": on_page, "flags": flagged.get(name, []),

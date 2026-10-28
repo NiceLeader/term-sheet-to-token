@@ -11,7 +11,8 @@
   "wrong_differing": 2,
   "wrong_flagged_by_checks": 2,
   "wrong_caught_either": 4,
-  "checks_from_eval": true
+  "checks_from_eval": true,
+  "checks_missing": []
  },
  "bonds": [
   {

@@ -149,6 +149,14 @@ def test_a_second_reading_is_shown_beside_a_models_reading(tmp_path, monkeypatch
     data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026",
                       params={"second": "none"}).json()
     assert data["second"]["run"] is None and data["fields"][0]["second"] is None
+    # A correction does not change what the model read, so the disagreement stays.
+    response = client.post("/api/review/agent-spark/ibrd-gbp-0750-2026/rounding_rule",
+                           json={"action": "correct", "value": "DOWN"})
+    assert response.status_code == 200
+    data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026").json()
+    rounding = next(f for f in data["fields"] if f["name"] == "rounding_rule")
+    assert rounding["value"] == "DOWN" and rounding["review"] == "corrected"
+    assert rounding["second"] == {"value": "DOWN", "agrees": False}
     data = client.get("/api/bond/groundtruth/ibrd-gbp-0750-2026").json()
     assert data["second"] == {"run": None, "label": None, "choices": []}
 

@@ -197,10 +197,20 @@ def _cmd_eval(args: argparse.Namespace) -> int:
 
 
 def _cmd_second(args: argparse.Namespace) -> int:
+    from tstt.review import RUN_NAME
     from tstt.second import compare_runs, save_comparison
 
+    for run in (args.run_a, args.run_b):
+        if not RUN_NAME.fullmatch(run):
+            print(f"run name {run!r} must be lower-case letters, digits, '.', '_' or '-'",
+                  file=sys.stderr)
+            return 2
     settings = load_settings()
-    result = compare_runs(settings, args.run_a, args.run_b, GROUND_TRUTH, args.bond or None)
+    try:
+        result = compare_runs(settings, args.run_a, args.run_b, GROUND_TRUTH, args.bond or None)
+    except FileNotFoundError as exc:
+        print(exc, file=sys.stderr)
+        return 2
     for row in result["bonds"]:
         wrong = []
         for side in ("a", "b"):
@@ -211,8 +221,9 @@ def _cmd_second(args: argparse.Namespace) -> int:
         print(f"  {row['bond_id']:24} differ {len(row['differing']):2}  "
               f"wrong: {'; '.join(wrong) or '-'}")
     summary = result["summary"]
-    if not summary["checks_from_eval"]:
-        print("  (run tstt eval first to count the wrong values flagged by the checks)")
+    if summary["checks_missing"]:
+        print(f"  (run tstt eval {' '.join(summary['checks_missing'])} first to count the wrong "
+              "values flagged by the checks)")
     print(json.dumps(summary))
     save_comparison(settings, result)
     return 0

@@ -150,8 +150,8 @@ function route() {
 }
 
 async function loadBond(run, bond, field) {
+  if (run !== state.run) state.second = undefined;  // the second reading is chosen per run
   state.run = run; state.bond = bond; state.field = null; state.doc = null;
-  if (state.second === run) state.second = undefined;  // the reading shown cannot be its own second
   $("#bond").value = bond;
   renderSources();
   try {
@@ -166,6 +166,7 @@ async function loadBond(run, bond, field) {
     $("#trace").innerHTML = "";
     $("#status").innerHTML = "";
     $("#review-bar").innerHTML = "";
+    $("#second").innerHTML = "";
     $("#model").textContent = "";
     $("#token").textContent = "";
     $("#cite-bar").classList.remove("show");
@@ -230,7 +231,10 @@ function renderSecondBar() {
   const differ = state.data.fields.filter((f) => f.second && !f.second.agrees).length;
   const chip = !s.run ? "" : differ ? `<span class="chip warn">${differ} term${differ === 1 ? "" : "s"} differ</span>`
                                     : `<span class="chip ok">all terms agree</span>`;
-  $("#second").innerHTML = `<label>Second reading <select id="second-run" aria-label="Second reading to compare with">${options}</select></label>${chip}`;
+  // The reading chosen for an earlier bond may not have read this one: say so.
+  const unmet = state.second && state.second !== "none" && state.second !== s.run
+    ? `<span class="note">The reading chosen before has not read this bond.</span>` : "";
+  $("#second").innerHTML = `<label>Second reading <select id="second-run" aria-label="Second reading to compare with">${options}</select></label>${chip}${unmet}`;
   $("#second-run").addEventListener("change", (e) => { state.second = e.target.value; refresh(state.field); });
 }
 

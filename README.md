@@ -132,7 +132,8 @@ Two readers make different mistakes. On the 22 bonds that both models read to th
 the two readings together hold 22 wrong values; the readings disagree on 14 of them, the consistency
 checks flag 11, and one or the other marks 17. The five that pass both are the two business day
 centres of the EIB krona note, where both models kept London and Stockholm, a record date both
-took from the rule for registered notes, and the day count and rounding of the second krona note.
+took from the rule for registered notes, which the checks flag in one reading only, and the
+rounding of the second krona note, which both read as rounding down.
 The review screen shows a second reading beside the first, by default the other model's, and
 marks every term where the two differ, so the reviewer looks there first and approves the terms
 that two readers and the checks agree on quickly (`tstt second` counts the disagreements).

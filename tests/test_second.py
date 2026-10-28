@@ -1,8 +1,11 @@
 import json
+import os
+
+import pytest
 
 from tstt.config import Settings
 from tstt.extract import Extraction, Usage
-from tstt.second import compare_runs, differing, disagreement_flags, pick_second, readings
+from tstt.second import compare_runs, differing, pick_second, readings
 
 TERMS = {"currency": "GBP", "interest_rate": "0.750", "business_day": ["London", "TARGET"],
          "rounding_rule": "HALF_UP", "stated_coupon_amounts": [], "record_date": None}
@@ -17,12 +20,6 @@ def test_differences_of_form_do_not_count():
 def test_a_different_value_or_a_missing_one_is_a_disagreement():
     other = TERMS | {"rounding_rule": "DOWN", "currency": None}
     assert differing(TERMS, other) == ["currency", "rounding_rule"]
-    flags = disagreement_flags(TERMS, other, "muse-glimmer-30b, agent")
-    assert [f.fields for f in flags] == [("currency",), ("rounding_rule",)]
-    assert flags[0].severity == "warning" and flags[0].code == "second_reading"
-    assert flags[0].message == ("currency: the second reading (muse-glimmer-30b, agent) "
-                                "gives nothing")
-    assert flags[1].message.endswith('gives "DOWN"')
 
 
 def _save(folder, bond_id, model, mode, values, error=None):
@@ -73,3 +70,22 @@ def test_two_runs_are_compared_against_the_verified_terms(tmp_path):
     assert (summary["wrong_values"], summary["wrong_differing"],
             summary["wrong_flagged_by_checks"], summary["wrong_caught_either"]) == (4, 2, 1, 3)
     assert summary["checks_from_eval"] is False  # b was never scored
+    assert summary["checks_missing"] == ["b"]
+
+    # A score older than the reading it scored, or one that misses a bond, does not count.
+    scored = settings.runs_dir / "eval" / "a.json"
+    old = scored.stat().st_mtime - 100
+    os.utime(scored, (old, old))
+    assert compare_runs(settings, "a", "b", truth)["summary"]["checks_missing"] == ["a", "b"]
+
+
+def test_a_missing_run_or_bond_is_an_error(tmp_path):
+    settings = Settings(tmp_path, None, "", "", "", "", None, None)
+    runs = settings.runs_dir / "extractions"
+    _save(runs / "a", "bond", "spark", "agent", TERMS)
+    _save(runs / "b", "bond", "glimmer", "agent", TERMS)
+    with pytest.raises(FileNotFoundError, match="no run folder c"):
+        compare_runs(settings, "a", "c", tmp_path)
+    with pytest.raises(FileNotFoundError, match="no reading of other"):
+        compare_runs(settings, "a", "b", tmp_path, ["bond", "other"])
+    assert compare_runs(settings, "a", "b", tmp_path, ["bond"])["summary"]["bonds"] == 1

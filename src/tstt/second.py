@@ -12,7 +12,6 @@ import json
 from pathlib import Path
 from typing import Any
 
-from tstt.checks import Flag
 from tstt.config import Settings
 from tstt.eval import normalise
 from tstt.extract import Extraction
@@ -31,14 +30,19 @@ def differing(values: dict[str, Any], other: dict[str, Any]) -> list[str]:
     return [s.name for s in FIELDS if not _same(s.name, values.get(s.name), other.get(s.name))]
 
 
-def disagreement_flags(values: dict[str, Any], other: dict[str, Any], label: str) -> list[Flag]:
-    flags = []
-    for name in differing(values, other):
-        got = other.get(name)
-        shown = "nothing" if got in (None, "", []) else json.dumps(got, ensure_ascii=False)
-        flags.append(Flag("warning", "second_reading",
-                          f"{name}: the second reading ({label}) gives {shown}", (name,)))
-    return flags
+_loaded: dict[Path, tuple[tuple[int, int], Extraction]] = {}
+
+
+def _load(file: Path) -> Extraction:
+    """An extraction file holds the tool log too, so a reading once loaded is kept
+    until the file changes: the review screen asks for the readings on every refresh."""
+    stat = file.stat()
+    stamp = (stat.st_mtime_ns, stat.st_size)
+    cached = _loaded.get(file)
+    if cached is None or cached[0] != stamp:
+        cached = (stamp, Extraction.load(file))
+        _loaded[file] = cached
+    return cached[1]
 
 
 def readings(settings: Settings, bond_id: str) -> dict[str, Extraction]:
@@ -48,7 +52,7 @@ def readings(settings: Settings, bond_id: str) -> dict[str, Extraction]:
     for path in sorted(folder.iterdir()) if folder.exists() else []:
         file = path / f"{bond_id}.json"
         if path.is_dir() and file.exists():
-            extraction = Extraction.load(file)
+            extraction = _load(file)
             if not extraction.error:
                 out[path.name] = extraction
     return out
@@ -71,13 +75,15 @@ def _wrong(values: dict[str, Any], truth: dict[str, Any]) -> set[str]:
     return {n for n, expected in truth.items() if not _same(n, values.get(n), expected)}
 
 
-def _flagged_by_checks(settings: Settings, run: str) -> dict[str, set[str]]:
-    """Wrong fields that the consistency checks flagged, per bond, from the run's last eval."""
+def _flagged_by_checks(settings: Settings, run: str) -> tuple[dict[str, set[str]], float | None]:
+    """Wrong fields that the consistency checks flagged, per bond, from the run's last eval,
+    and when that eval was made."""
     path = settings.runs_dir / "eval" / f"{run}.json"
     if not path.exists():
-        return {}
+        return {}, None
     scored = json.loads(path.read_text(encoding="utf-8"))
-    return {b["bond_id"]: set(b.get("wrong_flagged", [])) for b in scored["bonds"]}
+    return ({b["bond_id"]: set(b.get("wrong_flagged", [])) for b in scored["bonds"]},
+            path.stat().st_mtime)
 
 
 def compare_runs(settings: Settings, run_a: str, run_b: str, ground_truth: Path,
@@ -85,10 +91,23 @@ def compare_runs(settings: Settings, run_a: str, run_b: str, ground_truth: Path,
     """Where two runs disagree, and which wrong values the disagreement would have caught.
 
     A wrong value counts as caught by the second reading when the other run gives a different
-    value, and as caught by the checks when the run's eval lists the field as flagged.
+    value, and as caught by the checks when the run's eval lists the field as flagged. The
+    eval counts only while it is newer than the readings it scored and covers every bond
+    compared; `checks_missing` names the runs to score again.
     """
     folder = settings.runs_dir / "extractions"
-    flagged = {run: _flagged_by_checks(settings, run) for run in (run_a, run_b)}
+    for run in (run_a, run_b):
+        if not (folder / run).is_dir():
+            raise FileNotFoundError(f"no run folder {run}")
+    if bonds:
+        unknown = [b for b in bonds if not (folder / run_a / f"{b}.json").exists()
+                   and not (folder / run_b / f"{b}.json").exists()]
+        if unknown:
+            raise FileNotFoundError(f"no reading of {', '.join(unknown)} in either run")
+    flagged, scored_at, fresh = {}, {}, {}
+    for run in (run_a, run_b):
+        flagged[run], scored_at[run] = _flagged_by_checks(settings, run)
+        fresh[run] = scored_at[run] is not None
     rows = []
     for path in sorted((folder / run_a).glob("*.json")):
         bond_id = path.stem
@@ -107,15 +126,19 @@ def compare_runs(settings: Settings, run_a: str, run_b: str, ground_truth: Path,
         if truth_path.exists():
             truth = json.loads(truth_path.read_text(encoding="utf-8"))
             true_values = {n: f.get("value") for n, f in truth["fields"].items()}
-            for side, values, run in (("a", values_a, run_a), ("b", values_b, run_b)):
+            for side, values, run, file in (("a", values_a, run_a, path),
+                                            ("b", values_b, run_b, other)):
                 wrong = sorted(_wrong(values, true_values))
                 row[f"wrong_{side}"] = {
                     name: {"differs": name in differ,
                            "flagged": name in flagged[run].get(bond_id, set())}
                     for name in wrong}
+                fresh[run] = (fresh[run] and bond_id in flagged[run]
+                              and file.stat().st_mtime <= scored_at[run])
         rows.append(row)
 
     wrong = [w for r in rows for side in ("a", "b") for w in r.get(f"wrong_{side}", {}).values()]
+    checks_missing = [run for run in (run_a, run_b) if not fresh[run]]
     summary = {
         "runs": [run_a, run_b], "bonds": len(rows),
         "fields_compared": sum(r["fields"] for r in rows),
@@ -124,7 +147,7 @@ def compare_runs(settings: Settings, run_a: str, run_b: str, ground_truth: Path,
         "wrong_differing": sum(w["differs"] for w in wrong),
         "wrong_flagged_by_checks": sum(w["flagged"] for w in wrong),
         "wrong_caught_either": sum(w["differs"] or w["flagged"] for w in wrong),
-        "checks_from_eval": all(run in flagged and flagged[run] for run in (run_a, run_b)),
+        "checks_from_eval": not checks_missing, "checks_missing": checks_missing,
     }
     return {"summary": summary, "bonds": rows}
 
