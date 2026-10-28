@@ -199,8 +199,9 @@ the whole bond against QuantLib and the printed amounts.
 - Where a coupon is calculated on the aggregate outstanding amount, the token rounds per unit
   of the smallest denomination, which can differ by a fraction of a cent per holding.
 - Rounding to a cash unit larger than the currency's minor unit (CHF 0.05) is not modelled.
-- The Hong Kong digital bond calculates interest on each token account's whole holding; the
-  token pays per unit.
+- The Hong Kong digital bonds calculate interest on each token account's whole holding; the
+  token rounds the coupon of each calculation amount and pays per unit. On a holding of
+  USD 200,000 of the 3.625% bond that is USD 3,624.00 a half year instead of USD 3,625.00.
 - The verified terms were prepared by hand from the documents and may contain mistakes of
   their own; each value cites its page so it can be checked.
 - The field rules given to the models were refined while reading these eighteen bonds. There
