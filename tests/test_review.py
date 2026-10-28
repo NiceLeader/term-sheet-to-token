@@ -144,6 +144,10 @@ def test_only_a_change_of_the_reviewed_terms_drops_their_replay(settings):
 def test_reading_a_bond_again_forgets_the_review_of_the_earlier_reading(settings):
     record(settings, RUN, BOND, "currency", "approve", "GBP")
     report = _replayed(settings)
+    replay = settings.runs_dir / "reports" / RUN / f"{BOND}.json"
+    replay.parent.mkdir(parents=True)
+    replay.write_text("{}", encoding="utf-8")
     discard(settings, RUN, BOND)
     assert not review_path(settings, RUN, BOND).exists() and not report.exists()
+    assert not replay.exists()
     assert unreviewed(load_review(settings, RUN, BOND)) == [f.name for f in FIELDS]

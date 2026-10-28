@@ -200,6 +200,7 @@ class Job:
     bond_id: str
     kind: str  # hosted | local
     mode: str  # agent | one_pass
+    run: str | None = None  # known once the model is
     events: list[dict[str, Any]] = field(default_factory=list)
     done: bool = False
 
@@ -215,7 +216,7 @@ def _run_job(settings: Settings, job: Job) -> None:
         if job.kind == "hosted" and not settings.model_api_key:
             raise ModelError("MODEL_API_KEY is not set in .env")
         client = make_client(job.kind, settings)
-        run = f"{job.mode}-{client.model}"
+        run = job.run = f"{job.mode}-{client.model}"
         emit("start", model=client.model, mode=job.mode, run=run)
         source = bond_source(settings, job.bond_id)
         if job.mode == "agent":
@@ -224,6 +225,7 @@ def _run_job(settings: Settings, job: Job) -> None:
             extraction = one_pass(client, source)
         extraction.save(settings.runs_dir / "extractions" / run)
         discard(settings, run, job.bond_id)
+        emit("saved", run=run)
         if extraction.error:
             raise ModelError(extraction.error)
         emit("extracted", seconds=round(extraction.seconds, 1), steps=extraction.steps,
@@ -262,7 +264,11 @@ def create_app(settings: Settings | None = None,
         origin = request.headers.get("origin")
         if request.method not in ("GET", "HEAD") and origin not in (None, f"http://{host}"):
             return Response("cross-site request", status_code=403)
-        return await call_next(request)
+        response = await call_next(request)
+        if not request.url.path.startswith("/api/"):
+            # The browser asks again each time, so a restarted server never runs an old script.
+            response.headers["Cache-Control"] = "no-cache"
+        return response
 
     @app.get("/api/runs")
     def runs() -> list[dict[str, Any]]:
@@ -288,19 +294,23 @@ def create_app(settings: Settings | None = None,
                         "verified": truth.get("status") == "verified"})
         return out
 
+    @app.get("/api/documents/{bond_id}")
+    def documents(bond_id: str) -> list[dict[str, Any]]:
+        manifest = load_manifest()
+        out = []
+        for d in _known_bond(bond_id)["documents"]:
+            meta = manifest["documents"][d["doc"]]
+            out.append({"doc": d["doc"], "role": d["role"], "title": meta["title"],
+                        "format": meta["format"], "url": meta["url"],
+                        "pages": len(load_document(settings, d["doc"]).pages)})
+        return out
+
     @app.get("/api/bond/{run}/{bond_id}")
     def bond(run: str, bond_id: str) -> dict[str, Any]:
-        manifest = load_manifest()
         entry = _known_bond(bond_id)
         _known_run(settings, run)
         fields, extraction, review = _reviewed(settings, run, bond_id)
         report = _read_json(_report_path(settings, run, bond_id, review))
-        documents = []
-        for d in entry["documents"]:
-            meta = manifest["documents"][d["doc"]]
-            documents.append({"doc": d["doc"], "role": d["role"], "title": meta["title"],
-                              "format": meta["format"], "url": meta["url"],
-                              "pages": len(load_document(settings, d["doc"]).pages)})
         scored = settings.runs_dir / "eval" / f"{run}.json"
         read = settings.runs_dir / "extractions" / run / f"{bond_id}.json"
         # A score older than the extraction belongs to an earlier reading.
@@ -311,7 +321,7 @@ def create_app(settings: Settings | None = None,
                       if b["bond_id"] == bond_id), None)
         return {"bond": {k: entry.get(k) for k in ("id", "label", "isin", "cusip",
                                                     "dlt_native")},
-                "run": run, "documents": documents, "extraction": extraction,
+                "run": run, "documents": documents(bond_id), "extraction": extraction,
                 "fields": _field_rows(settings, bond_id, fields, report, extraction is not None,
                                       review),
                 "report": report, "score": score, "review": _review_summary(review)}
@@ -336,10 +346,18 @@ def create_app(settings: Settings | None = None,
         report.save(_report_path(settings, run, bond_id, review))
         return report.summary(), review
 
+    def not_being_read(run: str, bond_id: str) -> None:
+        """Refuse to review or deploy a model's reading of a bond while that model reads the
+        bond again: the page still shows the earlier reading, which the new one replaces."""
+        if any(job.bond_id == bond_id and not job.done and job.run in (None, run)
+               for job in jobs.values()):
+            raise HTTPException(409, "this bond is being read again; wait for the new reading")
+
     @app.post("/api/verify/{run}/{bond_id}")
     def verify_now(run: str, bond_id: str) -> dict[str, Any]:
         _known_bond(bond_id)
         _known_run(settings, run)
+        not_being_read(run, bond_id)
         return run_verify(run, bond_id)[0]
 
     @app.post("/api/review/{run}/{bond_id}/{name}")
@@ -348,6 +366,7 @@ def create_app(settings: Settings | None = None,
         _known_run(settings, run)
         if name not in FIELD_BY_NAME:
             raise HTTPException(404, f"unknown field {name}")
+        not_being_read(run, bond_id)
         with review_lock:
             fields, _ = _source_fields(settings, run, bond_id)
             try:
@@ -362,6 +381,7 @@ def create_app(settings: Settings | None = None,
         """Issue the token once every term is reviewed and the replay raises no red flag."""
         _known_bond(bond_id)
         _known_run(settings, run)
+        not_being_read(run, bond_id)
         with review_lock:
             missing = unreviewed(load_review(settings, run, bond_id))
             if missing:

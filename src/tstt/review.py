@@ -201,10 +201,12 @@ def save_review(settings: Settings, review: dict[str, Any]) -> None:
 
 
 def discard(settings: Settings, run: str, bond_id: str) -> None:
-    """Forget the review of a model's earlier reading when the bond is read again."""
+    """Forget the review and the reports of a model's earlier reading when the bond is read
+    again."""
     if run != TRUTH:
         review_path(settings, run, bond_id).unlink(missing_ok=True)
         reviewed_report_path(settings, run, bond_id).unlink(missing_ok=True)
+        (settings.runs_dir / "reports" / run / f"{bond_id}.json").unlink(missing_ok=True)
 
 
 def reviewed_values(fields: dict[str, dict[str, Any]],

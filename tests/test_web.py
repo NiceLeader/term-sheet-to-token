@@ -1,10 +1,14 @@
+import shutil
+import threading
+
 import pytest
 
 fastapi = pytest.importorskip("fastapi")
 
 from fastapi.testclient import TestClient  # noqa: E402
 
-from tstt.config import load_settings  # noqa: E402
+from tstt import review, web  # noqa: E402
+from tstt.config import Settings, load_settings  # noqa: E402
 from tstt.web import create_app  # noqa: E402
 
 
@@ -67,3 +71,40 @@ def test_review_refuses_an_invalid_correction(client):
     response = client.post("/api/review/groundtruth/ibrd-gbp-0750-2026/no_such_field",
                            json={"action": "approve"})
     assert response.status_code == 404
+
+
+def test_a_bond_being_read_again_cannot_be_reviewed(tmp_path, monkeypatch):
+    truth = tmp_path / "groundtruth"
+    truth.mkdir()
+    shutil.copy(review.GROUND_TRUTH / "ibrd-gbp-0750-2026.json", truth)
+    monkeypatch.setattr(review, "GROUND_TRUTH", truth)
+    started, release = threading.Event(), threading.Event()
+
+    def reading(settings, job):
+        job.run = "agent-test-model"
+        started.set()
+        release.wait(5)
+        job.done = True
+
+    monkeypatch.setattr(web, "_run_job", reading)
+    settings = Settings(tmp_path / "data", None, "", "", "", "", None, None)
+    (settings.runs_dir / "extractions" / "agent-test-model").mkdir(parents=True)
+    client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
+    try:
+        assert client.post("/api/extract/local/ibrd-gbp-0750-2026").status_code == 200
+        assert started.wait(5)
+        bond = "agent-test-model/ibrd-gbp-0750-2026"
+        approve = client.post(f"/api/review/{bond}/currency", json={"action": "approve"})
+        assert approve.status_code == 409
+        assert client.post(f"/api/issue/{bond}").status_code == 409
+        assert client.post(f"/api/verify/{bond}").status_code == 409
+        # The verified terms are not replaced by a reading, so they can be reviewed meanwhile.
+        approve = client.post("/api/review/groundtruth/ibrd-gbp-0750-2026/currency",
+                              json={"action": "approve"})
+        assert approve.status_code == 200
+    finally:
+        release.set()
+
+
+def test_the_page_is_checked_for_changes_on_every_load(client):
+    assert client.get("/app.js").headers["cache-control"] == "no-cache"

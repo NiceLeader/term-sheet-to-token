@@ -30,8 +30,8 @@ const NAMES = {
 };
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-const state = { runs: [], bonds: [], run: null, bond: null, data: null, field: null,
-                view: null, doc: null, page: 1, quotes: [], label: "" };
+const state = { runs: [], bonds: [], run: null, bond: null, data: null, documents: [],
+                field: null, view: null, doc: null, page: 1, quotes: [], label: "" };
 
 async function api(path, options) {
   const response = await fetch(path, options);
@@ -150,6 +150,7 @@ async function loadBond(run, bond, field) {
   renderSources();
   try {
     state.data = await api(`/api/bond/${run}/${bond}`);
+    state.documents = state.data.documents;
   } catch (error) {
     state.data = null;
     const label = runLabel(state.runs.find((r) => r.id === run) || { kind: "truth" });
@@ -161,11 +162,15 @@ async function loadBond(run, bond, field) {
     $("#review-bar").innerHTML = "";
     $("#model").textContent = "";
     $("#token").textContent = "";
-    $("#doc-tabs").innerHTML = "";
     $("#cite-bar").classList.remove("show");
-    $("#page").value = ""; $("#pages").textContent = "";
     $("#trace-tab").classList.add("hidden");
     leftTab("terms");
+    // The documents can still be read, and followed while a model reads them.
+    state.documents = await api(`/api/documents/${bond}`).catch(() => []);
+    if (state.bond !== bond) return;
+    renderDocTabs();
+    if (state.documents.length) { openPage(state.documents[0].doc, 1, [], ""); return; }
+    $("#page").value = ""; $("#pages").textContent = "";
     $("#sheet").innerHTML = `<div class="empty">No terms from this source for this bond yet.</div>`;
     return;
   }
@@ -174,7 +179,7 @@ async function loadBond(run, bond, field) {
   renderTrace();
   renderPayments();
   renderDocTabs();
-  const first = state.data.documents[0];
+  const first = state.documents[0];
   if (field) selectField(field); else openPage(first.doc, 1, [], "");
 }
 
@@ -389,7 +394,7 @@ function renderTerms() {
     const pageRef = !quoted && f.cites.length ? `p.${f.cites[0].page}` : sym;
     const cites = f.cites.map((c, i) => {
       const [sc, st] = citeStatus[c.status] || ["", c.status];
-      const doc = state.data.documents.find((d) => d.doc === c.doc);
+      const doc = state.documents.find((d) => d.doc === c.doc);
       const where = `${esc(ROLES[doc?.role] || c.doc)}, p.${esc(c.page)}`;
       const moved = c.found_page && c.found_page !== c.page ? ` (found on p.${esc(c.found_page)})` : "";
       return `<div class="cite" data-cite="${i}"><span class="where">${c.role === "defined_in" ? "Defined in" : "Stated in"} ${where}
@@ -427,7 +432,7 @@ function selectField(name, citeIndex = 0) {
   row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   const cite = field.cites[citeIndex] || field.cites[0];
   if (!cite) {
-    if (!state.doc) openPage(state.data.documents[0].doc, 1, [], "");
+    if (!state.doc) openPage(state.documents[0].doc, 1, [], "");
     return;
   }
   const page = cite.found_page && cite.status === "wrong_page" ? cite.found_page : cite.page;
@@ -439,13 +444,13 @@ function selectField(name, citeIndex = 0) {
 // ---------------------------------------------------------------- document
 
 function renderDocTabs() {
-  $("#doc-tabs").innerHTML = state.data.documents.map((d) => `<button class="tab" data-doc="${esc(d.doc)}" title="${esc(d.title)}">${esc(ROLES[d.role] || d.role)}<small>${d.pages} p.</small></button>`).join("");
+  $("#doc-tabs").innerHTML = state.documents.map((d) => `<button class="tab" data-doc="${esc(d.doc)}" title="${esc(d.title)}">${esc(ROLES[d.role] || d.role)}<small>${d.pages} p.</small></button>`).join("");
   $("#doc-tabs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => openPage(b.dataset.doc, 1, [], "")));
 }
 
 // `checked` holds the quote check's verdict for each quote, when the quotes come from a field.
 async function openPage(doc, page, quotes, label, checked = null) {
-  const meta = state.data?.documents.find((d) => d.doc === doc);
+  const meta = state.documents.find((d) => d.doc === doc);
   if (!meta) return;
   page = Math.min(Math.max(1, page || 1), meta.pages);
   Object.assign(state, { doc, page, quotes, label });
@@ -507,7 +512,7 @@ async function find(phrase) {
 // ---------------------------------------------------------------- agent trace
 
 function docTitle(doc) {
-  return ROLES[state.data?.documents.find((d) => d.doc === doc)?.role] || doc || "all documents";
+  return ROLES[state.documents.find((d) => d.doc === doc)?.role] || doc || "all documents";
 }
 
 function stepHtml(s, fresh = false) {
@@ -558,10 +563,26 @@ async function startExtraction(kind) {
     if (time) time.textContent = `${Math.round((Date.now() - began) / 1000)} s`;
   }, 1000);
   const finish = () => { clearInterval(tick); buttons.forEach((b) => { b.disabled = false; }); };
-  const fail = (message) => {
+  let replaced = null; // the run whose reading of this bond the new one has overwritten
+  const fail = async (message) => {
     finish();
-    live.className = "live error"; live.textContent = message;
-    if (earlier) { $("#live-steps").insertAdjacentHTML("afterend", `<h3 class="section-title">Earlier reading</h3>${earlier}`); bindSteps(); }
+    if (replaced) state.runs = await api("/api/runs").catch(() => state.runs);
+    if (replaced && state.bond === bond && state.run === replaced) {
+      // The earlier reading is gone, so the failed one is shown, with what it got to.
+      await loadBond(replaced, bond, state.field);
+      $("#trace").insertAdjacentHTML("afterbegin", `<div class="live error">${esc(message)}</div>`);
+      $("#trace-tab").classList.remove("hidden");
+      leftTab("trace");
+    } else if (live.isConnected) {
+      live.className = "live error"; live.textContent = message;
+      if (earlier) { $("#live-steps").insertAdjacentHTML("afterend", `<h3 class="section-title">Earlier reading</h3>${earlier}`); bindSteps(); }
+      if (replaced) renderSources();
+    } else {
+      // The reviewer has moved on; the header still says that the reading failed.
+      if (replaced) renderSources();
+      const label = state.bonds.find((b) => b.id === bond)?.label || bond;
+      $("#status").insertAdjacentHTML("afterbegin", `<span class="pill bad" title="${esc(message)}">reading ${esc(label)} again failed</span>`);
+    }
   };
   let job;
   try {
@@ -573,18 +594,24 @@ async function startExtraction(kind) {
   const events = new EventSource(`/api/jobs/${job}/events`);
   events.onmessage = (message) => {
     const e = JSON.parse(message.data);
+    // The live block is gone once the reviewer opens another bond or source.
+    const text = $("#live-text"), steps = $("#live-steps");
     if (e.type === "start") {
       model = modelName(e.model);
-      $("#live-text").innerHTML = `<b>${esc(model)}</b> is reading the documents of this bond${e.mode === "one_pass" ? " in one pass" : ""}…`;
+      if (text) text.innerHTML = `<b>${esc(model)}</b> is reading the documents of this bond${e.mode === "one_pass" ? " in one pass" : ""}…`;
     } else if (e.type === "step") {
-      $("#live-steps").insertAdjacentHTML("beforeend", stepHtml(e, true));
-      $("#live-steps").lastElementChild.scrollIntoView({ block: "nearest" });
-      $("#live-text").innerHTML = `<b>${esc(model)}</b>: step ${e.step}, ${amount(String(e.input_tokens))} tokens read`;
+      if (steps) {
+        steps.insertAdjacentHTML("beforeend", stepHtml(e, true));
+        steps.lastElementChild.scrollIntoView({ block: "nearest" });
+        bindSteps();
+      }
+      if (text) text.innerHTML = `<b>${esc(model)}</b>: step ${e.step}, ${amount(String(e.input_tokens))} tokens read`;
       if (e.tool === "read_page" && state.bond === bond) openPage(e.args.doc, Number(e.args.page), [], "Page the model is reading");
-      bindSteps();
+    } else if (e.type === "saved") {
+      replaced = e.run;
     } else if (e.type === "extracted") {
       const how = mode === "agent" ? `after ${e.steps} step${e.steps === 1 ? "" : "s"}` : `in ${Math.round(e.seconds)} s`;
-      $("#live-text").textContent = `Terms submitted ${how}. Deploying the token and paying every coupon on a local chain…`;
+      if (text) text.textContent = `Terms submitted ${how}. Deploying the token and paying every coupon on a local chain…`;
     } else if (e.type === "done") {
       events.close(); finish();
       live.className = "live done";
