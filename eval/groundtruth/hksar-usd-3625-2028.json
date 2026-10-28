@@ -1,7 +1,7 @@
 {
   "bond_id": "hksar-usd-3625-2028",
   "isin": "HK0001201893",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "HK0001201893", "doc": "hksar-digital-green-2025-ps", "page": 67},
     "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-digital-green-2025-ps", "page": 64},

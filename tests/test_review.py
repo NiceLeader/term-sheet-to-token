@@ -19,6 +19,7 @@ from tstt.review import (
     reviewed_values,
     truth_path,
     unreviewed,
+    write_truth,
 )
 from tstt.terms import FIELDS, TermsError
 
@@ -63,20 +64,25 @@ def test_untouched_ground_truth_files_are_reproduced_exactly():
         assert _patched(text, json.loads(text)) == text, path.name
 
 
-def test_correcting_the_ground_truth_changes_only_that_line(settings):
-    before = truth_path(BOND).read_bytes()
+def test_correcting_the_ground_truth_changes_only_the_value_and_the_status(settings):
+    write_truth(BOND, dict(read_truth(BOND), status="verified"))
+    before = truth_path(BOND).read_text(encoding="utf-8")
     record(settings, "groundtruth", BOND, "interest_rate", "correct", "0.750", "0.85")
-    after = truth_path(BOND).read_bytes().decode("utf-8")
-    changed = [(a, b) for a, b in zip(before.decode("utf-8").splitlines(), after.splitlines(),
-                                      strict=True)
+    after = truth_path(BOND).read_text(encoding="utf-8")
+    changed = [(a, b) for a, b in zip(before.splitlines(), after.splitlines(), strict=True)
                if a != b]
-    assert len(changed) == 1 and '"value": "0.85"' in changed[0][1]
+    assert [b.split(":")[0].strip() for _, b in changed] == ['"status"', '"interest_rate"']
+    assert '"value": "0.85"' in changed[1][1]
     assert read_truth(BOND)["status"] == "draft"
     entry = load_review(settings, "groundtruth", BOND)["fields"]["interest_rate"]
     assert entry["status"] == "corrected" and entry["original"] == "0.750"
 
+    # Undoing the correction restores the value; the file stays a draft until the field is
+    # approved again and the bond is issued.
     record(settings, "groundtruth", BOND, "interest_rate", "reset", "0.85")
-    assert truth_path(BOND).read_bytes() == before
+    restored = truth_path(BOND).read_text(encoding="utf-8")
+    assert [b.strip() for a, b in zip(before.splitlines(), restored.splitlines(), strict=True)
+            if a != b] == ['"status": "draft",']
 
 
 def test_a_correction_back_to_the_source_value_is_an_approval(settings):

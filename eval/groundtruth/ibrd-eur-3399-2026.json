@@ -1,7 +1,7 @@
 {
   "bond_id": "ibrd-eur-3399-2026",
   "isin": "XS2615318289",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "XS2615318289", "doc": "ibrd-xs2615318289-ft", "page": 3},
     "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-xs2615318289-ft", "page": 1},

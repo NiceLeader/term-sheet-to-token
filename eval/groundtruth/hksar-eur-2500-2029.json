@@ -1,7 +1,7 @@
 {
   "bond_id": "hksar-eur-2500-2029",
   "isin": "HK0001201901",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "HK0001201901", "doc": "hksar-digital-green-2025-ps", "page": 75},
     "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-digital-green-2025-ps", "page": 72},

@@ -1,7 +1,7 @@
 {
   "bond_id": "ibrd-aud-4400-2028",
   "isin": "AU3CB0295509",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "AU3CB0295509", "doc": "ibrd-au3cb0295509-ft", "page": 4},
     "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-au3cb0295509-ft", "page": 1},

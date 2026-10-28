@@ -1,7 +1,7 @@
 {
   "bond_id": "kfw-usd-4500-2031",
   "isin": "US500769KT05",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "US500769KT05", "doc": "kfw-us500769kt05-ps", "page": 2},
     "issuer": {"value": "KfW", "doc": "kfw-us500769kt05-ps", "page": 2},

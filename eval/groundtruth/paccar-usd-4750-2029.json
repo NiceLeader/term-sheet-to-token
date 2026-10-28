@@ -1,7 +1,7 @@
 {
   "bond_id": "paccar-usd-4750-2029",
   "isin": null,
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": null},
     "issuer": {"value": "PACCAR Financial Corp.", "doc": "paccar-69371ru79-ps", "page": 1},

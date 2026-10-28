@@ -1,7 +1,7 @@
 {
   "bond_id": "eib-sek-2680-2029",
   "isin": "EU000A4ETDA0",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "EU000A4ETDA0", "doc": "eib-eu000a4etda0-ft", "page": 5},
     "issuer": {"value": "European Investment Bank", "doc": "eib-eu000a4etda0-ft", "page": 2},

@@ -1,7 +1,7 @@
 {
   "bond_id": "ibrd-gbp-0750-2026",
   "isin": "XS2113033281",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "XS2113033281", "doc": "ibrd-xs2113033281-ft", "page": 3},
     "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-xs2113033281-ft", "page": 1},

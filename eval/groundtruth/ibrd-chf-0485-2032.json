@@ -1,7 +1,7 @@
 {
   "bond_id": "ibrd-chf-0485-2032",
   "isin": "CH1452360691",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "CH1452360691", "doc": "ibrd-ch1452360691-ft", "page": 7},
     "issuer": {"value": "International Bank for Reconstruction and Development", "doc": "ibrd-ch1452360691-ft", "page": 1},

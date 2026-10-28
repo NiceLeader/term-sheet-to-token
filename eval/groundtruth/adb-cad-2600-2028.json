@@ -1,7 +1,7 @@
 {
   "bond_id": "adb-cad-2600-2028",
   "isin": "CA045167GN78",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "CA045167GN78", "doc": "adb-gmtn-1892-ps", "page": 8},
     "issuer": {"value": "Asian Development Bank", "doc": "adb-gmtn-1892-ps", "page": 4},

@@ -1,7 +1,7 @@
 {
   "bond_id": "korea-eur-3250-2033",
   "isin": "XS3437347787",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "XS3437347787", "doc": "korea-xs3437347787-424b2", "page": 30},
     "issuer": {"value": "The Republic of Korea", "doc": "korea-xs3437347787-424b2", "page": 6},

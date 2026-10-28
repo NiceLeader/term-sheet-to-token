@@ -1,7 +1,7 @@
 {
   "bond_id": "deere-usd-4800-2029",
   "isin": "US24422EYT09",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "US24422EYT09", "doc": "deere-us24422eyt09-ps", "page": 1},
     "issuer": {"value": "John Deere Capital Corporation", "doc": "deere-us24422eyt09-ps", "page": 1},

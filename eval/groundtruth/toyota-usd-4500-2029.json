@@ -1,7 +1,7 @@
 {
   "bond_id": "toyota-usd-4500-2029",
   "isin": "US89236TQD09",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "US89236TQD09", "doc": "toyota-us89236tqd09-ps", "page": 2},
     "issuer": {"value": "Toyota Motor Credit Corporation", "doc": "toyota-us89236tqd09-ps", "page": 2},

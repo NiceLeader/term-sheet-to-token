@@ -1,7 +1,7 @@
 {
   "bond_id": "adb-usd-4250-2036",
   "isin": "US045167GP25",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "US045167GP25", "doc": "adb-gmtn-1927-ps", "page": 8},
     "issuer": {"value": "Asian Development Bank", "doc": "adb-gmtn-1927-ps", "page": 4},

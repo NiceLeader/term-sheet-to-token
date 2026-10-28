@@ -1,7 +1,7 @@
 {
   "bond_id": "ceb-gbp-3875-2029",
   "isin": "XS3268973966",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "XS3268973966", "doc": "ceb-xs3268973966-ps", "page": 5},
     "issuer": {"value": "Council of Europe Development Bank", "doc": "ceb-xs3268973966-ps", "page": 1},

@@ -1,7 +1,7 @@
 {
   "bond_id": "hksar-eur-3375-2031",
   "isin": "HK0001031944",
-  "status": "draft",
+  "status": "verified",
   "fields": {
     "isin": {"value": "HK0001031944", "doc": "hksar-hk0001031944-ps", "page": 25},
     "issuer": {"value": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China", "doc": "hksar-hk0001031944-ps", "page": 22},
@@ -32,7 +32,7 @@
       "value": ["TARGET"],
       "doc": "hksar-hk0001031944-ps", "page": 24,
       "definition": {"doc": "hksar-gmtn-om-2024", "page": 61},
-      "check": "The cited PS page only says Financial Centre(s): Not Applicable (item 26); TARGET comes from Condition 7(h)(ii), which for a Euro payment requires a TARGET Business Day. 7(h) also refers to the place of presentation, which is not a fixed centre and is disregarded for Global Notes (OM p.85)."
+      "check": "The cited PS page only says Financial Centre(s): Not Applicable (item 26); TARGET comes from Condition 7(h)(ii), which for a Euro payment requires a TARGET Business Day. 7(h) also refers to the place of presentation, which is not a fixed centre; the OM disregards it for payments on a Global Note (p.85, on the Business Day definition in Condition 5(k)), and these Notes are held through a Global Certificate in the clearing systems, so TARGET is the only fixed centre."
     },
     "final_redemption_amount": {"value": "100", "doc": "hksar-hk0001031944-ps", "page": 23},
     "stated_coupon_amounts": {
