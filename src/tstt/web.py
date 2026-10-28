@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import asyncio
 import json
-import re
 import threading
 import uuid
 from dataclasses import dataclass, field
@@ -31,6 +30,7 @@ from tstt.fetch import load_manifest
 from tstt.pages import page_image, page_view, search_pages
 from tstt.review import (
     GROUND_TRUTH,
+    RUN_NAME,
     corrected,
     discard,
     load_review,
@@ -44,7 +44,6 @@ from tstt.terms import FIELD_BY_NAME, FIELDS, TermsError, build_terms
 
 WEB_DIR = REPO_ROOT / "web"
 LOCAL_HOSTS = frozenset({"127.0.0.1", "localhost"})
-RUN_NAME = re.compile(r"[a-z0-9][a-z0-9._-]*")
 
 FIELD_GROUPS: dict[str, list[tuple[str, str]]] = {
     "Instrument": [("isin", "ISIN"), ("issuer", "Issuer"), ("currency", "Currency"),
@@ -78,10 +77,22 @@ def _runs(settings: Settings) -> list[dict[str, Any]]:
     folder = settings.runs_dir / "extractions"
     for path in sorted(folder.iterdir()) if folder.exists() else []:
         if path.is_dir():
-            mode, _, model = path.name.partition("-")
-            runs.append({"id": path.name, "kind": "extraction", "mode": mode, "model": model,
-                         "label": f"{model} ({mode.replace('_', '-')})"})
+            runs.append(_run_entry(path))
     return runs
+
+
+def _run_entry(path: Path) -> dict[str, Any]:
+    """Mode and model come from a saved extraction; the folder name only names the run."""
+    mode, _, model = path.name.partition("-")
+    first = next(iter(sorted(path.glob("*.json"))), None)
+    saved = _read_json(first) if first else None
+    if isinstance(saved, dict):
+        mode, model = saved.get("mode") or mode, saved.get("model") or model
+    default = f"{mode}-{model}"
+    tag = path.name.removeprefix(default).lstrip("-") if path.name.startswith(default) \
+        else path.name
+    label = f"{model} ({mode.replace('_', '-')}{', ' + tag if tag else ''})"
+    return {"id": path.name, "kind": "extraction", "mode": mode, "model": model, "label": label}
 
 
 def _known_run(settings: Settings, run: str) -> str:

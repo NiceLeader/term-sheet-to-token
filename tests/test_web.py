@@ -1,3 +1,4 @@
+import json
 import shutil
 import threading
 
@@ -111,3 +112,22 @@ def test_a_bond_being_read_again_cannot_be_reviewed(tmp_path, monkeypatch):
 
 def test_the_page_is_checked_for_changes_on_every_load(client):
     assert client.get("/app.js").headers["cache-control"] == "no-cache"
+
+
+def test_run_label_comes_from_the_saved_reading(tmp_path):
+    unseen = tmp_path / "agent-muse-spark-1.3-contributor-unseen"
+    unseen.mkdir()
+    (unseen / "a.json").write_text(json.dumps({"mode": "agent",
+                                               "model": "muse-spark-1.3-contributor"}),
+                                   encoding="utf-8")
+    entry = web._run_entry(unseen)
+    assert (entry["mode"], entry["model"]) == ("agent", "muse-spark-1.3-contributor")
+    assert entry["label"] == "muse-spark-1.3-contributor (agent, unseen)"
+    trial = tmp_path / "trial"
+    trial.mkdir()
+    (trial / "a.json").write_text(json.dumps({"mode": "one_pass", "model": "muse-glimmer-30b"}),
+                                  encoding="utf-8")
+    assert web._run_entry(trial)["label"] == "muse-glimmer-30b (one-pass, trial)"
+    empty = tmp_path / "one_pass-muse-glimmer-30b"
+    empty.mkdir()
+    assert web._run_entry(empty)["label"] == "muse-glimmer-30b (one-pass)"

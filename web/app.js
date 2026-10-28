@@ -10,7 +10,8 @@ const ROLES = {
   final_terms: "Final terms", pricing_supplement: "Pricing supplement",
   supplement: "Supplement", base_prospectus: "Base prospectus",
   prospectus_supplement: "Prospectus supplement", prospectus: "Prospectus",
-  offering_circular: "Offering circular", term_sheet: "Term sheet",
+  offering_circular: "Offering circular", offering_memorandum: "Offering memorandum",
+  term_sheet: "Term sheet",
 };
 const CLAUSE_FIELDS = {
   coupon: ["interest_rate", "day_count_fraction", "business_day_convention", "business_day",

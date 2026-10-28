@@ -66,7 +66,7 @@ note, a CEB euro bond, a NIB USD note and two KfW USD global notes.
 | Guard probes rejected on chain | 125 of 125 |
 | Deliberate bugs planted in the bond contract and caught by replaying the 25 bonds and the contract tests | 18 of 18 |
 | Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 281 of 306 |
-| Verified values found on the page they are cited from | 261 of 306 |
+| Verified values found on the page they are cited from | 290 of 306 |
 
 Reading the documents of the first eighteen bonds (bonds for which the model submitted a full
 set of terms, field accuracy of those against the verified terms, bonds whose every payment

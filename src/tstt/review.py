@@ -20,6 +20,9 @@ from tstt.terms import FIELD_BY_NAME, FIELDS, TermsError, parse_value
 
 GROUND_TRUTH = REPO_ROOT / "eval" / "groundtruth"
 TRUTH = "groundtruth"
+# A run folder name: lower-case letters, digits, dots, underscores and dashes, so it cannot
+# leave the extractions folder.
+RUN_NAME = re.compile(r"[a-z0-9][a-z0-9._-]*")
 FIELD_START = re.compile(r'    "([a-z_]+)": ')
 ONE_LINE = 120
 

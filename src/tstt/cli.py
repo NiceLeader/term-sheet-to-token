@@ -12,6 +12,20 @@ from tstt.config import REPO_ROOT, load_settings
 GROUND_TRUTH = REPO_ROOT / "eval" / "groundtruth"
 
 
+def ground_truth_bonds(held_out: bool = False) -> list[str]:
+    """Bonds with verified terms: those labelled after the field rules were frozen when
+    `held_out` is set, otherwise the rest."""
+    from tstt.fetch import load_manifest
+
+    flags = {bond["id"]: bool(bond.get("held_out")) for bond in load_manifest()["bonds"]}
+    return [path.stem for path in sorted(GROUND_TRUTH.glob("*.json"))
+            if flags.get(path.stem, False) is held_out]
+
+
+def run_folder_name(mode: str, model: str, held_out: bool = False) -> str:
+    return f"{mode}-{model}" + ("-unseen" if held_out else "")
+
+
 def _cmd_fetch(args: argparse.Namespace) -> int:
     from tstt.fetch import fetch_all
 
@@ -86,14 +100,19 @@ def _cmd_verify(args: argparse.Namespace) -> int:
 def _cmd_extract(args: argparse.Namespace) -> int:
     from tstt.extract import agent, bond_source, one_pass
     from tstt.llm import ModelError, SpendLimitReached, make_client
-    from tstt.review import discard
+    from tstt.review import RUN_NAME, discard
 
+    if args.run is not None and not RUN_NAME.fullmatch(args.run):
+        print(f"run name {args.run!r} must be lower-case letters, digits, '.', '_' or '-'",
+              file=sys.stderr)
+        return 2
     settings = load_settings()
     client = make_client(args.model, settings)
     if args.effort and hasattr(client, "effort"):
         client.effort = args.effort
-    folder = settings.runs_dir / "extractions" / (args.run or f"{args.mode}-{client.model}")
-    bonds = args.bond or [p.stem for p in sorted(GROUND_TRUTH.glob("*.json"))]
+    run_name = args.run or run_folder_name(args.mode, client.model, args.held_out)
+    folder = settings.runs_dir / "extractions" / run_name
+    bonds = args.bond or ground_truth_bonds(args.held_out)
     failed = 0
     for bond_id in bonds:
         source = bond_source(settings, bond_id)
@@ -208,12 +227,17 @@ def main(argv: list[str] | None = None) -> int:
     check.set_defaults(func=_cmd_verify)
 
     extract = sub.add_parser("extract", help="extract bond terms with a Meta model")
-    extract.add_argument("bond", nargs="*", help="bond ids (default: all with ground truth)")
+    extract.add_argument("bond", nargs="*",
+                         help="bond ids (default: all with verified terms but the held-out ones)")
     extract.add_argument("--model", choices=["hosted", "local"], default="hosted",
                          help="hosted Muse Spark or local Muse Glimmer")
     extract.add_argument("--mode", choices=["one_pass", "agent"], default="one_pass")
     extract.add_argument("--effort", help="effort level for the hosted model (low, medium, high)")
-    extract.add_argument("--run", help="name of the run folder (default: <mode>-<model>)")
+    extract.add_argument("--held-out", action="store_true",
+                         help="read the bonds labelled after the field rules were frozen "
+                              "(default folder: <mode>-<model>-unseen)")
+    extract.add_argument("--run", help="name of the run folder: lower-case letters, digits, "
+                                       "'.', '_' and '-' (default: <mode>-<model>)")
     extract.set_defaults(func=_cmd_extract)
 
     mutate = sub.add_parser("mutate", help="inject known errors and count how many are caught")
