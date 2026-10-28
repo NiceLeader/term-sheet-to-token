@@ -76,7 +76,10 @@ def test_two_runs_are_compared_against_the_verified_terms(tmp_path):
     scored = settings.runs_dir / "eval" / "a.json"
     old = scored.stat().st_mtime - 100
     os.utime(scored, (old, old))
-    assert compare_runs(settings, "a", "b", truth)["summary"]["checks_missing"] == ["a", "b"]
+    result = compare_runs(settings, "a", "b", truth)
+    assert result["summary"]["checks_missing"] == ["a", "b"]
+    assert result["bonds"][0]["wrong_a"]["currency"]["flagged"] is False
+    assert result["summary"]["wrong_flagged_by_checks"] == 0
 
 
 def test_a_missing_run_or_bond_is_an_error(tmp_path):

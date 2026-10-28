@@ -459,8 +459,11 @@ def create_app(settings: Settings | None = None,
     @app.get("/api/results")
     def results() -> JSONResponse:
         folder = settings.runs_dir
+        # The eval folder also holds the comparisons of two runs (second-*.json), whose
+        # summary names two runs; the table shows one run per row.
+        scored = [_read_json(p) for p in sorted((folder / "eval").glob("*.json"))]
         return JSONResponse({
-            "eval": [_read_json(p)["summary"] for p in sorted((folder / "eval").glob("*.json"))],
+            "eval": [s["summary"] for s in scored if s and "run" in s.get("summary", {})],
             "terms": (_read_json(folder / "mutation" / "terms.json") or {}).get("summary"),
             "contracts": (_read_json(folder / "mutation" / "contracts.json")
                           or {}).get("mutants"),

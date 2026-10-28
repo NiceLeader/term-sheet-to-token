@@ -104,41 +104,42 @@ def compare_runs(settings: Settings, run_a: str, run_b: str, ground_truth: Path,
                    and not (folder / run_b / f"{b}.json").exists()]
         if unknown:
             raise FileNotFoundError(f"no reading of {', '.join(unknown)} in either run")
-    flagged, scored_at, fresh = {}, {}, {}
-    for run in (run_a, run_b):
-        flagged[run], scored_at[run] = _flagged_by_checks(settings, run)
-        fresh[run] = scored_at[run] is not None
-    rows = []
+    pairs = []
     for path in sorted((folder / run_a).glob("*.json")):
-        bond_id = path.stem
-        if bonds and bond_id not in bonds:
-            continue
         other = folder / run_b / path.name
-        if not other.exists():
-            continue
-        a, b = Extraction.load(path), Extraction.load(other)
-        if a.error or b.error:
-            continue
+        if (not bonds or path.stem in bonds) and other.exists():
+            a, b = Extraction.load(path), Extraction.load(other)
+            if not (a.error or b.error):
+                pairs.append((path.stem, a, b, {run_a: path, run_b: other}))
+    # An eval counts only while it is newer than every reading compared and covers each of
+    # them; a stale eval contributes no flags at all.
+    flagged, checks_missing = {}, []
+    for run in (run_a, run_b):
+        found, scored_at = _flagged_by_checks(settings, run)
+        fresh = scored_at is not None and all(
+            bond_id in found and files[run].stat().st_mtime <= scored_at
+            for bond_id, _, _, files in pairs)
+        flagged[run] = found if fresh else {}
+        if not fresh:
+            checks_missing.append(run)
+    rows = []
+    for bond_id, a, b, _ in pairs:
         values_a, values_b = a.values(), b.values()
         differ = differing(values_a, values_b)
         row: dict[str, Any] = {"bond_id": bond_id, "fields": len(FIELDS), "differing": differ}
-        truth_path = ground_truth / path.name
+        truth_path = ground_truth / f"{bond_id}.json"
         if truth_path.exists():
             truth = json.loads(truth_path.read_text(encoding="utf-8"))
             true_values = {n: f.get("value") for n, f in truth["fields"].items()}
-            for side, values, run, file in (("a", values_a, run_a, path),
-                                            ("b", values_b, run_b, other)):
+            for side, values, run in (("a", values_a, run_a), ("b", values_b, run_b)):
                 wrong = sorted(_wrong(values, true_values))
                 row[f"wrong_{side}"] = {
                     name: {"differs": name in differ,
                            "flagged": name in flagged[run].get(bond_id, set())}
                     for name in wrong}
-                fresh[run] = (fresh[run] and bond_id in flagged[run]
-                              and file.stat().st_mtime <= scored_at[run])
         rows.append(row)
 
     wrong = [w for r in rows for side in ("a", "b") for w in r.get(f"wrong_{side}", {}).values()]
-    checks_missing = [run for run in (run_a, run_b) if not fresh[run]]
     summary = {
         "runs": [run_a, run_b], "bonds": len(rows),
         "fields_compared": sum(r["fields"] for r in rows),
