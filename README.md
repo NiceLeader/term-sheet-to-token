@@ -16,6 +16,8 @@ to the highlighted sentence it came from, and every payment next to the clauses 
 approves or corrects each term, and issues the token only when all of them are reviewed and the
 replay raises no red flag.
 
+![The review screen: the terms Muse Spark read from the Hong Kong SAR digital green bond, the pricing supplement page with the sentence it relied on marked, and every coupon with the amounts from the engine, QuantLib, the token and the documents](docs/review-screen.png)
+
 Built for the Meta Global AI Developer Hackathon, October to November 2026.
 
 ## How Meta's models are used
@@ -23,7 +25,7 @@ Built for the Meta Global AI Developer Hackathon, October to November 2026.
 | Model | Where it runs | What it does |
 |---|---|---|
 | Muse Spark | Meta Model API (Responses API) | Reads the documents of a bond in two ways: in one pass, with all documents in context and a strict JSON schema for the answer, or as an agent that calls four tools (`list_documents`, `search`, `read_page`, `submit_terms`) until its submission passes validation. |
-| Muse Glimmer | Open weights on the reviewer's own machine, through a local chat completions server (LM Studio or llama.cpp) | The same agent, for documents that should not leave the building. On a single RTX 5090 it reads a bond in about six and a half minutes. |
+| Muse Glimmer | Open weights on the reviewer's own machine, through a local chat completions server (LM Studio or llama.cpp) | The same agent, for documents that should not leave the building. On a single RTX 5090 it reads a bond in under four minutes. |
 
 Every field the model returns carries the quote it relied on and the page of the document,
 both where the value is stated (the final terms) and where the term is defined (the base
@@ -61,27 +63,36 @@ Motor Credit, John Deere Capital and PACCAR Financial.
 | Deliberate errors planted in the verified terms that change a cash flow, flagged before issuance | 204 of 220 |
 | Verified values found on the page they are cited from | 214 of 220 |
 
-<!-- Muse Glimmer row: fill in after its full run on the 18 bonds. -->
-Reading the documents (field accuracy against the verified terms, bonds whose every payment
-comes out right, quotes found on the cited page, time and cost per bond):
+Reading the documents (bonds for which the model submitted a full set of terms, field accuracy
+of those against the verified terms, bonds whose every payment comes out right, quotes found on
+the cited page, time and cost per bond):
 
-| Model and mode | Bonds | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
+| Model and mode | Terms submitted | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
 |---|---|---|---|---|---|---|
-| Muse Spark 1.3, agent | 18 | 99.7% | 18 of 18 | 508 of 517 | 196 s | $0.008 |
-| Muse Spark 1.3, one pass | 18 | 99.5% | 17 of 18 | 447 of 487 | 79 s | $0.015 |
-| Muse Glimmer, agent (local) | | | | | | none |
+| Muse Spark 1.3, agent | 18 of 18 | 99.2% | 18 of 18 | 503 of 530 | 292 s | $0.009 |
+| Muse Spark 1.3, one pass | 18 of 18 | 99.7% | 18 of 18 | 473 of 529 | 84 s | $0.015 |
+| Muse Glimmer 30B, agent (local) | 15 of 18 | 96.1% | 10 of 15 | 364 of 395 | 222 s | none |
 
 Muse Spark ran on the Contributor tier of the Meta Model API (the same model at a lower price,
 in exchange for the inputs being usable for training; the documents are public). Agent mode
 costs less than one pass because it reads only the pages it searches for, not the whole
 prospectus.
 
-Of 378 values, agent mode got one wrong and the single pass two. Both took the record date of one
-Hong Kong euro bond from the rule for registered notes instead of the rule for the global
-certificate held in the clearing system. That date changes no payment amount, so no check flags
-it: this is the kind of error the reviewer is there for. In one pass the model also left the
-redemption amount of the Toyota note empty (the US prospectus implies par and never prints
-"100 per cent"); the token cannot be built without it, so the bond is stopped before issuance.
+Of 396 values, the single pass got one wrong and agent mode three. Both modes kept London and
+Stockholm among the business day centres of the EIB krona note, where the base prospectus says
+that once T2 is listed only TARGET days count. Agent mode also took the record date of one Hong
+Kong euro bond from the rule for registered notes instead of the rule for the global certificate
+held in the clearing system, and wrote the issuer of the KfW note with its seat ("KfW,
+Frankfurt/Main, Federal Republic of Germany"). None of these changes the amount or the date of a
+payment, so the replay cannot catch them: this is the kind of error the reviewer is there for.
+
+Muse Glimmer, the 30B open-weights model running locally, read fifteen of the eighteen bonds to
+the end; for three (Deere, IBRD EUR, Toyota) it never produced a complete set of terms within
+its step budget. Of the 330 values it did submit, 317 are right. Its most frequent mistake is to
+read "Business Day Convention: Not Applicable" or "not adjusted" as no convention at all,
+instead of the payment on the next business day that the conditions provide for; that moves
+payment dates, and the consistency checks flag it. Nine of its thirteen wrong values are
+flagged before issuance.
 
 The errors that get through are listed in `tstt mutate terms`: values that are implied rather
 than written (a first payment date that follows from the cycle, redemption at par in a US
@@ -107,6 +118,7 @@ src/tstt/        Python package and the `tstt` command
   web.py         review screen;  review.py  reviewer sign-off and issuance
 contracts/       BondToken.sol and CashToken.sol (Foundry), with tests
 eval/groundtruth one file of verified terms per bond, each value with its page
+eval/results     score of each extraction run behind the tables above
 sources/         manifest of the public documents: URL, size, SHA-256
 web/             review screen (plain HTML, CSS and JavaScript)
 ```
@@ -205,3 +217,7 @@ the whole bond against QuantLib and the printed amounts.
   their own; each value cites its page so it can be checked.
 - The field rules given to the models were refined while reading these eighteen bonds. There
   is no held-out set, so the accuracy figures are likely higher than on unseen documents.
+
+## License
+
+Apache License 2.0, see `LICENSE`.

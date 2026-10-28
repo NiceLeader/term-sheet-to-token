@@ -1,0 +1,516 @@
+{
+ "summary": {
+  "run": "agent-muse-glimmer-30b",
+  "bonds": 18,
+  "submitted": 15,
+  "field_accuracy": 0.9606,
+  "bonds_all_fields_correct": 4,
+  "bonds_cash_flows_match": 10,
+  "payments_matching": "120/131",
+  "quotes_on_page": "364/395",
+  "wrong_fields_flagged": "9/13",
+  "cost_usd": null,
+  "seconds_per_bond": 222.3
+ },
+ "bonds": [
+  {
+   "bond_id": "adb-cad-2600-2028",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "rounding_rule": {
+     "expected": "HALF_UP",
+     "extracted": "UP"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 7,
+   "payments_matching": 7,
+   "quotes": 27,
+   "quotes_on_page": 25,
+   "errors": 0,
+   "warnings": 6,
+   "wrong_flagged": [
+    "rounding_rule"
+   ],
+   "seconds": 143.8,
+   "steps": 48,
+   "input_tokens": 1098822,
+   "cached_tokens": 0,
+   "output_tokens": 8090,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "adb-usd-4250-2036",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "rounding_rule": {
+     "expected": "NOT_STATED",
+     "extracted": "HALF_UP"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 21,
+   "payments_matching": 21,
+   "quotes": 28,
+   "quotes_on_page": 26,
+   "errors": 0,
+   "warnings": 2,
+   "wrong_flagged": [],
+   "seconds": 209.3,
+   "steps": 32,
+   "input_tokens": 676599,
+   "cached_tokens": 0,
+   "output_tokens": 13975,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "ceb-gbp-3875-2029",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "record_date": {
+     "expected": null,
+     "extracted": "Close of business on Clearing System Business Day before due date"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 4,
+   "payments_matching": 4,
+   "quotes": 23,
+   "quotes_on_page": 23,
+   "errors": 0,
+   "warnings": 2,
+   "wrong_flagged": [],
+   "seconds": 292.7,
+   "steps": 48,
+   "input_tokens": 1490218,
+   "cached_tokens": 0,
+   "output_tokens": 18185,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "deere-usd-4800-2029",
+   "fields_total": 0,
+   "fields_correct": 0,
+   "wrong": {},
+   "flows_match": null,
+   "flows_detail": "",
+   "payments": 0,
+   "payments_matching": 0,
+   "quotes": 0,
+   "quotes_on_page": 0,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [],
+   "seconds": 288.1,
+   "steps": 50,
+   "input_tokens": 1104184,
+   "cached_tokens": 0,
+   "output_tokens": 18444,
+   "cost_usd": null,
+   "error": "last submission not accepted: missing terms needed for the schedule: currency, aggregate_nominal_amount, specified_denomination, issue_date, maturity_date, interest_rate, coupon_frequency, first_interest_payment_date, day_count_fraction, business_day_convention, final_redemption_amount"
+  },
+  {
+   "bond_id": "eib-sek-2680-2029",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "business_day": {
+     "expected": [
+      "TARGET"
+     ],
+     "extracted": [
+      "London",
+      "Stockholm",
+      "T2"
+     ]
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 5,
+   "payments_matching": 5,
+   "quotes": 25,
+   "quotes_on_page": 18,
+   "errors": 0,
+   "warnings": 7,
+   "wrong_flagged": [],
+   "seconds": 155.7,
+   "steps": 45,
+   "input_tokens": 850995,
+   "cached_tokens": 0,
+   "output_tokens": 9658,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "hksar-cny-1900-2030",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 11,
+   "payments_matching": 11,
+   "quotes": 29,
+   "quotes_on_page": 25,
+   "errors": 0,
+   "warnings": 2,
+   "wrong_flagged": [],
+   "seconds": 200.8,
+   "steps": 48,
+   "input_tokens": 962828,
+   "cached_tokens": 0,
+   "output_tokens": 12184,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "hksar-eur-2500-2029",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "business_day_convention": {
+     "expected": "FOLLOWING",
+     "extracted": "NONE"
+    }
+   },
+   "flows_match": false,
+   "flows_detail": "('coupon', '2028-11-13', Decimal('1.25E+3'), Decimal('8.75E+3')) vs ('coupon', '2028-11-11', Decimal('1.25E+3'), Decimal('8.75E+3'))",
+   "payments": 9,
+   "payments_matching": 6,
+   "quotes": 34,
+   "quotes_on_page": 30,
+   "errors": 0,
+   "warnings": 4,
+   "wrong_flagged": [
+    "business_day_convention"
+   ],
+   "seconds": 178.9,
+   "steps": 48,
+   "input_tokens": 1024419,
+   "cached_tokens": 0,
+   "output_tokens": 10900,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "hksar-eur-3375-2031",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "record_date": {
+     "expected": "Close of business on the Clearing System Business Day immediately prior to the date for payment (Global Certificate)",
+     "extracted": "fifteenth day before due date"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 8,
+   "payments_matching": 8,
+   "quotes": 25,
+   "quotes_on_page": 23,
+   "errors": 0,
+   "warnings": 3,
+   "wrong_flagged": [
+    "record_date"
+   ],
+   "seconds": 249.6,
+   "steps": 48,
+   "input_tokens": 1329319,
+   "cached_tokens": 0,
+   "output_tokens": 15488,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "hksar-hkd-2500-2027",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 5,
+   "payments_matching": 5,
+   "quotes": 26,
+   "quotes_on_page": 23,
+   "errors": 0,
+   "warnings": 3,
+   "wrong_flagged": [],
+   "seconds": 171.1,
+   "steps": 45,
+   "input_tokens": 950010,
+   "cached_tokens": 0,
+   "output_tokens": 11203,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "hksar-usd-3625-2028",
+   "fields_total": 22,
+   "fields_correct": 20,
+   "wrong": {
+    "issuer": {
+     "expected": "The Government of the Hong Kong Special Administrative Region of the People’s Republic of China",
+     "extracted": "Government of the Hong Kong Special Administrative Region of the People's Republic of China"
+    },
+    "business_day_convention": {
+     "expected": "FOLLOWING",
+     "extracted": "NONE"
+    }
+   },
+   "flows_match": false,
+   "flows_detail": "('coupon', '2028-11-13', Decimal('3624'), Decimal('25375')) vs ('coupon', '2028-11-12', Decimal('3624'), Decimal('25375'))",
+   "payments": 7,
+   "payments_matching": 5,
+   "quotes": 24,
+   "quotes_on_page": 23,
+   "errors": 0,
+   "warnings": 4,
+   "wrong_flagged": [
+    "business_day_convention"
+   ],
+   "seconds": 216.0,
+   "steps": 48,
+   "input_tokens": 1160744,
+   "cached_tokens": 0,
+   "output_tokens": 13411,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "ibrd-aud-4400-2028",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "business_day_convention": {
+     "expected": "FOLLOWING",
+     "extracted": "NONE"
+    }
+   },
+   "flows_match": false,
+   "flows_detail": "('coupon', '2024-01-15', Decimal('22'), Decimal('154')) vs ('coupon', '2024-01-13', Decimal('22'), Decimal('154'))",
+   "payments": 11,
+   "payments_matching": 8,
+   "quotes": 23,
+   "quotes_on_page": 22,
+   "errors": 0,
+   "warnings": 6,
+   "wrong_flagged": [
+    "business_day_convention"
+   ],
+   "seconds": 308.6,
+   "steps": 48,
+   "input_tokens": 1615044,
+   "cached_tokens": 0,
+   "output_tokens": 16866,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "ibrd-chf-0485-2032",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "business_day_convention": {
+     "expected": "FOLLOWING",
+     "extracted": "NONE"
+    }
+   },
+   "flows_match": false,
+   "flows_detail": "('coupon', '2028-06-20', Decimal('485'), Decimal('3395')) vs ('coupon', '2028-06-17', Decimal('485'), Decimal('3395'))",
+   "payments": 8,
+   "payments_matching": 6,
+   "quotes": 23,
+   "quotes_on_page": 22,
+   "errors": 0,
+   "warnings": 3,
+   "wrong_flagged": [
+    "business_day_convention"
+   ],
+   "seconds": 214.9,
+   "steps": 45,
+   "input_tokens": 895840,
+   "cached_tokens": 0,
+   "output_tokens": 12733,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "ibrd-eur-3399-2026",
+   "fields_total": 0,
+   "fields_correct": 0,
+   "wrong": {},
+   "flows_match": null,
+   "flows_detail": "",
+   "payments": 0,
+   "payments_matching": 0,
+   "quotes": 0,
+   "quotes_on_page": 0,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [],
+   "seconds": 195.5,
+   "steps": 50,
+   "input_tokens": 1041388,
+   "cached_tokens": 0,
+   "output_tokens": 10790,
+   "cost_usd": null,
+   "error": "last submission not accepted: missing terms needed for the schedule: currency, aggregate_nominal_amount, specified_denomination, issue_date, maturity_date, interest_rate, coupon_frequency, first_interest_payment_date, day_count_fraction, business_day_convention, final_redemption_amount"
+  },
+  {
+   "bond_id": "ibrd-gbp-0750-2026",
+   "fields_total": 22,
+   "fields_correct": 20,
+   "wrong": {
+    "calculation_amount": {
+     "expected": null,
+     "extracted": "1000"
+    },
+    "business_day_convention": {
+     "expected": "FOLLOWING",
+     "extracted": "NONE"
+    }
+   },
+   "flows_match": false,
+   "flows_detail": "('coupon', '2024-12-16', Decimal('7.5'), Decimal('52.5')) vs ('coupon', '2024-12-15', Decimal('7.5'), Decimal('52.5'))",
+   "payments": 8,
+   "payments_matching": 7,
+   "quotes": 28,
+   "quotes_on_page": 24,
+   "errors": 0,
+   "warnings": 7,
+   "wrong_flagged": [
+    "business_day_convention",
+    "calculation_amount"
+   ],
+   "seconds": 176.7,
+   "steps": 23,
+   "input_tokens": 327921,
+   "cached_tokens": 0,
+   "output_tokens": 11050,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "kfw-usd-4500-2031",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "stated_coupon_amounts": {
+     "expected": [
+      {
+       "date": "2026-10-10",
+       "amount": "9000000.00",
+       "per": "3000000000"
+      }
+     ],
+     "extracted": [
+      {
+       "date": null,
+       "amount": "45",
+       "per": "1000"
+      },
+      {
+       "date": "2026-10-10",
+       "amount": "9.000000",
+       "per": "3000000000"
+      }
+     ]
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 12,
+   "payments_matching": 12,
+   "quotes": 28,
+   "quotes_on_page": 28,
+   "errors": 2,
+   "warnings": 7,
+   "wrong_flagged": [
+    "stated_coupon_amounts"
+   ],
+   "seconds": 173.0,
+   "steps": 48,
+   "input_tokens": 1196804,
+   "cached_tokens": 0,
+   "output_tokens": 9311,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "korea-eur-3250-2033",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 8,
+   "payments_matching": 8,
+   "quotes": 31,
+   "quotes_on_page": 31,
+   "errors": 0,
+   "warnings": 7,
+   "wrong_flagged": [],
+   "seconds": 202.1,
+   "steps": 48,
+   "input_tokens": 1301053,
+   "cached_tokens": 0,
+   "output_tokens": 11321,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "paccar-usd-4750-2029",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 7,
+   "payments_matching": 7,
+   "quotes": 21,
+   "quotes_on_page": 21,
+   "errors": 0,
+   "warnings": 4,
+   "wrong_flagged": [],
+   "seconds": 440.7,
+   "steps": 49,
+   "input_tokens": 1236203,
+   "cached_tokens": 0,
+   "output_tokens": 26610,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "toyota-usd-4500-2029",
+   "fields_total": 0,
+   "fields_correct": 0,
+   "wrong": {},
+   "flows_match": null,
+   "flows_detail": "",
+   "payments": 0,
+   "payments_matching": 0,
+   "quotes": 0,
+   "quotes_on_page": 0,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [],
+   "seconds": 282.7,
+   "steps": 50,
+   "input_tokens": 1437039,
+   "cached_tokens": 0,
+   "output_tokens": 14319,
+   "cost_usd": null,
+   "error": "last submission not accepted: missing terms needed for the schedule: currency, aggregate_nominal_amount, specified_denomination, issue_date, maturity_date, interest_rate, coupon_frequency, first_interest_payment_date, day_count_fraction, business_day_convention, final_redemption_amount"
+  }
+ ]
+}

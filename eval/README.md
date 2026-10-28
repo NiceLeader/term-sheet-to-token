@@ -58,4 +58,12 @@ terms") records that check field by field, writes any correction into the file, 
 | `rounding_rule` | Rounding of coupon amounts to the sub-unit: `HALF_UP`, `HALF_EVEN`, `DOWN`, `UP`, `NOT_STATED` |
 | `interest_on_holding` | `true` if interest is calculated on the whole amount in each holder's account and rounded once, `false` if per calculation amount or per note |
 | `stated_coupon_amounts` | Coupon amounts printed in the documents, list of `{"date": "YYYY-MM-DD" or null, "amount": "33.99", "per": "1000"}`; a fixed coupon amount that applies to every regular date has `date: null` |
+
+## Results
+
+`results/<run>.json` is the output of `tstt eval` for each extraction run reported in the main
+README: a summary (field accuracy, bonds whose cash flows match, quotes found on the cited page,
+time and cost per bond) and one record per bond with the fields the model got wrong, each with
+the expected and the extracted value. The extractions themselves are not in the repository,
+because their tool logs contain pages of the documents.
 | `record_date` | Record date rule as a short phrase, or `null` |
