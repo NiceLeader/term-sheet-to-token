@@ -28,10 +28,10 @@
     },
     "accrual_adjusted": {"value": false, "doc": "eib-eu000a4etda0-ft", "page": 5},
     "business_day": {
-      "value": ["London", "Stockholm", "TARGET"],
+      "value": ["TARGET"],
       "doc": "eib-eu000a4etda0-ft", "page": 5,
       "definition": {"doc": "eib-dip-2025", "page": 27},
-      "check": "Final Terms list 'London, Stockholm and T2'. The Business Day definition (a)(i) says that if T2 is specified as a Business Day Centre, a payment Business Day is a TARGET Settlement Day; read literally, London and Stockholm would then not count."
+      "check": "Final Terms list 'London, Stockholm and T2'. The Business Day definition (a)(i) says that if T2 is specified as a Business Day Centre, a Business Day for payments is a TARGET Settlement Day, so London and Stockholm do not count."
     },
     "final_redemption_amount": {"value": "100", "doc": "eib-eu000a4etda0-ft", "page": 6},
     "stated_coupon_amounts": {
