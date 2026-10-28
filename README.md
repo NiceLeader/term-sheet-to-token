@@ -249,6 +249,23 @@ the whole bond against QuantLib and the printed amounts.
   also appear among the eighteen, so they test unseen documents more than unseen drafting
   styles.
 
+## Where this goes
+
+The reviewer today is the second person who checks a colleague's keying against the PDF. The
+same reading, evidence and replay serve more than a new issue:
+
+- Bonds already outstanding exist only as prose. Reading their documents and comparing the
+  result with the terms configured in an existing token or issuance system turns the check
+  between paper and code into a control that can run on a whole book of bonds.
+- Exporting the terms as an ICMA Bond Data Taxonomy record, for issuance platforms and for the
+  comparison with vendor data that treasuries already run.
+- A second reading by a different model, with the disagreements shown to the reviewer next to
+  the flags of the consistency checks: two independent readers make different mistakes.
+- Floating-rate, callable and amortising notes: more fields and the fixings of a reference
+  rate, the same quotes and the same replay.
+- A fully local installation, Muse Glimmer with a local chain, for institutions that cannot send
+  documents outside, with the accuracy gap to the hosted model measured as here.
+
 ## License
 
 Apache License 2.0, see `LICENSE`.
