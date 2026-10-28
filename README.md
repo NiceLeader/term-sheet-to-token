@@ -186,7 +186,8 @@ forge test --root contracts
 
 uv run tstt verify                # deploy and replay all 25 bonds from the verified terms
 uv run tstt extract ibrd-gbp-0750-2026 --model hosted --mode agent
-uv run tstt verify ibrd-gbp-0750-2026 --extraction <data dir>/runs/extractions/agent-muse-spark-1.3
+uv run tstt verify ibrd-gbp-0750-2026 --extraction <data dir>/runs/extractions/agent-muse-spark-1.3-contributor
+uv run tstt extract --held-out    # the seven bonds read after the field rules were frozen
 uv run tstt mutate                # planted errors and planted contract bugs
 uv run tstt eval                  # score every extraction run
 uv run tstt serve                 # review screen on http://127.0.0.1:8000
