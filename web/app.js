@@ -732,7 +732,7 @@ async function showResults() {
       <div class="card"><div class="big">${payments}</div><div class="what">payments on ${truth.length} bonds where the engine, QuantLib, the token on chain and the printed amounts ${allOk ? "all agree" : "do not all agree"}</div></div>
       <div class="card"><div class="big">${probes}/${probesTotal}</div><div class="what">guard probes rejected on chain (early payment, wrong payer, double payment, early redemption, unpaid coupon)</div></div>
       <div class="card"><div class="big">${mutants.filter((m) => m.caught).length}/${mutants.length}</div><div class="what">deliberate bugs in the bond contract caught by replaying the 18 bonds and the contract tests</div></div>
-      <div class="card"><div class="big">${caught}/${withEffect}</div><div class="what">injected term errors that change a cash flow, flagged before issuance</div></div>
+      <div class="card"><div class="big">${caught}/${withEffect}</div><div class="what">injected term errors that change a cash flow, flagged by the consistency checks before issuance</div></div>
     </div>`;
   if (results.eval.length) {
     html += `<h2>Reading the documents</h2><div class="table-wrap"><table><tr><th>Model</th><th class="num">Bonds</th><th class="num">Field accuracy</th><th class="num">Bonds with all cash flows right</th><th class="num">Quotes on cited page</th><th class="num">Time per bond</th><th class="num">Cost</th></tr>` +
