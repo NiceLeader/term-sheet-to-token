@@ -84,6 +84,13 @@ Field rules:
 - Amounts are plain decimals without separators or currency, e.g. "100000000".
 """
 
+# The schema of the answer describes every field, but a model does not always follow the
+# descriptions in an output schema (Muse Wonder did not), so the single pass repeats them in
+# the instructions. Agent mode gets them as the parameters of submit_terms.
+ONE_PASS_INSTRUCTIONS = INSTRUCTIONS + """
+The value of each field:
+""" + "".join(f"- {spec.name}: {spec.description}\n" for spec in FIELDS)
+
 AGENT_INSTRUCTIONS = INSTRUCTIONS + """
 You cannot see the documents directly. Use list_documents, search and read_page to find each
 term, read the pages you cite, and call submit_terms once with all fields. If submit_terms
@@ -212,7 +219,7 @@ def one_pass(client: MetaClient | LocalClient, source: BondSource) -> Extraction
     # Documents first, target last: repeated runs on the same bond reuse the cached prefix.
     body = "\n\n".join(render_for_model(doc, role) for doc, role in source.documents)
     user = f"{body}\n\n{target_line(source)}"
-    reply = client.structured(INSTRUCTIONS, user, "bond_terms", extraction_schema())
+    reply = client.structured(ONE_PASS_INSTRUCTIONS, user, "bond_terms", extraction_schema())
     fields = reply.json()["fields"]
     return Extraction(source.bond_id, "one_pass", client.model, fields, reply.usage,
                       reply.seconds, reply.usage.cost(client.model))

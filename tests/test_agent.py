@@ -88,3 +88,16 @@ def test_rejected_forced_choice_is_sent_again_as_auto(monkeypatch):
     monkeypatch.setattr(llm, "_post", fake_post)
     assert llm._post_tools(None, "u", {"tool_choice": "required"}) == {"ok": True}
     assert [b["tool_choice"] for b in bodies] == ["required", "auto"]
+
+
+def test_one_pass_instructions_describe_every_field_and_the_agent_gets_them_as_a_tool():
+    from tstt.extract import AGENT_INSTRUCTIONS, ONE_PASS_INSTRUCTIONS, TOOLS
+    from tstt.terms import FIELDS
+
+    for spec in FIELDS:
+        assert f"- {spec.name}: {spec.description}" in ONE_PASS_INSTRUCTIONS
+        assert f"- {spec.name}: " not in AGENT_INSTRUCTIONS
+    submit = next(t for t in TOOLS if t["name"] == "submit_terms")
+    fields = submit["parameters"]["properties"]["fields"]["properties"]
+    assert all(fields[spec.name]["properties"]["value"]["description"] == spec.description
+               for spec in FIELDS)

@@ -28,6 +28,7 @@ Built for the Meta Global AI Developer Hackathon, October to November 2026.
 |---|---|---|
 | Muse Spark | Meta Model API (Responses API) | Reads the documents of a bond in two ways: in one pass, with all documents in context and a strict JSON schema for the answer, or as an agent that calls four tools (`list_documents`, `search`, `read_page`, `submit_terms`) until its submission passes validation. |
 | Muse Glimmer | Open weights on the reviewer's own machine, through a local chat completions server (LM Studio or llama.cpp) | The same agent, for documents that should not leave the building. On a single RTX 5090 it reads a bond in under four minutes. |
+| Muse Wonder | Meta Model API (Responses API), in preview | The same agent and the same single pass, run on every bond as a second reading beside Spark's: the terms where the two models differ are marked for the reviewer. |
 
 Every field the model returns carries the quote it relied on and the page of the document,
 both where the value is stated (the final terms) and where the term is defined (the base
@@ -69,6 +70,7 @@ note, a CEB euro bond, a NIB USD note and two KfW USD global notes.
 | Deliberate errors planted in the verified terms that change a cash flow, flagged by the consistency checks before issuance | 290 of 306 |
 | Verified values found on the page they are cited from | 299 of 306 |
 | Wrong values in the readings of Spark and Glimmer, marked by a disagreement between the two readings | 14 of 22 |
+| Wrong values in the readings of Spark and Wonder, marked by a disagreement between the two readings | 8 of 14 |
 
 Reading the documents of the first eighteen bonds (bonds for which the model submitted a full
 set of terms, field accuracy of those against the verified terms, bonds whose every payment
@@ -77,13 +79,15 @@ comes out right, quotes found on the cited page, time and cost per bond):
 | Model and mode | Terms submitted | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
 |---|---|---|---|---|---|---|
 | Muse Spark 1.3, agent | 18 of 18 | 99.2% | 18 of 18 | 503 of 530 | 292 s | $0.009 |
-| Muse Spark 1.3, one pass | 18 of 18 | 99.7% | 18 of 18 | 473 of 529 | 84 s | $0.015 |
+| Muse Spark 1.3, one pass | 18 of 18 | 99.7% | 18 of 18 | 478 of 522 | 81 s | $0.015 |
+| Muse Wonder 1.0, agent | 18 of 18 | 98.7% | 18 of 18 | 532 of 542 | 156 s | $0.44 |
+| Muse Wonder 1.0, one pass | 18 of 18 | 90.2% | 5 of 18 | 542 of 577 | 34 s | $0.43 |
 | Muse Glimmer 30B, agent (local) | 15 of 18 | 96.1% | 10 of 15 | 364 of 395 | 222 s | none |
 
 Muse Spark ran on the Contributor tier of the Meta Model API (the same model at a lower price,
 in exchange for the inputs being usable for training; the documents are public). Agent mode
 costs less than one pass because it reads only the pages it searches for, not the whole
-prospectus.
+prospectus. Muse Wonder ran the same code unchanged.
 
 Of 396 values, the single pass got one wrong and agent mode three. Both modes kept London and
 Stockholm among the business day centres of the EIB krona note, where the base prospectus says
@@ -92,6 +96,19 @@ Kong euro bond from the rule for registered notes instead of the rule for the gl
 held in the clearing system, and wrote the issuer of the KfW note with its seat ("KfW,
 Frankfurt/Main, Federal Republic of Germany"). None of these changes the amount or the date of a
 payment, so the replay cannot catch them: this is the kind of error the reviewer is there for.
+
+Muse Wonder as an agent read 391 of the 396 values. Four of its five wrong values are one
+judgement: the final terms of the IBRD notes leave the Calculation Amount blank, and Wonder filled
+in the base prospectus rule that it then equals the minimum denomination, where the verified terms
+keep it blank. The fifth is the business day centres of the EIB krona note, which every reading
+gets wrong. In one pass, with the whole documents in context and a strict schema for the answer,
+Wonder was unreliable. In a first run it wrote the rate as a fraction, the redemption as an amount
+per note and the payment dates as a list of every date, against the formats the schema describes.
+With the formats repeated in the instructions (the single pass now does this for every model), it
+put values into the wrong fields instead, a date as the rate or a day count as the redemption
+amount, or left a value empty while its note gives it. The replay catches most of this: thirteen of
+the eighteen bonds fail the payment check, and the consistency checks flag 24 of its 39 wrong
+values. Spark's single pass shows neither problem.
 
 Muse Glimmer, the 30B open-weights model running locally, read fifteen of the eighteen bonds to
 the end; for three (Deere, IBRD EUR, Toyota) it never produced a complete set of terms within
@@ -106,20 +123,23 @@ The seven bonds fetched and labelled after the field rules were frozen (154 valu
 | Model and mode | Terms submitted | Field accuracy | All payments right | Quotes on page | Time per bond | Cost per bond |
 |---|---|---|---|---|---|---|
 | Muse Spark 1.3, agent | 7 of 7 | 98.1% | 7 of 7 | 184 of 184 | 192 s | $0.006 |
-| Muse Spark 1.3, one pass | 7 of 7 | 98.1% | 7 of 7 | 191 of 198 | 90 s | $0.008 |
+| Muse Spark 1.3, one pass | 7 of 7 | 98.1% | 7 of 7 | 200 of 211 | 83 s | $0.008 |
+| Muse Wonder 1.0, agent | 7 of 7 | 98.1% | 7 of 7 | 200 of 200 | 150 s | $0.41 |
+| Muse Wonder 1.0, one pass | 7 of 7 | 92.2% | 3 of 7 | 194 of 205 | 30 s | $0.34 |
 | Muse Glimmer 30B, agent (local) | 7 of 7 | 98.1% | 7 of 7 | 166 of 166 | 232 s | none |
 
-All three readings miss the same values of the EIB krona note, whose conditions are written
-without the usual labels. Its day count is the 30E/360 wording of the ISDA definitions ("without
-regard to the date of the first day or last day of the period"), and all three read it as
-30/360. Its coupon amounts are rounded "to the nearest SEK (with one half of öre rounded down)",
-which none of the five rounding rules expresses; the verified terms carry half up as the nearest
-rounding, all three models chose rounding down. The single pass and Glimmer also took the
+The three agent readings and Spark's single pass miss the same values of the EIB krona note,
+whose conditions are written without the usual labels. Its day count is the 30E/360 wording of
+the ISDA definitions ("without regard to the date of the first day or last day of the period"),
+and all four read it as 30/360. Its coupon amounts are rounded "to the nearest SEK (with one half
+of öre rounded down)", which none of the five rounding rules expresses; the verified terms carry
+half up as the nearest rounding, all four chose rounding down. Glimmer and Wonder also took the
 interest periods as adjusted, because the payment dates are defined "subject to the Following
 Business Day Convention", although the coupon is a fixed amount per note. Agent mode of Spark
-wrote the KfW issuer with its seat again. None of these changes a payment of the seven bonds;
-the day count is flagged by the checks, the others are not. Glimmer completed all seven bonds
-within its step budget, against fifteen of eighteen before.
+wrote the KfW issuer with its seat again; its single pass took a clause of the NIB note that
+rounds the results of interest rate calculations for a rounding of the coupon. None of these
+changes a payment of the seven bonds; the day count is flagged by the checks, the others are not.
+Glimmer completed all seven bonds within its step budget, against fifteen of eighteen before.
 
 The errors that get through are listed in `tstt mutate terms`: values that are implied rather
 than written (redemption at par in a US prospectus that never says "100 per cent", an interest
@@ -134,6 +154,12 @@ checks flag 11, and one or the other marks 17. The five that pass both are the t
 centres of the EIB krona note, where both models kept London and Stockholm, a record date both
 took from the rule for registered notes, which the checks flag in one reading only, and the
 rounding of the second krona note, which both read as rounding down.
+With Wonder as the second reader, on the 25 bonds that it and Spark read as an agent, the two
+readings hold 14 wrong values; they disagree on 8, the checks flag 3, and one or the other marks
+10. The two models slip on different terms, Wonder on the Calculation Amount of the IBRD notes,
+Spark on the KfW issuer and the record date of one Hong Kong bond, and each is marked by the
+other. What passes both is the krona notes again: the business day centres of one and the
+rounding of the other.
 The review screen shows a second reading beside the first, by default the other model's, and
 marks every term where the two differ, so the reviewer looks there first and approves the terms
 that two readers and the checks agree on quickly (`tstt second` counts the disagreements). On a

@@ -21,6 +21,7 @@ META_BASE_URL = "https://api.meta.ai/v1"
 
 # USD per million tokens: input, cached input, output (dev.meta.ai pricing, October 2026).
 PRICES = {
+    "muse-wonder-1.0": (4.00, 0.20, 20.00),
     "muse-spark-1.3": (1.25, 0.15, 4.25),
     "muse-spark-1.3-contributor": (0.10, 0.002, 0.20),
 }

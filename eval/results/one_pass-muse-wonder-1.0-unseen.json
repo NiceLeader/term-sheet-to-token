@@ -1,0 +1,235 @@
+{
+ "summary": {
+  "run": "one_pass-muse-wonder-1.0-unseen",
+  "bonds": 7,
+  "submitted": 7,
+  "field_accuracy": 0.9221,
+  "bonds_all_fields_correct": 2,
+  "bonds_cash_flows_match": 3,
+  "payments_matching": "32/56",
+  "quotes_on_page": "194/205",
+  "wrong_fields_flagged": "7/12",
+  "cost_usd": 2.3696,
+  "seconds_per_bond": 30.1
+ },
+ "bonds": [
+  {
+   "bond_id": "ceb-eur-3000-2033",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "rounding_rule": {
+     "expected": "HALF_UP",
+     "extracted": "DOWN"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 8,
+   "payments_matching": 8,
+   "quotes": 33,
+   "quotes_on_page": 32,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [],
+   "seconds": 33.6,
+   "steps": 1,
+   "input_tokens": 89501,
+   "cached_tokens": 1140,
+   "output_tokens": 5895,
+   "cost_usd": 0.471572,
+   "error": null
+  },
+  {
+   "bond_id": "eib-eur-2507-2024",
+   "fields_total": 22,
+   "fields_correct": 20,
+   "wrong": {
+    "interest_rate": {
+     "expected": "2.507",
+     "extracted": null
+    },
+    "final_redemption_amount": {
+     "expected": "100",
+     "extracted": null
+    }
+   },
+   "flows_match": null,
+   "flows_detail": "no schedule: missing terms needed for the schedule: interest_rate, final_redemption_amount",
+   "payments": 3,
+   "payments_matching": 0,
+   "quotes": 35,
+   "quotes_on_page": 31,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [
+    "final_redemption_amount",
+    "interest_rate"
+   ],
+   "seconds": 35.7,
+   "steps": 1,
+   "input_tokens": 39339,
+   "cached_tokens": 1140,
+   "output_tokens": 6200,
+   "cost_usd": 0.277024,
+   "error": null
+  },
+  {
+   "bond_id": "eib-sek-3638-2025",
+   "fields_total": 22,
+   "fields_correct": 17,
+   "wrong": {
+    "interest_rate": {
+     "expected": "3.638",
+     "extracted": "..."
+    },
+    "day_count_fraction": {
+     "expected": "THIRTY_E_360",
+     "extracted": "ACT_360"
+    },
+    "accrual_adjusted": {
+     "expected": false,
+     "extracted": true
+    },
+    "final_redemption_amount": {
+     "expected": "100",
+     "extracted": "..."
+    },
+    "rounding_rule": {
+     "expected": "HALF_UP",
+     "extracted": "UP"
+    }
+   },
+   "flows_match": null,
+   "flows_detail": "no schedule: interest_rate: not a decimal: '...'",
+   "payments": 3,
+   "payments_matching": 0,
+   "quotes": 29,
+   "quotes_on_page": 27,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [
+    "final_redemption_amount",
+    "interest_rate"
+   ],
+   "seconds": 33.7,
+   "steps": 1,
+   "input_tokens": 51607,
+   "cached_tokens": 1140,
+   "output_tokens": 6771,
+   "cost_usd": 0.337516,
+   "error": null
+  },
+  {
+   "bond_id": "eib-usd-4375-2031",
+   "fields_total": 22,
+   "fields_correct": 19,
+   "wrong": {
+    "interest_rate": {
+     "expected": "4.375",
+     "extracted": null
+    },
+    "day_count_fraction": {
+     "expected": "THIRTY_360",
+     "extracted": "ACT_360"
+    },
+    "final_redemption_amount": {
+     "expected": "100",
+     "extracted": "}, "
+    }
+   },
+   "flows_match": null,
+   "flows_detail": "no schedule: final_redemption_amount: not a decimal: '}, '",
+   "payments": 12,
+   "payments_matching": 0,
+   "quotes": 23,
+   "quotes_on_page": 23,
+   "errors": 0,
+   "warnings": 0,
+   "wrong_flagged": [
+    "final_redemption_amount",
+    "interest_rate"
+   ],
+   "seconds": 25.5,
+   "steps": 1,
+   "input_tokens": 33352,
+   "cached_tokens": 1140,
+   "output_tokens": 5241,
+   "cost_usd": 0.233896,
+   "error": null
+  },
+  {
+   "bond_id": "kfw-usd-3750-2031",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 12,
+   "payments_matching": 12,
+   "quotes": 29,
+   "quotes_on_page": 25,
+   "errors": 0,
+   "warnings": 5,
+   "wrong_flagged": [],
+   "seconds": 27.7,
+   "steps": 1,
+   "input_tokens": 59615,
+   "cached_tokens": 1140,
+   "output_tokens": 5792,
+   "cost_usd": 0.349968,
+   "error": null
+  },
+  {
+   "bond_id": "kfw-usd-4250-2029",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "day_count_fraction": {
+     "expected": "THIRTY_360",
+     "extracted": "ACT_365_FIXED"
+    }
+   },
+   "flows_match": false,
+   "flows_detail": "('coupon', '2027-02-01', Decimal('23.02'), Decimal('161.14')) vs ('coupon', '2027-02-01', Decimal('23.17'), Decimal('162.19'))",
+   "payments": 7,
+   "payments_matching": 1,
+   "quotes": 30,
+   "quotes_on_page": 30,
+   "errors": 1,
+   "warnings": 4,
+   "wrong_flagged": [
+    "day_count_fraction"
+   ],
+   "seconds": 29.6,
+   "steps": 1,
+   "input_tokens": 69728,
+   "cached_tokens": 1140,
+   "output_tokens": 5721,
+   "cost_usd": 0.389,
+   "error": null
+  },
+  {
+   "bond_id": "nib-usd-3750-2031",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 11,
+   "payments_matching": 11,
+   "quotes": 26,
+   "quotes_on_page": 26,
+   "errors": 0,
+   "warnings": 3,
+   "wrong_flagged": [],
+   "seconds": 24.7,
+   "steps": 1,
+   "input_tokens": 52610,
+   "cached_tokens": 1140,
+   "output_tokens": 5225,
+   "cost_usd": 0.310608,
+   "error": null
+  }
+ ]
+}

@@ -1,0 +1,100 @@
+{
+ "summary": {
+  "runs": [
+   "agent-muse-spark-1.3-contributor-unseen",
+   "one_pass-muse-spark-1.3-contributor-unseen"
+  ],
+  "bonds": 7,
+  "fields_compared": 154,
+  "fields_differing": 2,
+  "wrong_values": 6,
+  "wrong_differing": 2,
+  "wrong_flagged_by_checks": 2,
+  "wrong_caught_either": 4,
+  "checks_from_eval": true,
+  "checks_missing": []
+ },
+ "bonds": [
+  {
+   "bond_id": "ceb-eur-3000-2033",
+   "fields": 22,
+   "differing": [],
+   "wrong_a": {},
+   "wrong_b": {}
+  },
+  {
+   "bond_id": "eib-eur-2507-2024",
+   "fields": 22,
+   "differing": [],
+   "wrong_a": {},
+   "wrong_b": {}
+  },
+  {
+   "bond_id": "eib-sek-3638-2025",
+   "fields": 22,
+   "differing": [],
+   "wrong_a": {
+    "day_count_fraction": {
+     "differs": false,
+     "flagged": true
+    },
+    "rounding_rule": {
+     "differs": false,
+     "flagged": false
+    }
+   },
+   "wrong_b": {
+    "day_count_fraction": {
+     "differs": false,
+     "flagged": true
+    },
+    "rounding_rule": {
+     "differs": false,
+     "flagged": false
+    }
+   }
+  },
+  {
+   "bond_id": "eib-usd-4375-2031",
+   "fields": 22,
+   "differing": [],
+   "wrong_a": {},
+   "wrong_b": {}
+  },
+  {
+   "bond_id": "kfw-usd-3750-2031",
+   "fields": 22,
+   "differing": [],
+   "wrong_a": {},
+   "wrong_b": {}
+  },
+  {
+   "bond_id": "kfw-usd-4250-2029",
+   "fields": 22,
+   "differing": [
+    "issuer"
+   ],
+   "wrong_a": {
+    "issuer": {
+     "differs": true,
+     "flagged": false
+    }
+   },
+   "wrong_b": {}
+  },
+  {
+   "bond_id": "nib-usd-3750-2031",
+   "fields": 22,
+   "differing": [
+    "rounding_rule"
+   ],
+   "wrong_a": {},
+   "wrong_b": {
+    "rounding_rule": {
+     "differs": true,
+     "flagged": false
+    }
+   }
+  }
+ ]
+}
