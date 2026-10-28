@@ -136,7 +136,9 @@ took from the rule for registered notes, which the checks flag in one reading on
 rounding of the second krona note, which both read as rounding down.
 The review screen shows a second reading beside the first, by default the other model's, and
 marks every term where the two differ, so the reviewer looks there first and approves the terms
-that two readers and the checks agree on quickly (`tstt second` counts the disagreements).
+that two readers and the checks agree on quickly (`tstt second` counts the disagreements). On a
+marked term the reviewer opens the page the second reading cites and, if it is the right one,
+takes its value as the correction with one click.
 
 ## What is in the repository
 
@@ -212,7 +214,8 @@ and `LOCAL_MODEL`, and pass `--model local`.
 
 On the review screen each term is approved or corrected (keys: A approves and moves on, J and K
 move down and up). A second reading of the bond, by the other model or by Spark in the other
-mode, is shown beside the first, and the terms where the two differ are marked. Corrections to a model's reading are kept beside the run, so the run can still
+mode, is shown beside the first, and the terms where the two differ are marked; the page it
+cites opens from the term, and its value can be taken as the correction. Corrections to a model's reading are kept beside the run, so the run can still
 be scored; on the verified terms they are written into `eval/groundtruth`, and the file is marked
 verified once every term is reviewed and the bond replays cleanly.
 

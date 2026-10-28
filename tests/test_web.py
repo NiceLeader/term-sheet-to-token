@@ -124,23 +124,26 @@ def test_a_second_reading_is_shown_beside_a_models_reading(tmp_path, monkeypatch
     source = json.loads((truth / "ibrd-gbp-0750-2026.json").read_text(encoding="utf-8"))
     values = {name: f.get("value") for name, f in source["fields"].items()}
 
-    def save(run, model, mode, changes):
-        fields = {name: {"value": v, "stated_in": [], "defined_in": [], "note": None}
-                  for name, v in (values | changes).items()}
+    def save(run, model, mode, changes, cites=None):
+        fields = {name: {"value": v, "stated_in": (cites or {}).get(name, []), "defined_in": [],
+                         "note": None} for name, v in (values | changes).items()}
         Extraction("ibrd-gbp-0750-2026", mode, model, fields, Usage(0, 0, 0), 1.0,
                    None).save(settings.runs_dir / "extractions" / run)
 
+    cite = {"doc": "ibrd-xs2113033281-ft", "page": 3, "quote": "rounded downwards"}
     save("agent-spark", "muse-spark", "agent", {})
     save("one_pass-spark", "muse-spark", "one_pass", {"interest_rate": "0.75"})
-    save("agent-glimmer", "muse-glimmer", "agent", {"rounding_rule": "DOWN"})
+    save("agent-glimmer", "muse-glimmer", "agent", {"rounding_rule": "DOWN"},
+         {"rounding_rule": [cite]})
     client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
 
     data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026").json()
     assert data["second"]["run"] == "agent-glimmer"  # another model by default
     assert [c["id"] for c in data["second"]["choices"]] == ["agent-glimmer", "one_pass-spark"]
     rounding = next(f for f in data["fields"] if f["name"] == "rounding_rule")
-    assert rounding["second"] == {"value": "DOWN", "agrees": False}
+    assert rounding["second"] == {"value": "DOWN", "agrees": False, "cite": cite}
     assert all(f["second"]["agrees"] for f in data["fields"] if f["name"] != "rounding_rule")
+    assert data["fields"][0]["second"]["cite"] is None  # the stub readings cite nothing else
 
     data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026",
                       params={"second": "one_pass-spark"}).json()
@@ -156,7 +159,7 @@ def test_a_second_reading_is_shown_beside_a_models_reading(tmp_path, monkeypatch
     data = client.get("/api/bond/agent-spark/ibrd-gbp-0750-2026").json()
     rounding = next(f for f in data["fields"] if f["name"] == "rounding_rule")
     assert rounding["value"] == "DOWN" and rounding["review"] == "corrected"
-    assert rounding["second"] == {"value": "DOWN", "agrees": False}
+    assert rounding["second"] == {"value": "DOWN", "agrees": False, "cite": cite}
     data = client.get("/api/bond/groundtruth/ibrd-gbp-0750-2026").json()
     assert data["second"] == {"run": None, "label": None, "choices": []}
 

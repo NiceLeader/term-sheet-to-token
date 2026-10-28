@@ -395,6 +395,7 @@ function bindReview(el, f) {
     el.querySelector(".review-error").textContent = "";
     if (act === "edit") { form.classList.remove("hidden"); form.elements.v.focus(); }
     else if (act === "cancel") form.classList.add("hidden");
+    else if (act === "take") review(f.name, "correct", f.second.value);  // the second reading's value
     else review(f.name, act);
   }));
   form?.addEventListener("submit", (event) => {
@@ -435,7 +436,9 @@ function renderTerms() {
     const flags = f.flags.map((x) => `<div class="flag-line ${esc(x.severity)}">${esc(x.message)}</div>`).join("");
     const second = !f.second ? "" : f.second.agrees
       ? `<div class="note">The second reading (${esc(secondLabel(state.data.second.label))}) agrees.</div>`
-      : `<div class="flag-line warning">The second reading (${esc(secondLabel(state.data.second.label))}) gives: ${esc(fieldValue({ name: f.name, value: f.second.value }) ?? "not stated")}</div>`;
+      : `<div class="flag-line warning">The second reading (${esc(secondLabel(state.data.second.label))}) gives: ${esc(fieldValue({ name: f.name, value: f.second.value }) ?? "not stated")}
+          ${f.second.cite ? `<a class="second-cite" href="#" data-doc="${esc(f.second.cite.doc)}" data-page="${esc(f.second.cite.page)}" data-quote="${esc(f.second.cite.quote ?? "")}">${esc(ROLES[state.documents.find((d) => d.doc === f.second.cite.doc)?.role] || f.second.cite.doc)}, p.${esc(f.second.cite.page)}</a>` : ""}
+          ${f.second.value != null && f.review !== "corrected" ? `<button class="button small ghost" data-act="take">Use this value</button>` : ""}</div>`;
     const reviewed = f.review ? `<span class="rv ${f.review}" title="${f.review}">${f.review === "approved" ? "✓ approved" : "corrected"}</span>` : "";
     html += `<div class="field ${f.review ? "reviewed" : ""}" data-name="${esc(f.name)}">
       <span class="label">${esc(f.label)}${reviewed}</span>
@@ -450,20 +453,32 @@ function renderTerms() {
   $("#terms").querySelectorAll(".field").forEach((el) => {
     bindReview(el, state.data.fields.find((f) => f.name === el.dataset.name));
     el.addEventListener("click", (event) => {
+      const other = event.target.closest(".second-cite");
+      if (other) {  // the page the second reading cites, with its quote marked
+        event.preventDefault();
+        highlightField(el.dataset.name);
+        openPage(other.dataset.doc, Number(other.dataset.page), other.dataset.quote ? [other.dataset.quote] : [],
+                 `${state.data.fields.find((f) => f.name === el.dataset.name).label} (second reading)`);
+        return;
+      }
       const cite = event.target.closest(".cite");
       selectField(el.dataset.name, cite ? Number(cite.dataset.cite) : 0);
     });
   });
 }
 
-function selectField(name, citeIndex = 0) {
-  const field = state.data?.fields.find((f) => f.name === name);
-  if (!field) return;
+function highlightField(name) {
   state.field = name;
   leftTab("terms");
   document.querySelectorAll(".field").forEach((el) => el.classList.toggle("selected", el.dataset.name === name));
   const row = document.querySelector(`.field[data-name="${CSS.escape(name)}"]`);
   row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+function selectField(name, citeIndex = 0) {
+  const field = state.data?.fields.find((f) => f.name === name);
+  if (!field) return;
+  highlightField(name);
   const cite = field.cites[citeIndex] || field.cites[0];
   if (!cite) {
     if (!state.doc) openPage(state.documents[0].doc, 1, [], "");

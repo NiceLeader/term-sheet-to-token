@@ -168,7 +168,7 @@ def _review_summary(review: dict) -> dict[str, Any]:
 def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | None,
                 quoted: bool, review: dict | None = None,
                 second: dict[str, Any] | None = None) -> list[dict[str, Any]]:
-    """One row per term; `second` holds the values of a second reading to compare with."""
+    """One row per term; `second` holds the fields of a second reading to compare with."""
     documents = [doc for doc, _ in bond_source(settings, bond_id).documents]
     checked = check_fields(fields, Citations(documents)) if quoted else None
     values = {n: f.get("value") for n, f in fields.items()}
@@ -176,7 +176,8 @@ def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | N
     # The second reading is compared with what the model read, not with the correction.
     read = {n: entries[n]["original"] if (entries.get(n) or {}).get("status") == "corrected"
             else v for n, v in values.items()}
-    differ = set(differing(read, second)) if second is not None else set()
+    other = None if second is None else {n: f.get("value") for n, f in second.items()}
+    differ = set(differing(read, other)) if other is not None else set()
     flagged: dict[str, list[dict]] = {}
     for flag in (report or {}).get("flags", []):
         for name in flag.get("fields", []):
@@ -206,8 +207,18 @@ def _field_rows(settings: Settings, bond_id: str, fields: dict, report: dict | N
                          "bdt": spec.bdt, "kind": spec.kind, "options": list(spec.enum),
                          "review": entry.get("status"), "original": entry.get("original"),
                          "second": None if second is None else
-                         {"value": second.get(name), "agrees": name not in differ}})
+                         {"value": other.get(name), "agrees": name not in differ,
+                          "cite": _first_cite(second.get(name))}})
     return rows
+
+
+def _first_cite(field: dict[str, Any] | None) -> dict[str, Any] | None:
+    """Where a reading says it found the term: the first citation with a page."""
+    for role in ("stated_in", "defined_in"):
+        for c in (field or {}).get(role) or []:
+            if c.get("doc") and c.get("page"):
+                return {"doc": c["doc"], "page": c["page"], "quote": c.get("quote")}
+    return None
 
 
 def _second_reading(settings: Settings, run: str, bond_id: str, extraction: dict | None,
@@ -225,7 +236,7 @@ def _second_reading(settings: Settings, run: str, bond_id: str, extraction: dict
     other = choices[chosen] if chosen else None
     return ({"run": chosen, "label": reading_label(other) if other else None,
              "choices": [{"id": r, "label": reading_label(e)} for r, e in choices.items()]},
-            other.values() if other else None)
+            other.fields if other else None)
 
 
 class ReviewAction(BaseModel):
