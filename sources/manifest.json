@@ -1,5 +1,5 @@
 {
-  "note": "Public bond documents used for evaluation. Files are fetched by scripts/fetch.py into $TSTT_DATA_DIR and never committed. Some documents carry 'not to be forwarded or distributed' legends, so only links and hashes live here.",
+  "note": "Public bond documents used for evaluation. Files are fetched by `tstt fetch` into $TSTT_DATA_DIR and never committed. Some documents carry 'not to be forwarded or distributed' legends, so only links and hashes live here.",
   "documents": {
     "ibrd-gdif-2021": {
       "title": "IBRD Global Debt Issuance Facility Prospectus, 24 September 2021",

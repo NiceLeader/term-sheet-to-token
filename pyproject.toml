@@ -1,7 +1,7 @@
 [project]
 name = "tstt"
 version = "0.1.0"
-description = "Read a bond's final terms and base prospectus with Meta Muse models, configure a bond token, and prove every payment against the clause that requires it."
+description = "Read a bond's final terms and base prospectus with Meta's Muse models, configure a bond token, and check every payment against the clause it follows from."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "Apache-2.0"
