@@ -158,6 +158,7 @@ src/tstt/        Python package and the `tstt` command
   eval.py        scoring against the verified terms
   second.py      a second reading of the same bond, compared field by field
   web.py         review screen;  review.py  reviewer sign-off and issuance
+  issued.py      the issuance record: documents with hashes, reading, decisions, terms, replay
 contracts/       BondToken.sol and CashToken.sol (Foundry), with tests
 eval/groundtruth one file of verified terms per bond, each value with its page
 eval/results     score of each extraction run behind the tables above, and the comparisons of two runs
@@ -217,7 +218,11 @@ move down and up). A second reading of the bond, by the other model or by Spark 
 mode, is shown beside the first, and the terms where the two differ are marked; the page it
 cites opens from the term, and its value can be taken as the correction. Corrections to a model's reading are kept beside the run, so the run can still
 be scored; on the verified terms they are written into `eval/groundtruth`, and the file is marked
-verified once every term is reviewed and the bond replays cleanly.
+verified once every term is reviewed and the bond replays cleanly. Issuing writes an issuance
+record (`runs/issued/<run>/<bond>.json`, also served by the screen): the documents with their
+SHA-256, the reading, every decision of the reviewer with the value it replaced, the terms the
+token was configured with and the result of the replay, under one hash. A question about a
+payment years later goes back to the page, the reading and the reviewer.
 
 The review screen listens on 127.0.0.1 only. It answers only requests addressed to localhost
 and accepts a POST only from its own page, so a page on another site cannot start an

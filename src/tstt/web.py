@@ -27,6 +27,7 @@ from tstt.docs import load_document
 from tstt.evidence import value_in_text
 from tstt.extract import Extraction, agent, bond_source, one_pass
 from tstt.fetch import load_manifest
+from tstt.issued import issuance_record, load_record, record_path, save_record
 from tstt.pages import page_image, page_view, search_pages
 from tstt.review import (
     GROUND_TRUTH,
@@ -378,7 +379,9 @@ def create_app(settings: Settings | None = None,
                 "fields": _field_rows(settings, bond_id, fields, report, extraction is not None,
                                       review, other),
                 "second": chosen,
-                "report": report, "score": score, "review": _review_summary(review)}
+                "report": report, "score": score,
+                "review": _review_summary(review)
+                | {"record": record_path(settings, run, bond_id).exists()}}
 
     def run_verify(run: str, bond_id: str) -> tuple[dict[str, Any], dict]:
         """Deploy and replay the bond from the reviewed terms and save the report."""
@@ -445,7 +448,22 @@ def create_app(settings: Settings | None = None,
             ok = summary["payments_ok"] and not summary["errors"] and passed == total
             if ok:
                 mark_issued(settings, run, bond_id, summary)
+                fields, extraction, review = _reviewed(settings, run, bond_id)
+                report = _read_json(_report_path(settings, run, bond_id, review))
+                save_record(settings, issuance_record(run, bond_id, fields, extraction, review,
+                                                      report))
         return {"issued": ok, "summary": summary}
+
+    @app.get("/api/issued/{run}/{bond_id}")
+    def issued(run: str, bond_id: str) -> dict[str, Any]:
+        """The record of the issuance: documents and their hashes, the reading, the reviewer's
+        decisions, the terms the token was configured with and the replay, under one hash."""
+        _known_bond(bond_id)
+        _known_run(settings, run)
+        record = load_record(settings, run, bond_id)
+        if record is None:
+            raise HTTPException(404, "not issued from this reading")
+        return record
 
     @app.get("/api/view/{doc_id}/{number}")
     def view(doc_id: str, number: int,
