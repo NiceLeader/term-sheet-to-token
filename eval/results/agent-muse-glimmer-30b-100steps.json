@@ -1,0 +1,95 @@
+{
+ "summary": {
+  "run": "agent-muse-glimmer-30b-100steps",
+  "bonds": 3,
+  "submitted": 3,
+  "field_accuracy": 0.9697,
+  "bonds_all_fields_correct": 1,
+  "bonds_cash_flows_match": 3,
+  "payments_matching": "18/18",
+  "quotes_on_page": "69/71",
+  "wrong_fields_flagged": "1/2",
+  "cost_usd": null,
+  "seconds_per_bond": 499.5
+ },
+ "bonds": [
+  {
+   "bond_id": "deere-usd-4800-2029",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "rounding_rule": {
+     "expected": "NOT_STATED",
+     "extracted": "HALF_UP"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 7,
+   "payments_matching": 7,
+   "quotes": 23,
+   "quotes_on_page": 23,
+   "errors": 0,
+   "warnings": 1,
+   "wrong_flagged": [],
+   "seconds": 379.8,
+   "steps": 67,
+   "input_tokens": 2125982,
+   "cached_tokens": 0,
+   "output_tokens": 20561,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "ibrd-eur-3399-2026",
+   "fields_total": 22,
+   "fields_correct": 21,
+   "wrong": {
+    "business_day_convention": {
+     "expected": "FOLLOWING",
+     "extracted": "NONE"
+    }
+   },
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 4,
+   "payments_matching": 4,
+   "quotes": 29,
+   "quotes_on_page": 27,
+   "errors": 0,
+   "warnings": 7,
+   "wrong_flagged": [
+    "business_day_convention"
+   ],
+   "seconds": 604.7,
+   "steps": 98,
+   "input_tokens": 3221580,
+   "cached_tokens": 0,
+   "output_tokens": 21508,
+   "cost_usd": null,
+   "error": null
+  },
+  {
+   "bond_id": "toyota-usd-4500-2029",
+   "fields_total": 22,
+   "fields_correct": 22,
+   "wrong": {},
+   "flows_match": true,
+   "flows_detail": "",
+   "payments": 7,
+   "payments_matching": 7,
+   "quotes": 19,
+   "quotes_on_page": 19,
+   "errors": 0,
+   "warnings": 7,
+   "wrong_flagged": [],
+   "seconds": 513.9,
+   "steps": 98,
+   "input_tokens": 3374483,
+   "cached_tokens": 0,
+   "output_tokens": 10847,
+   "cost_usd": null,
+   "error": null
+  }
+ ]
+}

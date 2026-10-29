@@ -124,7 +124,9 @@ values. Spark's single pass shows neither problem.
 
 Muse Glimmer, the 30B open-weights model running locally, read fifteen of the eighteen bonds to
 the end; for three (Deere, IBRD EUR, Toyota) it never produced a complete set of terms within
-its step budget. Of the 330 values it did submit, 317 are right. Its most frequent mistake is to
+its step budget of 50 steps. With the budget raised to 100 steps (`tstt extract --steps 100`)
+it finished those three as well, 64 of their 66 terms and every payment right, at about eight
+minutes a bond. Of the 330 values it submitted in the first run, 317 are right. Its most frequent mistake is to
 read "Business Day Convention: Not Applicable" or "not adjusted" as no convention at all,
 instead of the payment on the next business day that the conditions provide for; that moves
 payment dates, and the consistency checks flag it. Nine of its thirteen wrong values are
