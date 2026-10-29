@@ -97,6 +97,36 @@ def _cmd_verify(args: argparse.Namespace) -> int:
     return 1 if failed else 0
 
 
+def _cmd_audit(args: argparse.Namespace) -> int:
+    from web3 import Web3
+
+    from tstt.audit import audit_token
+    from tstt.extract import Extraction
+    from tstt.schedule import build_schedule
+    from tstt.terms import TermsError, build_terms
+    from tstt.token import TokenError
+    from tstt.verify import ground_truth_fields
+
+    if args.extraction:
+        fields = Extraction.load(Path(args.extraction) / f"{args.bond}.json").fields
+    else:
+        fields = ground_truth_fields(GROUND_TRUTH / f"{args.bond}.json")
+    try:
+        schedule = build_schedule(build_terms({n: f.get("value") for n, f in fields.items()}))
+        result = audit_token(schedule, Web3(Web3.HTTPProvider(args.rpc)), args.address)
+    except (TermsError, TokenError, ValueError) as exc:
+        print(f"{args.bond}: {exc}", file=sys.stderr)
+        return 2
+    print(f"{args.bond}: token {result.address}, issuer {result.parties['issuer']}, "
+          f"paying agent {result.parties['payingAgent']}, cash {result.parties['cash']}, "
+          f"{result.payments} payments")
+    for d in result.differences:
+        print(f"  {d.what}: documents {d.documents}, token {d.token}")
+    print("every term matches the documents" if result.clean
+          else f"{len(result.differences)} values differ")
+    return 0 if result.clean else 1
+
+
 def _cmd_extract(args: argparse.Namespace) -> int:
     from tstt.extract import agent, bond_source, one_pass
     from tstt.llm import ModelError, SpendLimitReached, make_client
@@ -260,6 +290,15 @@ def main(argv: list[str] | None = None) -> int:
     check.add_argument("--extraction", help="folder of extractions to use instead of ground truth")
     check.add_argument("--quiet", action="store_true", help="print one summary line per bond")
     check.set_defaults(func=_cmd_verify)
+
+    audit = sub.add_parser("audit", help="compare a deployed token with the terms read from "
+                                         "the documents")
+    audit.add_argument("bond", help="bond id")
+    audit.add_argument("--rpc", required=True, help="JSON-RPC endpoint of the chain")
+    audit.add_argument("--address", required=True, help="address of the BondToken contract")
+    audit.add_argument("--extraction",
+                       help="folder of extractions to use instead of the verified terms")
+    audit.set_defaults(func=_cmd_audit)
 
     extract = sub.add_parser("extract", help="extract bond terms with a Meta model")
     extract.add_argument("bond", nargs="*",

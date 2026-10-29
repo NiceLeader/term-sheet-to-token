@@ -179,6 +179,7 @@ src/tstt/        Python package and the `tstt` command
   llm.py         clients for the Meta Model API and a local chat completions server
   cite.py        quote check;  evidence.py  value check;  checks.py  consistency checks
   token.py       deploy the token on anvil and run the bond's life
+  audit.py       read a deployed token back and compare it with the documents
   verify.py      the per-bond report
   mutate.py      planted errors in terms and planted bugs in the contract
   eval.py        scoring against the verified terms
@@ -229,7 +230,10 @@ anvil and runs the replay, and the two Solidity contracts.
 - **Another EVM chain.** The same bytecode with the same constructor arguments from the
   issuance record deploys on any EVM network, public or a bank's own. The replay stays on a
   local chain because it moves the clock through the whole life of the bond; on a live network
-  the token is issued from the record and each coupon is paid on its date.
+  the token is issued from the record and each coupon is paid on its date. A token already
+  deployed is checked against the documents with `tstt audit --rpc URL --address 0x…`: it
+  reads the terms, the accrual segments and the payment dates the contract holds and lists
+  every value that differs from the reading, as dates, percentages and named conventions.
 - **Other platforms.** Seven of the 25 bonds were issued on DLT platforms (Euroclear D-FMI, GS
   DAP, so|bond, HSBC Orion), and the digital bonds of banks run on Canton or on private chains.
   Those systems take the terms as data, as this contract does. What a port rewrites is the
@@ -253,6 +257,7 @@ uv run tstt verify                # deploy and replay all 25 bonds from the veri
 uv run tstt extract ibrd-gbp-0750-2026 --model hosted --mode agent
 HOSTED_MODEL=muse-wonder-1.0 uv run tstt extract ibrd-gbp-0750-2026 --mode agent   # the same reading with Muse Wonder
 uv run tstt verify ibrd-gbp-0750-2026 --extraction <data dir>/runs/extractions/agent-muse-spark-1.3-contributor
+uv run tstt audit ibrd-gbp-0750-2026 --rpc http://127.0.0.1:8545 --address 0x…   # a deployed token against the documents
 uv run tstt extract --held-out    # the seven bonds read after the field rules were frozen
 uv run tstt mutate                # planted errors and planted contract bugs
 uv run tstt eval                  # score every extraction run
@@ -327,9 +332,10 @@ the whole bond against QuantLib and the printed amounts.
 The reviewer today is the second person who checks a colleague's keying against the PDF. The
 same reading, evidence and replay serve more than a new issue:
 
-- Bonds already outstanding exist only as prose. Reading their documents and comparing the
-  result with the terms configured in an existing token or issuance system turns the check
-  between paper and code into a control that can run on a whole book of bonds.
+- Bonds already outstanding exist only as prose. `tstt audit` runs the check between paper and
+  code for one token on an EVM chain; the same comparison against the terms configured in an
+  issuance system or a custodian's records makes it a control that runs over a whole book of
+  bonds.
 - Exporting the terms as an ICMA Bond Data Taxonomy record, for issuance platforms and for the
   comparison with vendor data that treasuries already run.
 - Who may hold the token. The contract checks holdings and payments, not investors; transfer
