@@ -117,8 +117,10 @@ def _cmd_extract(args: argparse.Namespace) -> int:
     for bond_id in bonds:
         source = bond_source(settings, bond_id)
         try:
-            run = one_pass if args.mode == "one_pass" else agent
-            extraction = run(client, source)
+            if args.mode == "one_pass":
+                extraction = one_pass(client, source)
+            else:
+                extraction = agent(client, source, max_steps=args.steps)
         except SpendLimitReached as exc:
             print(f"{bond_id}: {exc}", file=sys.stderr)
             return 1
@@ -266,6 +268,9 @@ def main(argv: list[str] | None = None) -> int:
                          help="hosted Muse Spark or local Muse Glimmer")
     extract.add_argument("--mode", choices=["one_pass", "agent"], default="one_pass")
     extract.add_argument("--effort", help="effort level for the hosted model (low, medium, high)")
+    extract.add_argument("--steps", type=int, default=50,
+                         help="tool calls allowed in agent mode before the terms must be "
+                              "submitted (default 50)")
     extract.add_argument("--held-out", action="store_true",
                          help="read the bonds labelled after the field rules were frozen "
                               "(default folder: <mode>-<model>-unseen)")

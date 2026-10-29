@@ -185,3 +185,11 @@ def test_run_label_comes_from_the_saved_reading(tmp_path):
     empty = tmp_path / "one_pass-muse-glimmer-30b"
     empty.mkdir()
     assert web._run_entry(empty)["label"] == "muse-glimmer-30b (one-pass)"
+
+
+def test_the_extract_buttons_name_the_configured_models(tmp_path):
+    settings = Settings(tmp_path / "data", None, "", "muse-wonder-1.0", "", "muse-glimmer-30b",
+                        None, None)
+    client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
+    assert client.get("/api/models").json() == {"hosted": "muse-wonder-1.0",
+                                                 "local": "muse-glimmer-30b"}

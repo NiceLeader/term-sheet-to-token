@@ -33,7 +33,8 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 
 const state = { runs: [], bonds: [], run: null, bond: null, data: null, documents: [],
                 field: null, view: null, doc: null, page: 1, quotes: [], label: "",
-                second: undefined };  // run id of the second reading, "none", or the default
+                second: undefined,  // run id of the second reading, "none", or the default
+                models: { hosted: "muse-spark-1.3", local: "muse-glimmer-30b" } };
 
 const secondQuery = () => (state.second ? `?second=${encodeURIComponent(state.second)}` : "");
 
@@ -70,6 +71,11 @@ function modelName(model) {
   // muse-spark-1.3-contributor -> Muse Spark 1.3 Contributor, muse-glimmer-30b -> Muse Glimmer 30B
   return model.split("-").map((w) => (/^\d+b$/.test(w) ? w.toUpperCase()
     : /^[a-z]/.test(w) ? w[0].toUpperCase() + w.slice(1) : w)).join(" ");
+}
+
+// muse-spark-1.3-contributor -> Muse Spark: the name the extract buttons show
+function shortModelName(model) {
+  return model?.startsWith("muse-") ? modelName(model).split(" ").slice(0, 2).join(" ") : model || "";
 }
 
 function runLabel(run) {
@@ -115,7 +121,10 @@ const citeStatus = {
 // ---------------------------------------------------------------- loading
 
 async function init() {
-  [state.runs, state.bonds] = await Promise.all([api("/api/runs"), api("/api/bonds")]);
+  [state.runs, state.bonds, state.models] = await Promise.all([
+    api("/api/runs"), api("/api/bonds"), api("/api/models").catch(() => state.models)]);
+  document.querySelectorAll("#extract button").forEach((b) => { b.textContent = shortModelName(state.models[b.dataset.kind]); });
+  $("#mode").setAttribute("aria-label", `How ${shortModelName(state.models.hosted)} reads the documents`);
   renderBondPicker();
   $("#bond").addEventListener("change", () => go(state.run || "groundtruth", $("#bond").value));
   document.addEventListener("keydown", reviewKeys);
@@ -601,7 +610,7 @@ async function startExtraction(kind) {
   buttons.forEach((b) => { b.disabled = true; });
   const bond = state.bond;
   const mode = kind === "hosted" ? $("#mode").value : "agent";
-  const name = kind === "hosted" ? "Muse Spark" : "Muse Glimmer";
+  const name = shortModelName(state.models[kind]);
   const earlier = $("#trace").innerHTML;
   $("#trace-tab").classList.remove("hidden");
   leftTab("trace");

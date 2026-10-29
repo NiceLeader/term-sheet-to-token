@@ -330,6 +330,11 @@ def create_app(settings: Settings | None = None,
     def runs() -> list[dict[str, Any]]:
         return _runs(settings)
 
+    @app.get("/api/models")
+    def models() -> dict[str, str]:
+        """The models the extract buttons start, as configured for this server."""
+        return {"hosted": settings.hosted_model, "local": settings.local_model}
+
     @app.get("/api/bonds")
     def bonds() -> list[dict[str, Any]]:
         manifest = load_manifest()
