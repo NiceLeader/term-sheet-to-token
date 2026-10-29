@@ -24,10 +24,10 @@ from pydantic import BaseModel
 
 from tstt.cite import Citations, check_fields
 from tstt.config import REPO_ROOT, Settings, load_settings
-from tstt.docs import load_document
+from tstt.docs import cache_path, load_document
 from tstt.evidence import value_in_text
 from tstt.extract import Extraction, agent, bond_source, one_pass
-from tstt.fetch import load_manifest
+from tstt.fetch import doc_path, load_manifest
 from tstt.issued import issuance_record, load_record, record_path, save_record
 from tstt.pages import page_image, page_view, search_pages
 from tstt.review import (
@@ -112,6 +112,14 @@ def _known_bond(bond_id: str) -> dict[str, Any]:
     if entry is None:
         raise HTTPException(404, f"unknown bond {bond_id}")
     return entry
+
+
+def _missing_documents(settings: Settings, bond: dict[str, Any]) -> list[str]:
+    """The bond's documents that are neither parsed nor fetched, so the screen cannot show them."""
+    manifest = load_manifest()
+    return [d["doc"] for d in bond["documents"]
+            if not cache_path(settings, d["doc"]).exists()
+            and not doc_path(settings, d["doc"], manifest["documents"][d["doc"]]).exists()]
 
 
 def _known_doc(doc_id: str) -> str:
@@ -358,14 +366,21 @@ def create_app(settings: Settings | None = None,
             out.append({"id": bond["id"], "label": bond["label"],
                         "isin": bond.get("isin"), "cusip": bond.get("cusip"),
                         "dlt_native": bond.get("dlt_native", False), "reports": reports,
-                        "verified": truth.get("status") == "verified"})
+                        "verified": truth.get("status") == "verified",
+                        "documents": not _missing_documents(settings, bond)})
         return out
 
     @app.get("/api/documents/{bond_id}")
     def documents(bond_id: str) -> list[dict[str, Any]]:
         manifest = load_manifest()
+        entry = _known_bond(bond_id)
+        missing = _missing_documents(settings, entry)
+        if missing:
+            raise HTTPException(409, f"the documents of {bond_id} are not fetched; run: "
+                                     f"tstt fetch --only {' '.join(missing)} and "
+                                     f"tstt parse --only {' '.join(missing)}")
         out = []
-        for d in _known_bond(bond_id)["documents"]:
+        for d in entry["documents"]:
             meta = manifest["documents"][d["doc"]]
             out.append({"doc": d["doc"], "role": d["role"], "title": meta["title"],
                         "format": meta["format"], "url": meta["url"],
@@ -376,6 +391,7 @@ def create_app(settings: Settings | None = None,
     def bond(run: str, bond_id: str, second: str | None = None) -> dict[str, Any]:
         entry = _known_bond(bond_id)
         _known_run(settings, run)
+        docs = documents(bond_id)  # refused first when the documents are not fetched
         fields, extraction, review = _reviewed(settings, run, bond_id)
         chosen, other = _second_reading(settings, run, bond_id, extraction, second)
         report = _read_json(_report_path(settings, run, bond_id, review))
@@ -389,7 +405,7 @@ def create_app(settings: Settings | None = None,
                       if b["bond_id"] == bond_id), None)
         return {"bond": {k: entry.get(k) for k in ("id", "label", "isin", "cusip",
                                                     "dlt_native")},
-                "run": run, "documents": documents(bond_id), "extraction": extraction,
+                "run": run, "documents": docs, "extraction": extraction,
                 "fields": _field_rows(settings, bond_id, fields, report, extraction is not None,
                                       review, other),
                 "second": chosen,

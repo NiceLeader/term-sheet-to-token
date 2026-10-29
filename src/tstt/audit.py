@@ -60,7 +60,10 @@ class Audit:
 def shown(name: str, value: Any) -> str:
     """A constructor value as a reviewer reads it: dates, percentages, names of enums."""
     if name in TIMESTAMPS:
-        return from_timestamp(int(value)).isoformat()
+        try:
+            return from_timestamp(int(value)).isoformat()
+        except (OverflowError, OSError, ValueError):
+            return f"{value} (not a date)"
     if name == "rate":
         return f"{Decimal(value) / RATE_SCALE:f}%"
     if name == "redemptionPercent":

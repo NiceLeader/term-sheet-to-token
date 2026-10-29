@@ -57,3 +57,7 @@ def test_audit_reads_a_deployed_token():
         miskeyed = _deploy(chain, out, token_config(keyed, cash, issuer, agent))
         result = audit_token(schedule, chain.w3, miskeyed, out)
         assert result.differences == [Difference("rate", "3.399%", "3.339%")]
+
+
+def test_a_timestamp_that_is_not_a_date_is_still_shown():
+    assert shown("maturityPaymentDate", 1_800_000_000_000).endswith("(not a date)")

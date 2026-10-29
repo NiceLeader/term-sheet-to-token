@@ -44,3 +44,21 @@ def test_shipped_readings_are_copied_into_the_data_folder(tmp_path, monkeypatch,
     assert main(["import", str(tmp_path / "readings"), "--force"]) == 0
     assert target.read_text(encoding="utf-8") == "{\"a\": 1}"
     assert "1 copied" in capsys.readouterr().out
+
+
+def test_audit_needs_verified_terms_for_the_bond(capsys):
+    assert main(["audit", "no-such-bond", "--rpc", "http://127.0.0.1:1",
+                 "--address", "0x" + "1" * 40]) == 2
+    assert "no verified terms" in capsys.readouterr().err
+
+
+def test_import_refuses_what_the_review_screen_would_not_show(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("TSTT_DATA_DIR", str(tmp_path / "data"))
+    assert main(["import", str(tmp_path / "nowhere")]) == 2
+    source = tmp_path / "readings" / "Test Run"
+    source.mkdir(parents=True)
+    (source / "ibrd-gbp-0750-2026.json").write_text("{}", encoding="utf-8")
+    assert main(["import", str(tmp_path / "readings")]) == 2
+    err = capsys.readouterr().err
+    assert "is not a folder" in err and "'Test Run'" in err
+    assert not (tmp_path / "data" / "runs").exists()

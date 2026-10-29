@@ -43,7 +43,7 @@ function size(bytes) {
 
 function citations(list, titles) {
   if (!list?.length) return `<span class="where">no citation</span>`;
-  return list.map((c) => `<div><span class="where">${c.role === "defined_in" ? "defined in" : "stated in"} ${esc(titles[c.doc] || c.doc)}${c.page ? `, p. ${c.page}` : ""}</span>${c.quote ? `<span class="quote">“${esc(c.quote)}”</span>` : ""}</div>`).join("");
+  return list.map((c) => `<div><span class="where">${c.role === "defined_in" ? "defined in" : "stated in"} ${esc(titles[c.doc] || c.doc)}${c.page ? `, p. ${esc(c.page)}` : ""}</span>${c.quote ? `<span class="quote">“${esc(c.quote)}”</span>` : ""}</div>`).join("");
 }
 
 function decision(entry) {
@@ -81,7 +81,7 @@ function render(record, groups) {
 
   $("#record").innerHTML = `
     <div class="tools">
-      <a class="button small ghost" href="/#/${enc(run)}/${enc(bond)}">Back to the review screen</a>
+      <a class="button small ghost" href="/#/bond/${enc(run)}/${enc(bond)}">Back to the review screen</a>
       <a class="button small ghost" href="/api/issued/${enc(run)}/${enc(bond)}" target="_blank" rel="noopener">Record as JSON</a>
       <button class="button small ghost" onclick="window.print()">Print</button>
     </div>
@@ -116,7 +116,7 @@ function render(record, groups) {
       <dt>Units</dt><dd>${esc(show(t.units))}${t.allocation ? ` (${esc(show(t.allocation))})` : ""}</dd>
       <dt>Deployment</dt><dd>${t.deploy_gas ? `${Number(t.deploy_gas).toLocaleString("en-GB")} gas` : ""}</dd>
     </dl>
-    ${constructorTerms ? `<h2>Constructor arguments</h2><table><tbody>${constructorTerms}</tbody></table>` : ""}
+    ${constructorTerms ? `<h2>Constructor terms</h2><table><tbody>${constructorTerms}</tbody></table>` : ""}
     <p class="sub" style="margin-top:24px">A question about a payment goes back to the page, the reading and the reviewer. Term Sheet to Token.</p>`;
   document.title = `Issuance record: ${record.bond.label || record.bond.id}`;
 }

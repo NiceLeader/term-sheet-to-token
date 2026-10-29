@@ -240,8 +240,10 @@ payment schedule as data, and the record keeps them with the pages they came fro
 chain-specific part is `token.py`, which turns that data into constructor arguments, deploys on
 anvil and runs the replay, and the two Solidity contracts.
 
-- **Another EVM chain.** The same bytecode with the same constructor arguments from the
-  issuance record deploys on any EVM network, public or a bank's own. The replay stays on a
+- **Another EVM chain.** The same bytecode deploys on any EVM network, public or a bank's own,
+  with the constructor arguments rebuilt from the issuance record: the record keeps the terms
+  as the constructor took them, and the segments and payments follow from the reviewed terms
+  through the schedule engine. The replay stays on a
   local chain because it moves the clock through the whole life of the bond; on a live network
   the token is issued from the record and each coupon is paid on its date. A token already
   deployed is checked against the documents with `tstt audit --rpc URL --address 0x…`: it

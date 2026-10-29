@@ -139,7 +139,7 @@ async function init() {
 }
 
 function renderBondPicker() {
-  $("#bond").innerHTML = state.bonds.map((b) => `<option value="${esc(b.id)}">${esc(b.label)}${b.verified ? " ✓" : ""}</option>`).join("");
+  $("#bond").innerHTML = state.bonds.map((b) => `<option value="${esc(b.id)}"${b.documents === false ? " disabled" : ""}>${esc(b.label)}${b.verified ? " ✓" : ""}${b.documents === false ? " (documents not fetched)" : ""}</option>`).join("");
   if (state.bond) $("#bond").value = state.bond;
 }
 
@@ -150,7 +150,8 @@ function route() {
   if (parts[0] === "results") return showResults();
   $("#results-view").classList.add("hidden");
   ["#bond-view", "#sources", "#status", "#extract"].forEach((s) => $(s).classList.remove("hidden"));
-  const [run, bond, field] = parts[0] === "bond" ? parts.slice(1, 4) : ["groundtruth", state.bonds[0]?.id];
+  const first = state.bonds.find((b) => b.documents !== false) || state.bonds[0];
+  const [run, bond, field] = parts[0] === "bond" ? parts.slice(1, 4) : ["groundtruth", first?.id];
   if (run === state.run && bond === state.bond && state.data) {
     if (field) selectField(field);
     return;

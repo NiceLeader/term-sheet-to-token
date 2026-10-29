@@ -100,6 +100,7 @@ def _cmd_verify(args: argparse.Namespace) -> int:
 
 def _cmd_audit(args: argparse.Namespace) -> int:
     from web3 import Web3
+    from web3.exceptions import Web3Exception
 
     from tstt.audit import audit_token
     from tstt.extract import Extraction
@@ -108,15 +109,22 @@ def _cmd_audit(args: argparse.Namespace) -> int:
     from tstt.token import TokenError
     from tstt.verify import ground_truth_fields
 
-    if args.extraction:
-        fields = Extraction.load(Path(args.extraction) / f"{args.bond}.json").fields
-    else:
-        fields = ground_truth_fields(GROUND_TRUTH / f"{args.bond}.json")
+    source = Path(args.extraction) / f"{args.bond}.json" if args.extraction \
+        else GROUND_TRUTH / f"{args.bond}.json"
+    if not source.exists():
+        print(f"{args.bond}: no {'reading' if args.extraction else 'verified terms'} at {source}",
+              file=sys.stderr)
+        return 2
+    fields = Extraction.load(source).fields if args.extraction else ground_truth_fields(source)
     try:
         schedule = build_schedule(build_terms({n: f.get("value") for n, f in fields.items()}))
         result = audit_token(schedule, Web3(Web3.HTTPProvider(args.rpc)), args.address)
     except (TermsError, TokenError, ValueError) as exc:
         print(f"{args.bond}: {exc}", file=sys.stderr)
+        return 2
+    except Web3Exception as exc:  # a contract at the address, but not a BondToken
+        print(f"{args.bond}: the contract at {args.address} does not answer like a BondToken: "
+              f"{exc}", file=sys.stderr)
         return 2
     print(f"{args.bond}: token {result.address}, issuer {result.parties['issuer']}, "
           f"paying agent {result.parties['payingAgent']}, cash {result.parties['cash']}, "
@@ -133,10 +141,19 @@ def _cmd_import(args: argparse.Namespace) -> int:
     folder, so the review screen shows them without a model being run."""
     import shutil
 
-    from tstt.review import discard
+    from tstt.review import RUN_NAME, discard
 
     settings = load_settings()
     source = Path(args.folder) if args.folder else READINGS
+    if not source.is_dir():
+        print(f"{source} is not a folder", file=sys.stderr)
+        return 2
+    bad = sorted({p.parent.name for p in source.glob("*/*.json")
+                  if not RUN_NAME.fullmatch(p.parent.name)})
+    if bad:
+        print(f"run folder {', '.join(repr(b) for b in bad)} must be lower-case letters, digits, "
+              "'.', '_' or '-' (the review screen shows only such runs)", file=sys.stderr)
+        return 2
     copied = kept = 0
     for path in sorted(source.glob("*/*.json")):
         target = settings.runs_dir / "extractions" / path.parent.name / path.name
@@ -235,9 +252,13 @@ def _cmd_eval(args: argparse.Namespace) -> int:
     from tstt.eval import score_run
 
     settings = load_settings()
-    folders = ([Path(f) for f in args.run] if args.run
-               else sorted(p for p in (settings.runs_dir / "extractions").iterdir()
-                           if p.is_dir()))
+    extractions = settings.runs_dir / "extractions"
+    folders = ([Path(f) if Path(f).is_dir() else extractions / f for f in args.run] if args.run
+               else sorted(p for p in extractions.iterdir() if p.is_dir()))
+    missing = [str(f) for f in folders if not f.is_dir()]
+    if missing:
+        print(f"no run at {', '.join(missing)}", file=sys.stderr)
+        return 2
     for folder in folders:
         run = score_run(settings, folder, GROUND_TRUTH)
         run.save(settings.runs_dir / "eval" / f"{folder.name}.json")

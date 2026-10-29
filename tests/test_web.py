@@ -120,6 +120,7 @@ def test_a_second_reading_is_shown_beside_a_models_reading(tmp_path, monkeypatch
     # No documents in this data folder: the readings carry no quotes to check.
     monkeypatch.setattr(web, "bond_source", lambda s, b: SimpleNamespace(documents=[]))
     monkeypatch.setattr(web, "load_document", lambda s, d: SimpleNamespace(pages=[]))
+    monkeypatch.setattr(web, "_missing_documents", lambda s, b: [])
     settings = Settings(tmp_path / "data", None, "", "", "", "", None, None)
     source = json.loads((truth / "ibrd-gbp-0750-2026.json").read_text(encoding="utf-8"))
     values = {name: f.get("value") for name, f in source["fields"].items()}
@@ -206,3 +207,14 @@ def test_the_record_page_gets_the_terms_in_their_groups(tmp_path):
     assert {"name": "interest_rate", "label": "Rate (% p.a.)"} in groups[2]["fields"]
     page = client.get("/record.html")
     assert page.status_code == 200 and "record.js" in page.text
+
+
+def test_a_bond_whose_documents_are_not_fetched_is_said_so(tmp_path):
+    settings = Settings(tmp_path / "data", None, "", "", "", "", None, None)
+    client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
+    bond = next(b for b in client.get("/api/bonds").json() if b["id"] == "ibrd-gbp-0750-2026")
+    assert bond["documents"] is False
+    response = client.get("/api/documents/ibrd-gbp-0750-2026")
+    assert response.status_code == 409
+    assert "tstt fetch --only ibrd-xs2113033281-ft ibrd-gdif-2008" in response.json()["detail"]
+    assert client.get("/api/bond/groundtruth/ibrd-gbp-0750-2026").status_code == 409
