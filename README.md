@@ -18,6 +18,18 @@ to the highlighted sentence it came from, and every payment next to the clauses 
 approves or corrects each term, and issues the token only when all of them are reviewed and the
 replay raises no red flag.
 
+```mermaid
+flowchart LR
+  docs["Final terms and base prospectus"] --> read["Reading: Muse Spark or Muse Wonder on the Meta Model API, Muse Glimmer on the reviewer's machine"]
+  read --> terms["Terms, each with a quote and a page"]
+  second["Second reading by another model"] --> checks
+  terms --> checks["Checks: quote on the page, value in the text, consistency, disagreements"]
+  checks --> review["Review: approve or correct each term"]
+  review --> token["BondToken on a local chain: issue, transfers, coupons, redemption"]
+  token --> four["Engine, QuantLib, token and documents agree on every payment"]
+  four --> record["Issuance record under one hash"]
+```
+
 ![The review screen: the terms Muse Spark read from the Hong Kong SAR digital green bond, the pricing supplement page with the sentence it relied on marked, and every coupon with the amounts from the engine, QuantLib, the token and the documents](docs/review-screen.png)
 
 Built for the Meta Global AI Developer Hackathon, October to November 2026.
