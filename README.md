@@ -214,6 +214,29 @@ rule, redemption percentage, whether interest is calculated on each holding) and
 - lets only the paying agent pay, not before the payment date, and only once;
 - redeems at maturity only after the last coupon is paid, and burns the units.
 
+Over the replays of the 25 bonds, deploying a token took 2.2 to 3.0 million gas (the whole
+schedule is stored on chain), a coupon to three holders 133 to 245 thousand, and the redemption
+188 to 233 thousand.
+
+## Other chains
+
+Everything up to the issuance record knows nothing about a chain. The reading, the checks, the
+schedule engine, the QuantLib comparison and the reviewer's decisions end in the terms and the
+payment schedule as data, and the record keeps them with the pages they came from. The
+chain-specific part is `token.py`, which turns that data into constructor arguments, deploys on
+anvil and runs the replay, and the two Solidity contracts.
+
+- **Another EVM chain.** The same bytecode with the same constructor arguments from the
+  issuance record deploys on any EVM network, public or a bank's own. The replay stays on a
+  local chain because it moves the clock through the whole life of the bond; on a live network
+  the token is issued from the record and each coupon is paid on its date.
+- **Other platforms.** Seven of the 25 bonds were issued on DLT platforms (Euroclear D-FMI, GS
+  DAP, so|bond, HSBC Orion), and the digital bonds of banks run on Canton or on private chains.
+  Those systems take the terms as data, as this contract does. What a port rewrites is the
+  contract's job in that platform's language: holders of record from checkpoints, the coupon
+  from the day count fraction, one payment per date, with the same four-way check of every
+  payment against the engine, QuantLib and the documents.
+
 ## Running it
 
 Requirements: Python 3.12 or later with [uv](https://docs.astral.sh/uv/), and
@@ -309,8 +332,9 @@ same reading, evidence and replay serve more than a new issue:
   between paper and code into a control that can run on a whole book of bonds.
 - Exporting the terms as an ICMA Bond Data Taxonomy record, for issuance platforms and for the
   comparison with vendor data that treasuries already run.
-- A second reading by a different model, with the disagreements shown to the reviewer next to
-  the flags of the consistency checks: two independent readers make different mistakes.
+- Who may hold the token. The contract checks holdings and payments, not investors; transfer
+  restrictions and identity (ERC-3643, or the registry the issuer already keeps) sit in front
+  of `transfer`.
 - Floating-rate, callable and amortising notes: more fields and the fixings of a reference
   rate, the same quotes and the same replay.
 - A fully local installation, Muse Glimmer with a local chain, for institutions that cannot send
