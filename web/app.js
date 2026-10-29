@@ -265,7 +265,7 @@ function renderReviewBar() {
   if (r.issued) {
     html = `<span class="chip ok">${truthRun() ? "verified" : "issued"}</span>
       <span>${truthRun() ? "Every term checked against its page and replayed on chain" : `Token issued after review${fixes}`}${r.issued.at ? `, ${esc(shortDate(r.issued.at.slice(0, 10)))}` : ""}.</span>
-      ${r.record ? `<a class="button small ghost" href="/api/issued/${encodeURIComponent(state.run)}/${encodeURIComponent(state.bond)}" target="_blank" rel="noopener" title="The documents and their hashes, the reading, every decision of the reviewer, the terms and the replay, under one hash">Issuance record</a>` : ""}`;
+      ${r.record ? `<a class="button small ghost" href="/record.html?run=${encodeURIComponent(state.run)}&bond=${encodeURIComponent(state.bond)}" target="_blank" rel="noopener" title="The documents and their hashes, the reading, every decision of the reviewer, the terms and the replay, under one hash">Issuance record</a>` : ""}`;
   } else {
     html = `<span class="progress"><span style="width:${(r.reviewed / r.total) * 100}%"></span></span>
       <span title="Keys: A approves the selected term and moves to the next one, J and K move down and up">Reviewed <b>${r.reviewed}</b> of ${r.total}${fixes}</span>

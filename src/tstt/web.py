@@ -335,6 +335,12 @@ def create_app(settings: Settings | None = None,
         """The models the extract buttons start, as configured for this server."""
         return {"hosted": settings.hosted_model, "local": settings.local_model}
 
+    @app.get("/api/fields")
+    def fields() -> list[dict[str, Any]]:
+        """The terms in the order and groups the screen shows them, with their labels."""
+        return [{"group": group, "fields": [{"name": n, "label": label} for n, label in names]}
+                for group, names in FIELD_GROUPS.items()]
+
     @app.get("/api/bonds")
     def bonds() -> list[dict[str, Any]]:
         manifest = load_manifest()

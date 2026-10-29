@@ -193,3 +193,16 @@ def test_the_extract_buttons_name_the_configured_models(tmp_path):
     client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
     assert client.get("/api/models").json() == {"hosted": "muse-wonder-1.0",
                                                  "local": "muse-glimmer-30b"}
+
+
+def test_the_record_page_gets_the_terms_in_their_groups(tmp_path):
+    settings = Settings(tmp_path / "data", None, "", "", "", "", None, None)
+    client = TestClient(create_app(settings), base_url="http://127.0.0.1:8000")
+    groups = client.get("/api/fields").json()
+    assert [g["group"] for g in groups] == ["Instrument", "Dates", "Interest", "Payment days",
+                                            "Redemption"]
+    names = [f["name"] for g in groups for f in g["fields"]]
+    assert len(names) == len(set(names)) == 22
+    assert {"name": "interest_rate", "label": "Rate (% p.a.)"} in groups[2]["fields"]
+    page = client.get("/record.html")
+    assert page.status_code == 200 and "record.js" in page.text

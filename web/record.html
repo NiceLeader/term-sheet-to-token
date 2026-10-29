@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Issuance record</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .record { max-width: 980px; margin: 0 auto; padding: 24px 20px 48px; background: var(--panel); }
+    .record h1 { font-size: 22px; margin: 0 0 4px; }
+    .record h2 { font-size: 15px; margin: 28px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+    .record .sub { color: var(--muted); margin: 0 0 16px; }
+    .record table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .record th, .record td { text-align: left; vertical-align: top; padding: 5px 8px; border-bottom: 1px solid var(--line); }
+    .record th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .record td.label { white-space: nowrap; width: 20%; }
+    .record td.value { font-weight: 600; width: 22%; word-break: break-word; }
+    .record .where { color: var(--muted); }
+    .record .quote { display: block; color: var(--ink); font-style: italic; margin-top: 2px; }
+    .record .hash, .record .mono { font-family: var(--mono); font-size: 12px; word-break: break-all; }
+    .record .ok { color: var(--ok); }
+    .record .bad { color: var(--bad); }
+    .record .corrected { color: var(--warn); }
+    .record .tools { display: flex; gap: 12px; margin: 0 0 20px; }
+    .record .error { color: var(--bad); padding: 24px 0; }
+    .record dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 13px; }
+    .record dt { color: var(--muted); }
+    .record dd { margin: 0; }
+    @media print {
+      body { background: #fff; }
+      .record { max-width: none; padding: 0; }
+      .record .tools { display: none; }
+      .record h2 { break-after: avoid; }
+      .record tr { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="record" id="record">Loading the record…</main>
+  <script src="record.js"></script>
+</body>
+</html>
