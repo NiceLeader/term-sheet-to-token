@@ -1,0 +1,534 @@
+{
+ "bond_id": "ibrd-gbp-0750-2026",
+ "mode": "agent",
+ "model": "muse-glimmer-30b",
+ "fields": {
+  "isin": {
+   "value": "XS2113033281",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 3,
+     "quote": "29. ISIN Code: XS2113033281"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "issuer": {
+   "value": "International Bank for Reconstruction and Development",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "1. Issuer: International Bank for Reconstruction and Development"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "currency": {
+   "value": "GBP",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "3. Specified Currency or Currencies Sterling (\"GBP\")"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "aggregate_nominal_amount": {
+   "value": "1500000000",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "4. Aggregate Nominal Amount: (i) Series: GBP 1,500,000,000"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "specified_denomination": {
+   "value": "1000",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "6. Specified Denominations GBP 1,000"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "calculation_amount": {
+   "value": "1000",
+   "stated_in": [],
+   "defined_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 25,
+     "quote": "If the Calculation Amount is not specified hereon, the Calculation Amount shall equal the minimum Specified Denomination."
+    }
+   ],
+   "note": null
+  },
+  "issue_date": {
+   "value": "2020-02-04",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "7. Issue Date: 4 February 2020"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "interest_commencement_date": {
+   "value": "2020-02-04",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "7. Issue Date: 4 February 2020"
+    }
+   ],
+   "defined_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 28,
+     "quote": "“Interest Commencement Date” means the Issue Date or such other date as may be specified hereon."
+    }
+   ],
+   "note": null
+  },
+  "maturity_date": {
+   "value": "2026-12-15",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 1,
+     "quote": "8. Maturity Date (Condition 6(a)): 15 December 2026"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "interest_rate": {
+   "value": "0.750",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(i) Rate of Interest: 0.750 per cent. per annum payable annually in arrear"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "coupon_frequency": {
+   "value": 1,
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(i) Rate of Interest: 0.750 per cent. per annum payable annually in arrear"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "interest_payment_dates": {
+   "value": [
+    "12-15"
+   ],
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(ii) Interest Payment Date(s): 15 December in each year, from and including 15 December 2020 to and including the Maturity Date, not subject to adjustment in accordance with a Business Day Convention"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "first_interest_payment_date": {
+   "value": "2020-12-15",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(vi) Broken Amount(s): Initial Broken Amount of GBP 6.45 per Specified Denomination, payable on 15 December 2020"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "day_count_fraction": {
+   "value": "ACT_ACT_ICMA",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(vii) Day Count Fraction: Actual/Actual ICMA"
+    }
+   ],
+   "defined_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 28,
+     "quote": "(vii) if “Actual/Actual-ICMA” is specified hereon, a fraction equal to “number of days accrued/number of days in year”, as such terms are used in Rule 251"
+    }
+   ],
+   "note": null
+  },
+  "business_day_convention": {
+   "value": "NONE",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(iv) Business Day Convention: Not Applicable"
+    }
+   ],
+   "defined_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 25,
+     "quote": "(f) Business Day Convention: If any date referred to in these Conditions that is specified to be subject to adjustment in accordance with a Business Day Convention would otherwise fall on a day that is not a Business Day, then, if the Business Day Convention specified is"
+    }
+   ],
+   "note": null
+  },
+  "accrual_adjusted": {
+   "value": false,
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(ii) Interest Payment Date(s): 15 December in each year, from and including 15 December 2020 to and including the Maturity Date, not subject to adjustment in accordance with a Business Day Convention"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "business_day": {
+   "value": [
+    "London",
+    "New York"
+   ],
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "21. Financial Centre(s) or other special provisions relating to payment dates (Condition 7(h)): London and New York"
+    }
+   ],
+   "defined_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 26,
+     "quote": "“Business Day” means: (i) either (a) in relation to Notes denominated in a Specified Currency other than euro, a day on which commercial banks and foreign exchange markets settle payments and are open for general business"
+    }
+   ],
+   "note": null
+  },
+  "final_redemption_amount": {
+   "value": "100",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "17. Final Redemption Amount of each GBP 1,000 per Specified Denomination"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "rounding_rule": {
+   "value": "HALF_UP",
+   "stated_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 25,
+     "quote": "(i) Rounding: For the purposes of any calculations required pursuant to these Conditions (unless otherwise specified), (x) all percentages resulting from such calculations shall be rounded, if necessary,"
+    }
+   ],
+   "defined_in": [
+    {
+     "doc": "ibrd-gdif-2008",
+     "page": 25,
+     "quote": "(z) all currency amounts that fall due and payable shall be rounded to the nearest unit of such currency (with halves being rounded up), except"
+    }
+   ],
+   "note": null
+  },
+  "interest_on_holding": {
+   "value": false,
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "19. Form of Notes (Condition l(a)): Registered Notes Global Registered Certificate available on Issue Date"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "stated_coupon_amounts": {
+   "value": [
+    {
+     "date": null,
+     "amount": "7.5",
+     "per": "1000"
+    },
+    {
+     "date": "2020-12-15",
+     "amount": "6.45",
+     "per": "1000"
+    }
+   ],
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(v) Fixed Coupon Amount: GBP 7.50 per Specified Denomination"
+    },
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "(vi) Broken Amount(s): Initial Broken Amount of GBP 6.45 per Specified Denomination, payable on 15 December 2020"
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  },
+  "record_date": {
+   "value": "close of business on the calendar day before due date",
+   "stated_in": [
+    {
+     "doc": "ibrd-xs2113033281-ft",
+     "page": 2,
+     "quote": "The first sentence of Condition 7(a)(ii) is hereby replaced by the following: \"Interest (which for the purpose of this Condition 7(a) shall include all Instalment Amounts other than final Instalment Amounts) on Registered Notes shall be paid to the person shown on the Register at the close of business on the calendar day before the due date for payment thereof (the \"Record Date\").\""
+    }
+   ],
+   "defined_in": [],
+   "note": null
+  }
+ },
+ "usage": {
+  "input_tokens": 327921,
+  "cached_tokens": 0,
+  "output_tokens": 11050,
+  "reasoning_tokens": 0
+ },
+ "seconds": 176.6593529999991,
+ "cost_usd": null,
+ "steps": 23,
+ "tool_log": [
+  {
+   "step": 1,
+   "tool": "list_documents",
+   "args": {},
+   "chars": 268
+  },
+  {
+   "step": 2,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-xs2113033281-ft",
+    "page": 1
+   },
+   "chars": 1628
+  },
+  {
+   "step": 3,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-xs2113033281-ft",
+    "page": 2
+   },
+   "chars": 2080
+  },
+  {
+   "step": 4,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-xs2113033281-ft",
+    "page": 3
+   },
+   "chars": 2757
+  },
+  {
+   "step": 5,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-xs2113033281-ft",
+    "page": 4
+   },
+   "chars": 1256
+  },
+  {
+   "step": 6,
+   "tool": "search",
+   "args": {
+    "query": "Day Count Fraction",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 2248
+  },
+  {
+   "step": 7,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 26
+   },
+   "chars": 4441
+  },
+  {
+   "step": 8,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 27
+   },
+   "chars": 2699
+  },
+  {
+   "step": 9,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 28
+   },
+   "chars": 3606
+  },
+  {
+   "step": 10,
+   "tool": "search",
+   "args": {
+    "query": "Business Day Convention",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 2213
+  },
+  {
+   "step": 11,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 25
+   },
+   "chars": 4894
+  },
+  {
+   "step": 12,
+   "tool": "search",
+   "args": {
+    "query": "record date",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 2146
+  },
+  {
+   "step": 13,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 32
+   },
+   "chars": 4180
+  },
+  {
+   "step": 14,
+   "tool": "search",
+   "args": {
+    "query": "Business Centre",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 2233
+  },
+  {
+   "step": 15,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 35
+   },
+   "chars": 4288
+  },
+  {
+   "step": 16,
+   "tool": "search",
+   "args": {
+    "query": "Financial Centre",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 2277
+  },
+  {
+   "step": 17,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-gdif-2008",
+    "page": 66
+   },
+   "chars": 2104
+  },
+  {
+   "step": 18,
+   "tool": "search",
+   "args": {
+    "query": "Interest on Holding",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 2225
+  },
+  {
+   "step": 19,
+   "tool": "search",
+   "args": {
+    "query": "rounding",
+    "doc": "ibrd-gdif-2008"
+   },
+   "chars": 737
+  },
+  {
+   "step": 20,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-xs2113033281-ft",
+    "page": 2
+   },
+   "repeat_of": 3
+  },
+  {
+   "step": 21,
+   "tool": "read_page",
+   "args": {
+    "doc": "ibrd-xs2113033281-ft",
+    "page": 3
+   },
+   "repeat_of": 4
+  },
+  {
+   "step": 22,
+   "tool": "search",
+   "args": {
+    "query": "Calculation Amount",
+    "doc": "ibrd-xs2113033281-ft"
+   },
+   "chars": 1124
+  },
+  {
+   "step": 23,
+   "tool": "submit_terms",
+   "errors": []
+  }
+ ],
+ "error": null
+}

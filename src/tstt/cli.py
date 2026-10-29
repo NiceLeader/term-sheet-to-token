@@ -10,6 +10,7 @@ from pathlib import Path
 from tstt.config import REPO_ROOT, load_settings
 
 GROUND_TRUTH = REPO_ROOT / "eval" / "groundtruth"
+READINGS = REPO_ROOT / "eval" / "readings"
 
 
 def ground_truth_bonds(held_out: bool = False) -> list[str]:
@@ -125,6 +126,30 @@ def _cmd_audit(args: argparse.Namespace) -> int:
     print("every term matches the documents" if result.clean
           else f"{len(result.differences)} values differ")
     return 0 if result.clean else 1
+
+
+def _cmd_import(args: argparse.Namespace) -> int:
+    """Copy the readings shipped in the repository (or any folder of runs) into the data
+    folder, so the review screen shows them without a model being run."""
+    import shutil
+
+    from tstt.review import discard
+
+    settings = load_settings()
+    source = Path(args.folder) if args.folder else READINGS
+    copied = kept = 0
+    for path in sorted(source.glob("*/*.json")):
+        target = settings.runs_dir / "extractions" / path.parent.name / path.name
+        if target.exists() and not args.force:
+            kept += 1
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(path, target)
+        discard(settings, path.parent.name, path.stem)
+        copied += 1
+        print(f"{path.parent.name}/{path.stem}")
+    print(f"{copied} copied, {kept} already there")
+    return 0
 
 
 def _cmd_extract(args: argparse.Namespace) -> int:
@@ -299,6 +324,12 @@ def main(argv: list[str] | None = None) -> int:
     audit.add_argument("--extraction",
                        help="folder of extractions to use instead of the verified terms")
     audit.set_defaults(func=_cmd_audit)
+
+    imp = sub.add_parser("import", help="copy the readings shipped in eval/readings into the "
+                                        "data folder for the review screen")
+    imp.add_argument("folder", nargs="?", help="a folder of run folders (default: eval/readings)")
+    imp.add_argument("--force", action="store_true", help="replace readings already there")
+    imp.set_defaults(func=_cmd_import)
 
     extract = sub.add_parser("extract", help="extract bond terms with a Meta model")
     extract.add_argument("bond", nargs="*",

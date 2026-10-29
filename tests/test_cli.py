@@ -28,3 +28,19 @@ def test_run_name_stays_inside_the_runs_folder(capsys):
 
 def test_offering_memorandum_is_read_like_final_terms():
     assert ROLE_ORDER["offering_memorandum"] == ROLE_ORDER["final_terms"]
+
+
+def test_shipped_readings_are_copied_into_the_data_folder(tmp_path, monkeypatch, capsys):
+    source = tmp_path / "readings" / "agent-muse-spark-1.3-contributor"
+    source.mkdir(parents=True)
+    (source / "ibrd-gbp-0750-2026.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("TSTT_DATA_DIR", str(tmp_path / "data"))
+    assert main(["import", str(tmp_path / "readings")]) == 0
+    target = tmp_path / "data" / "runs" / "extractions" / source.name / "ibrd-gbp-0750-2026.json"
+    assert target.read_text(encoding="utf-8") == "{}"
+    (source / "ibrd-gbp-0750-2026.json").write_text("{\"a\": 1}", encoding="utf-8")
+    assert main(["import", str(tmp_path / "readings")]) == 0
+    assert target.read_text(encoding="utf-8") == "{}"  # a reading already there is kept
+    assert main(["import", str(tmp_path / "readings"), "--force"]) == 0
+    assert target.read_text(encoding="utf-8") == "{\"a\": 1}"
+    assert "1 copied" in capsys.readouterr().out

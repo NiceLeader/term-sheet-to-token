@@ -189,6 +189,7 @@ src/tstt/        Python package and the `tstt` command
 contracts/       BondToken.sol and CashToken.sol (Foundry), with tests
 eval/groundtruth one file of verified terms per bond, each value with its page
 eval/results     score of each extraction run behind the tables above, and the comparisons of two runs
+eval/readings    the readings of one bond by the three models, for the review screen without an API key
 sources/         manifest of the public documents: URL, size, SHA-256
 web/             review screen (plain HTML, CSS and JavaScript)
 ```
@@ -246,8 +247,21 @@ anvil and runs the replay, and the two Solidity contracts.
 Requirements: Python 3.12 or later with [uv](https://docs.astral.sh/uv/), and
 [Foundry](https://book.getfoundry.sh/) for `forge` and `anvil`.
 
+The review screen for one bond, with the readings of the three models shipped in the
+repository, needs no API key:
+
 ```sh
 uv sync
+cp .env.example .env              # set TSTT_DATA_DIR
+uv run tstt fetch --only ibrd-xs2113033281-ft ibrd-gdif-2008   # final terms and prospectus, under 1 MB
+uv run tstt parse --only ibrd-xs2113033281-ft ibrd-gdif-2008
+uv run tstt import                # the readings of IBRD GBP 0.750% 2026 by Spark, Wonder and Glimmer
+uv run tstt serve                 # review screen on http://127.0.0.1:8000
+```
+
+Everything else:
+
+```sh
 cp .env.example .env              # set TSTT_DATA_DIR, MODEL_API_KEY, SEC_USER_AGENT
 uv run tstt fetch                 # download the public documents (about 21 MB)
 uv run tstt parse
