@@ -32,6 +32,8 @@ flowchart LR
 
 ![The review screen: the terms Muse Spark read from the Hong Kong SAR digital green bond, the pricing supplement page with the sentence it relied on marked, and every coupon with the amounts from the engine, QuantLib, the token and the documents](docs/review-screen.png)
 
+![A click through the review screen: a term and the sentence it was read from, the clause that defines it, the coupons with the holders at each record date, the results, and the issuance record](docs/review-screen.gif)
+
 Built for the Meta Global AI Developer Hackathon, October to November 2026.
 
 ## How Meta's models are used

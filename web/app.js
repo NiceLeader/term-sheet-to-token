@@ -784,13 +784,13 @@ async function showResults() {
   const termRows = results.terms || [];
   const withEffect = termRows.reduce((a, r) => a + r.with_effect, 0);
   const caught = termRows.reduce((a, r) => a + r.caught, 0);
-  let html = `<h1>Results</h1><p class="lede">Eighteen live fixed-rate bonds: IBRD notes including a digitally native one, the Hong Kong
+  let html = `<h1>Results</h1><p class="lede">Twenty-five live fixed-rate bonds: IBRD notes including a digitally native one, the Hong Kong
     digital green bonds, and supranational, sovereign and corporate notes from public filings. Every number below can be reproduced with
     <code>tstt verify</code>, <code>tstt mutate</code> and <code>tstt eval</code>.</p>
     <div class="cards">
       <div class="card"><div class="big">${payments}</div><div class="what">payments on ${truth.length} bonds where the engine, QuantLib, the token on chain and the printed amounts ${allOk ? "all agree" : "do not all agree"}</div></div>
       <div class="card"><div class="big">${probes}/${probesTotal}</div><div class="what">guard probes rejected on chain (early payment, wrong payer, double payment, early redemption, unpaid coupon)</div></div>
-      <div class="card"><div class="big">${mutants.filter((m) => m.caught).length}/${mutants.length}</div><div class="what">deliberate bugs in the bond contract caught by replaying the 18 bonds and the contract tests</div></div>
+      <div class="card"><div class="big">${mutants.filter((m) => m.caught).length}/${mutants.length}</div><div class="what">deliberate bugs in the bond contract caught by replaying the 25 bonds and the contract tests</div></div>
       <div class="card"><div class="big">${caught}/${withEffect}</div><div class="what">injected term errors that change a cash flow, flagged by the consistency checks before issuance</div></div>
     </div>`;
   if (results.eval.length) {
